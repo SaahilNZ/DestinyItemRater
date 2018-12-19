@@ -1,12 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import { ITEMS } from './data';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+class MainApp extends React.Component {
+    render() {
+        const items = ITEMS.map(item => {
+            return (
+                <li key={item.id}>
+                    {item.id} - {item.item}
+                </li>
+            );
+        });
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
+        return (
+            <div>
+                <h1>Destiny Item Rater</h1>
+                <ul>{items}</ul>
+            </div>
+        );
+    }
+}
+
+ReactDOM.render(
+    <MainApp />,
+    document.getElementById('root')
+);
