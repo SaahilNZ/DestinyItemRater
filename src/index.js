@@ -9,7 +9,8 @@ class DestinyItem extends React.Component {
         this.state = {
             perksPopulated: false,
             primaryPerks: [],
-            secondaryPerks: []
+            secondaryPerks: [],
+            rating: null
         }
     }
 
@@ -45,12 +46,18 @@ class DestinyItem extends React.Component {
             }
         }
         this.setState({ perksPopulated: true });
+        this.rateItem();
     }
 
     rateItem() {
-        let primaryPerks;
-        let secondaryPerks;
-
+        let badPrimaryPerks = this.state.primaryPerks.filter(perk => !perk.isGood);
+        if (badPrimaryPerks.length === this.state.primaryPerks.length) {
+            this.setState({ rating: 'bad' });
+        } else if (badPrimaryPerks.length === this.state.primaryPerks.length - 1) {
+            this.setState({ rating: 'ok'});
+        } else {
+            this.setState({ rating: 'good'});
+        }
     }
 
     render() {
@@ -61,18 +68,18 @@ class DestinyItem extends React.Component {
                 if (perk == null) {
                     return <li>undefined</li>
                 }
-                return <li>{perk.name}</li>
+                return <li><div className={perk.isGood ? 'good' : 'bad'}>{perk.name}</div></li>;
             });
             let perkCol2 = this.state.secondaryPerks.map((perk) =>
             {
                 if (perk == null) {
                     return <li>undefined</li>;
                 }
-                return <li>{perk.name}</li>;
+                return <li><div className={perk.isGood ? 'good' : 'bad'}>{perk.name}</div></li>;
             });
             content = (
                 <div>
-                    <div>{this.props.item.id} - {this.props.item.item} - {this.props.item.type} ({this.props.item.class})</div>
+                    <div className={this.state.rating}>{this.props.item.id} - {this.props.item.item} - {this.props.item.type} ({this.props.item.class})</div>
                     <div>
                         <p>Perk Column 1</p>
                         <ul>{perkCol1}</ul>

@@ -1,0 +1,14 @@
+.good {
+    background-color: lime;
+    color: black;
+}
+
+.ok {
+    background-color: yellow;
+    color: black;
+}
+
+.bad {
+    background-color: red;
+    color: white;
+}
