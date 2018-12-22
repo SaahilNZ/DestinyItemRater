@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import DestinyPerk, { ITEMS, getPerks } from './data';
+import { ITEMS, getPerks } from './data';
+
+let destinyItems = [];
 
 class DestinyItem extends React.Component {
     constructor(props) {
@@ -58,6 +60,7 @@ class DestinyItem extends React.Component {
         } else {
             this.setState({ rating: 'good'});
         }
+        this.props.parent.onItemRated(this.props.item.id, this.state.rating);
     }
 
     render() {
@@ -104,22 +107,77 @@ class DestinyItem extends React.Component {
 class MainApp extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            goodItems: [],
+            badItems: []
+        };
         getPerks();
+        destinyItems = ITEMS.map(item =>
+            <DestinyItem key={item.id} item={item} parent={this} />);
+    }
+
+    onItemRated(id, rating) {
+        if (rating === 'good') {
+            this.setState({ goodItems: this.state.goodItems.concat(id) });
+        } else {
+            this.setState({ badItems: this.state.badItems.concat(id) });
+        }
     }
 
     render() {
-        const items = ITEMS.map(item => {
+        const items = destinyItems.map(item => {
             return (
                 <li key={item.id}>
-                    <DestinyItem item={item} />
+                    {item}
                 </li>
             );
         });
 
+        const goodItems = destinyItems.filter(item =>
+            this.state.goodItems.includes(item.key))
+            .map(item => {
+                return (
+                    <li key={item.key}>
+                        {item}
+                    </li>
+                );
+            }
+        );
+
+        const badItems = destinyItems.filter(item =>
+            this.state.badItems.includes(item.key))
+            .map(item => {
+                return (
+                    <li key={item.key}>
+                        {item}
+                    </li>
+                );
+            }
+        );
+
         return (
             <div>
                 <h1>Destiny Item Rater</h1>
-                <ul>{items}</ul>
+                <div>
+                    <h2>All Items:</h2>
+                    <div className="scroll-container">
+                        <ul>{items}</ul>
+                    </div>
+                </div>
+                <div className="split-content-container">
+                    <div className="list-container">
+                        <h2>Good Items:</h2>
+                        <div className="scroll-container">
+                            <ul>{goodItems}</ul>
+                        </div>
+                    </div>
+                    <div className="list-container">
+                        <h2>Bad Items:</h2>
+                        <div className="scroll-container">
+                            <ul>{badItems}</ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }
