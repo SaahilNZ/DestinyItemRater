@@ -9,6 +9,7 @@ class ItemStore {
         this.bindListeners({
             handleUpdateItems: ItemActions.UPDATE_ITEMS,
             handleFetchItems: ItemActions.FETCH_ITEMS,
+            handleRateItems: ItemActions.RATE_ITEMS,
             handleItemsFailed: ItemActions.ITEMS_FAILED
         })        
     }
@@ -34,6 +35,7 @@ class ItemStore {
                             .map(perkName => allPerks.get(perkName.toLowerCase()));
 
             return {
+                id: item.id,
                 name: item.item,
                 class: item.class,
                 type: item.type,
@@ -47,6 +49,25 @@ class ItemStore {
 
     handleFetchItems() {
         this.items = [];
+    }
+
+    handleRateItems() {
+        let itemDict = {};
+        this.items.forEach(item => {
+            let similarItems = this.items.filter(other => !(other.id === item.id)
+                && other.class === item.class && other.type === item.type)
+                .map(other => other.id);
+            itemDict[item.id] = {
+                name: item.name,
+                class: item.class,
+                type: item.type,
+                power: item.power,
+                primaryPerks: item.primaryPerks,
+                secondaryPerks: item.secondaryPerks,
+                similarItems: similarItems
+            };
+        });
+        console.log(JSON.stringify(itemDict));
     }
 
     handleItemsFailed(errorMessage) {

@@ -1,5 +1,5 @@
 import Papa from 'papaparse';
-import { DestinyPerk } from '../stores/PerkStore';
+import DestinyPerk from '../model/DestinyPerk';
 
 let perkMap;
 
@@ -8,9 +8,9 @@ class PerkSource {
         if (perkMap == null) {
             let tempMap = new Map();
             await fetch("data/d2-armour-perks.csv")
-            .then(csv => csv.text())
-            .then(data => Papa.parse(data))
-            .then(parsed => this.populatePerkMap(tempMap, parsed));
+                .then(csv => csv.text())
+                .then(data => Papa.parse(data))
+                .then(parsed => this.populatePerkMap(tempMap, parsed));
             perkMap = tempMap;
             return perkMap;
         }

@@ -1,15 +1,6 @@
 import PerkActions from "../actions/PerkActions";
 import alt from "../alt";
 
-export class DestinyPerk {
-    constructor(name, isGood, upgrade1, upgrade2) {
-        this.name = name;
-        this.isGood = isGood;
-        this.upgrade1 = upgrade1;
-        this.upgrade2 = upgrade2;
-    }
-}
-
 class PerkStore {
     constructor() {
         this.perks = new Map();

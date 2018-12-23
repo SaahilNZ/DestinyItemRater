@@ -13,11 +13,16 @@ class ItemActions {
             source.fetch()
                 .then((items) => {
                     this.updateItems(items);
+                    this.rateItems();
                 })
                 .catch((errorMessage) => {
                     this.itemsFailed(errorMessage);
                 })
         }
+    }
+
+    rateItems() {
+        return true;
     }
 
     itemsFailed(errorMessage) {
