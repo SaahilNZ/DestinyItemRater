@@ -1,16 +1,15 @@
-.scroll-container {
-    overflow: auto;
-    word-wrap: normal;
-    height: 360px;
-    background-color: #EEE;
+.item-table {
+    width: 100%;
 }
 
-.split-content-container {
-    display: flex;
+.item-table, th, td {
+    border-color: black;
+    border-width: 1px;
+    border-style: solid;
 }
 
-.list-container {
-    flex-grow: 1;
+.perk {
+    display: inline-block;
 }
 
 .good {
