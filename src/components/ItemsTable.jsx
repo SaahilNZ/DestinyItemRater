@@ -1,7 +1,8 @@
 import React from 'react';
 import ItemStore from '../stores/ItemStore';
 import ItemActions from '../actions/ItemActions';
-import Item, { DestinyItem } from './Item';
+import Item from './Item';
+import PerkActions from '../actions/PerkActions';
 
 class ItemsTable extends React.Component {
     constructor(props) {
@@ -13,6 +14,7 @@ class ItemsTable extends React.Component {
     componentDidMount() {
         ItemStore.listen(this.onChange);
 
+        PerkActions.fetchPerks();
         ItemActions.fetchItems();
     }
 
@@ -50,7 +52,7 @@ class ItemsTable extends React.Component {
                     </tr>
                     {this.state.items.map((item) => {
                         return (
-                            <Item key={item.id} item={new DestinyItem(item)}/>
+                            <Item key={item.id} item={item}/>
                             );
                         })}
                 </tbody>

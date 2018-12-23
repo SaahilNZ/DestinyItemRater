@@ -8,6 +8,10 @@
     border-style: solid;
 }
 
+td {
+    padding: 0 1em 0 1em;
+}
+
 .perk {
     display: inline-block;
 }
