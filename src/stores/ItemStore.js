@@ -7,14 +7,16 @@ class ItemStore {
         this.items = [];
         this.errorMessage = null;
         this.bindListeners({
-            handleUpdateItems: ItemActions.UPDATE_ITEMS,
-            handleFetchItems: ItemActions.FETCH_ITEMS,
-            handleRateItems: ItemActions.RATE_ITEMS,
-            handleItemsFailed: ItemActions.ITEMS_FAILED
+            onItemsFetching: ItemActions.fetchItems,
+            onItemsComparing: ItemActions.compareItems,
+
+            onItemsUpdated: ItemActions.onItemsUpdated,
+            onItemsFailedToLoad: ItemActions.onItemsFailedToLoad,
+            onItemsCompared: ItemActions.onItemsCompared
         })        
     }
 
-    handleUpdateItems(items) {
+    onItemsUpdated(items) {
         this.waitFor(PerkStore);
         let allPerks = PerkStore.getState().perks;
         this.items = items.map((item) => {
@@ -41,36 +43,31 @@ class ItemStore {
                 type: item.type,
                 power: item.power,
                 primaryPerks: primaryPerks,
-                secondaryPerks: secondaryPerks
+                secondaryPerks: secondaryPerks,
+                comparisons: null
             };
         });
         this.errorMessage = null;
     }
 
-    handleFetchItems() {
+    onItemsFetching() {
         this.items = [];
     }
 
-    handleRateItems() {
-        let itemDict = {};
-        this.items.forEach(item => {
-            let similarItems = this.items.filter(other => !(other.id === item.id)
-                && other.class === item.class && other.type === item.type)
-                .map(other => other.id);
-            itemDict[item.id] = {
-                name: item.name,
-                class: item.class,
-                type: item.type,
-                power: item.power,
-                primaryPerks: item.primaryPerks,
-                secondaryPerks: item.secondaryPerks,
-                similarItems: similarItems
-            };
-        });
-        console.log(JSON.stringify(itemDict));
+    onItemsComparing() {
+        this.items.forEach(item => item.comparisons = null);
     }
 
-    handleItemsFailed(errorMessage) {
+    onItemsCompared(comparisons) {
+        comparisons.forEach(comparison => {
+            let item = this.items.find(i => i.id === comparison.id);
+            if (item) {
+                item.comparisons = comparison.comparisons;
+            } 
+        });
+    }
+
+    onItemsFailedToLoad(errorMessage) {
         this.errorMessage = errorMessage;
     }
 }

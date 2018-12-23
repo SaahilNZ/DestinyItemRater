@@ -1,29 +1,24 @@
 import Papa from 'papaparse';
 import DestinyPerk from '../model/DestinyPerk';
 
-let perkMap;
-
 class PerkSource {
     async fetch() {
-        if (perkMap == null) {
-            let tempMap = new Map();
-            await fetch("data/d2-armour-perks.csv")
-                .then(csv => csv.text())
-                .then(data => Papa.parse(data))
-                .then(parsed => this.populatePerkMap(tempMap, parsed));
-            perkMap = tempMap;
-            return perkMap;
-        }
-        return perkMap;
+        return await fetch("data/d2-armour-perks.csv")
+            .then(response => response.text())
+            .then(csv => Papa.parse(csv))
+            .then(parsed => this.populatePerkMap(parsed))
+            .catch(error => console.log(error));
     }
-
-    populatePerkMap(map, data) {
+    
+    populatePerkMap(data) {
+        let map = new Map();
         data.data.forEach(perk => {
             map.set(perk[0].toLowerCase(),
                 new DestinyPerk(perk[0], perk[1] === 'good',
                     perk[2] === '' ? null : perk[2],
                     perk[3] === '' ? null : perk[3]));
-        })
+        });
+        return map;
     }
 }
 

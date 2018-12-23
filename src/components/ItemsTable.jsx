@@ -49,6 +49,7 @@ class ItemsTable extends React.Component {
                         <th>Power</th>
                         <th>Primary</th>
                         <th>Secondary</th>
+                        <th>Similar items</th>
                     </tr>
                     {this.state.items.map((item) => {
                         return (

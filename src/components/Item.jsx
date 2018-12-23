@@ -1,8 +1,20 @@
 import React from 'react';
 import Perk from './Perk';
+import ItemComparisonResult from '../services/ItemComparisonResult';
 
 class Item extends React.Component {
     render() {
+        let comparisons = <div>Loading...</div>;
+        if (this.props.item.comparisons) {
+            let similar = this.props.item.comparisons.filter(comparison =>
+                comparison.result !== ItemComparisonResult.ITEM_IS_INCOMPARABLE);
+            comparisons = (
+                <ul>
+                    {similar.map(comparison => 
+                        <li key={comparison.id}>{comparison.id} ({comparison.result})</li>)}
+                </ul>);
+        }
+
         return (
             <tr>
                 <td>{this.props.item.name}</td>
@@ -24,6 +36,9 @@ class Item extends React.Component {
                                 <Perk perk={perk} />
                             </li>)}
                     </ul>
+                </td>
+                <td>
+                    {comparisons}
                 </td>
             </tr>
         );
