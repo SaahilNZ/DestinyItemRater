@@ -9,53 +9,11 @@ class ArmourComparer {
         if (item1.type !== item2.type) {
             return ItemComparisonResult.ITEM_IS_INCOMPARABLE;
         }
+        
         let perks = PerkStore.getState().perks;
-        let item1GoodPerks = [];
-        let item2GoodPerks = [];
-        if (item1.type === "Warlock Bond" ||
-            item1.type === "Hunter Cloak" ||
-            item1.type === "Titan Mark") {
-            if (item1.perks[0] && item2.perks[0] &&
-                item1.perks[1] && item2.perks[1]) {
-                item1GoodPerks = [
-                    item1.perks[0].filter(perkName => perkName !== "")
-                        .filter(perkName => perks.get(perkName.toLowerCase()).isGood)
-                        .map(perkName => perks.get(perkName.toLowerCase())),
-                    item1.perks[1].filter(perkName => perkName !== "")
-                        .filter(perkName => perks.get(perkName.toLowerCase()).isGood)
-                        .map(perkName => perks.get(perkName.toLowerCase()))
-                ];
+        let item1GoodPerks = this.getGoodPerks(item1, perks);
+        let item2GoodPerks = this.getGoodPerks(item2, perks);
 
-                item2GoodPerks = [
-                    item2.perks[0].filter(perkName => perkName !== "")
-                        .filter(perkName => perks.get(perkName.toLowerCase()).isGood)
-                        .map(perkName => perks.get(perkName.toLowerCase())),
-                    item2.perks[1].filter(perkName => perkName !== "")
-                        .filter(perkName => perks.get(perkName.toLowerCase()).isGood)
-                        .map(perkName => perks.get(perkName.toLowerCase()))
-                ];
-            }
-        } else {
-            if (item1.perks[2] && item2.perks[2] &&
-                item1.perks[3] && item2.perks[3]) {
-                item1GoodPerks = [
-                    ...item1.perks[2].filter(perkName => perkName !== "")
-                        .filter(perkName => perks.get(perkName.toLowerCase()).isGood)
-                        .map(perkName => perks.get(perkName.toLowerCase())),
-                    ...item1.perks[3].filter(perkName => perkName !== "")
-                        .filter(perkName => perks.get(perkName.toLowerCase()).isGood)
-                        .map(perkName => perks.get(perkName.toLowerCase()))
-                ];
-                item2GoodPerks = [
-                    ...item2.perks[2].filter(perkName => perkName !== "")
-                        .filter(perkName => perks.get(perkName.toLowerCase()).isGood)
-                        .map(perkName => perks.get(perkName.toLowerCase())),
-                    ...item2.perks[3].filter(perkName => perkName !== "")
-                        .filter(perkName => perks.get(perkName.toLowerCase()).isGood)
-                        .map(perkName => perks.get(perkName.toLowerCase()))
-                ];
-            }
-        }
         let intersect = item1GoodPerks.filter(perk => item2GoodPerks.includes(perk));
         if (intersect.length < item1GoodPerks.length &&
             intersect.length < item2GoodPerks.length) {
@@ -70,6 +28,25 @@ class ArmourComparer {
             return ItemComparisonResult.ITEM_IS_WORSE;
         }
         return ItemComparisonResult.ITEM_IS_EQUIVALENT;
+    }
+
+    getGoodPerks(item, perks) {
+        let columns = [2,3];
+        if (item.type === "Warlock Bond" ||
+            item.type === "Hunter Cloak" ||
+            item.type === "Titan Mark") {
+            columns = [0,1];
+        }
+        let goodPerksInColumns = columns.map(column => {
+            let perkColumn = item.perks[column];
+            if (perkColumn) {
+                return perkColumn
+                    .map(perkName => perks.get(perkName.toLowerCase()))
+                    .filter(perk => perk !== null && perk.isGood);
+            }
+            return [];
+        })
+        return [].concat(...goodPerksInColumns);
     }
 }
 
