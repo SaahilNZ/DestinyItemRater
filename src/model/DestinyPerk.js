@@ -1,9 +1,8 @@
 class DestinyPerk {
-    constructor(name, isGood, upgrade1, upgrade2) {
+    constructor(name, isGood, upgrades) {
         this.name = name;
         this.isGood = isGood;
-        this.upgrade1 = upgrade1;
-        this.upgrade2 = upgrade2;
+        this.upgrades = upgrades;
     }
 }
 

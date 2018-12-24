@@ -13,10 +13,16 @@ class PerkSource {
     populatePerkMap(data) {
         let map = new Map();
         data.data.forEach(perk => {
+            let upgrades = [];
+            if (perk[2] !== '') {
+                upgrades.push(perk[2]);
+            }
+            if (perk[3] !== '') {
+                upgrades.push(perk[3]);
+            }
+
             map.set(perk[0].toLowerCase(),
-                new DestinyPerk(perk[0], perk[1] === 'good',
-                    perk[2] === '' ? null : perk[2],
-                    perk[3] === '' ? null : perk[3]));
+                new DestinyPerk(perk[0], perk[1] === 'good', upgrades));
         });
         return map;
     }
