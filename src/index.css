@@ -30,3 +30,21 @@ td {
     background-color: red;
     color: white;
 }
+
+.comparison-equivalent {
+    display: inline-block;
+    background-color: #DDDDDD;
+    color: black;
+}
+
+.comparison-better {
+    display: inline-block;
+    background-color: lime;
+    color: black;
+}
+
+.comparison-worse {
+    display: inline-block;
+    background-color: red;
+    color: white;
+}

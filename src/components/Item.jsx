@@ -10,13 +10,34 @@ class Item extends React.Component {
                 comparison.result !== ItemComparisonResult.ITEM_IS_INCOMPARABLE);
             comparisons = (
                 <ul>
-                    {similar.map(comparison => 
-                        <li key={comparison.id}>{comparison.id} ({comparison.result})</li>)}
-                </ul>);
+                    {similar.map(comparison => {
+                        let className = "";
+                        switch (comparison.result) {
+                            case ItemComparisonResult.ITEM_IS_EQUIVALENT:
+                                className = "comparison-equivalent";
+                                break;
+                            case ItemComparisonResult.ITEM_IS_BETTER:
+                                className = "comparison-better";
+                                break;
+                            case ItemComparisonResult.ITEM_IS_WORSE:
+                                className = "comparison-worse";
+                                break;
+                            default:
+                                className = "";
+                                break;
+                        }
+                        return (
+                        <li key={comparison.id}>
+                            <div className={className}>{comparison.id}</div>
+                        </li>);
+                    })}
+                </ul>
+            );
         }
 
         return (
             <tr>
+                <td>{this.props.item.id}</td>
                 <td>{this.props.item.name}</td>
                 <td>{this.props.item.class}</td>
                 <td>{this.props.item.type}</td>

@@ -29,7 +29,10 @@ class ItemsTable extends React.Component {
     render() {
         if (this.state.errorMessage) {
             return (
-                <div>Something went wrong :(</div>
+                <div>
+                    <div>Something went wrong :(</div>
+                    <div>{this.state.errorMessage}</div>
+                </div>
             );
         }
 
@@ -43,6 +46,7 @@ class ItemsTable extends React.Component {
             <table className="item-table">
                 <tbody>
                     <tr>
+                        <th>ID</th>
                         <th>Name</th>
                         <th>Class</th>
                         <th>Type</th>
