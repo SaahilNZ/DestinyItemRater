@@ -29,7 +29,7 @@ class ArmourComparer {
             }
             return [];
         })
-        return [].concat(...goodPerksInColumns);
+        return goodPerksInColumns;
     }
 
     getRateablePerkColumns(item) {
@@ -43,63 +43,72 @@ class ArmourComparer {
     }
 
     comparePerks(item1Perks, item2Perks, perks) {
-        let sharedPerks = [];
-        let item1UpgradedPerks = [];
-        let item2UpgradedPerks = [];
+        let item1PerkConfigs = this.getPerkConfigs(item1Perks);
+        let item2PerkConfigs = this.getPerkConfigs(item2Perks);
 
-        for (let i1 = 0; i1 < item1Perks.length; i1++) {
-            const item1Perk = item1Perks[i1];
-            let item1PerkUpgrades = this.getPerkUpgrades(item1Perk, perks);
-            for (let i2 = 0; i2 < item2Perks.length; i2++) {
-                const item2Perk = item2Perks[i2];
-                let item2PerkUpgrades = this.getPerkUpgrades(item2Perk, perks);
-                if (item1Perk === item2Perk) {
-                    sharedPerks.push(item1Perk);
+        let isBetterOrEqual = true;
+        for (let i1 = 0; i1 < item1PerkConfigs.length; i1++) {
+            const item1PerkConfig = item1PerkConfigs[i1];
+            let containsConfig = false;
+
+            let comparablePerks = [];
+            item1PerkConfig.forEach(perk => {
+                comparablePerks.push(perk);
+                comparablePerks.push(...this.getPerkUpgrades(perk, perks));
+            });
+
+            for (let i2 = 0; i2 < item2PerkConfigs.length; i2++) {
+                const item2PerkConfig = item2PerkConfigs[i2];
+                if (comparablePerks.filter(
+                    p => item2PerkConfig.includes(p)).length === item1PerkConfig.length) {
+                    containsConfig = true;
                     break;
-                } else if (item1PerkUpgrades.includes(item2Perk)) {
-                    item2UpgradedPerks.push(item2Perk);
-                    break;
-                } else if (item2PerkUpgrades.includes(item1Perk)) {
-                    item1UpgradedPerks.push(item1Perk);
                 }
+            }
+            
+            if (!containsConfig) {
+                isBetterOrEqual = false;
+                break;
             }
         }
 
-        /*
-        item2 is incomparable when:
-        - item2 does not contain all of item1's good perks or better versions of these perks
-        AND
-        item1 does not contain all of item2's good perks or better versions of these perks
-         */
-        if (sharedPerks.length + item2UpgradedPerks.length < item1Perks.length &&
-            sharedPerks.length + item1UpgradedPerks.length < item2Perks.length) {
+        if (isBetterOrEqual) {
+            if (item2PerkConfigs.length > item1PerkConfigs.length) {
+                return ItemComparisonResult.ITEM_IS_BETTER;
+            }
+            return ItemComparisonResult.ITEM_IS_EQUIVALENT;
+        } else {
+            let containsAll = true;
+            for (let i1 = 0; i1 < item2PerkConfigs.length; i1++) {
+                const item2PerkConfig = item2PerkConfigs[i1];
+                let containsConfig = false;
+    
+                let comparablePerks = [];
+                item2PerkConfig.forEach(perk => {
+                    comparablePerks.push(perk);
+                    comparablePerks.push(...this.getPerkUpgrades(perk, perks));
+                });
+    
+                for (let i2 = 0; i2 < item1PerkConfigs.length; i2++) {
+                    const item1PerkConfig = item1PerkConfigs[i2];
+                    if (comparablePerks.filter(
+                        p => item1PerkConfig.includes(p)).length === item2PerkConfig.length) {
+                        containsConfig = true;
+                        break;
+                    }
+                }
+                
+                if (!containsConfig) {
+                    containsAll = false;
+                    break;
+                }
+            }
+            if (containsAll) {
+                return ItemComparisonResult.ITEM_IS_WORSE;
+            }
+
             return ItemComparisonResult.ITEM_IS_INCOMPARABLE;
         }
-
-        /*
-        item2 is better when:
-        - item2 contains all of item1's good perks, including at least 1 perk upgrade
-        - item2 contains all of item1's good perks
-        AND
-        item2 contains at least 1 good perk that item1 does not have
-         */
-        if (sharedPerks.length + item2UpgradedPerks.length === item1Perks.length ||
-            (sharedPerks.length === item1Perks.length && item2Perks.length > sharedPerks.length)) {
-            return ItemComparisonResult.ITEM_IS_BETTER;
-        }
-
-        /*
-        item2 is worse when:
-        - item1 contains all of item2's good perks
-        AND
-        item1 contains at least 1 good perk that item2 does not have
-         */
-        if (sharedPerks.length === item2Perks.length &&
-            item1Perks.length > item2Perks.length) {
-            return ItemComparisonResult.ITEM_IS_WORSE;
-        }
-
-        return ItemComparisonResult.ITEM_IS_EQUIVALENT;
     }
 
     getPerkUpgrades(perk, perks) {
@@ -110,6 +119,48 @@ class ArmourComparer {
             upgrades = upgrades.concat(...this.getPerkUpgrades(upgrade));
         });
         return upgrades;
+    }
+
+    getPerkConfigs(perkColumns) {
+        let filteredColumns = perkColumns.filter(column => column.length > 0);
+        let perkTree = this.convertToTree(null, filteredColumns);
+        return this.getPerkConfigsFromTree(perkTree);
+    }
+
+    convertToTree(perk, perkColumns) {
+        let node = {};
+        node.perk = perk;
+        let children = [];
+        if (perkColumns[0]) {
+            perkColumns[0].forEach(nextPerk => {
+                children.push(this.convertToTree(nextPerk, perkColumns.slice(1)));
+            })
+        }
+        node.children = children;
+        return node;
+    }
+
+    getPerkConfigsFromTree(perkTree) {
+        let configs = [];
+        perkTree.children.forEach(perk => {
+            configs.push(...this.getPerkConfigsFromNode(perk));
+        });
+        return configs;
+    }
+
+    getPerkConfigsFromNode(perkNode) {
+        let configs = [];
+        let baseConfig = [perkNode.perk];
+        perkNode.children.forEach(child => {
+            let childConfigs = this.getPerkConfigsFromNode(child);
+            childConfigs.forEach(childConfig => {
+                configs.push(baseConfig.concat(...childConfig));
+            });
+        });
+        if (configs.length === 0) {
+            configs.push(baseConfig);
+        }
+        return configs;
     }
 }
 
