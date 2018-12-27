@@ -20,6 +20,10 @@
     background-color: #ddd;
 }
 
+.tab-link-active {
+    background-color: #ddd;
+}
+
 .tab-content {
     display: none;
 }
