@@ -1,3 +1,29 @@
+.tab {
+    overflow: hidden;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    margin-bottom: 8px;
+}
+
+.tab-link {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 8px;
+    transition: 0.3s;
+}
+
+.tab-link:hover {
+    background-color: #ddd;
+}
+
+.tab-content {
+    display: none;
+}
+
 .item-table {
     width: 100%;
 }

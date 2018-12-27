@@ -3,6 +3,7 @@ import ItemStore from '../stores/ItemStore';
 import ItemActions from '../actions/ItemActions';
 import Item from './Item';
 import PerkActions from '../actions/PerkActions';
+import ItemComparisonResult from '../services/ItemComparisonResult';
 
 class ItemsTable extends React.Component {
     constructor(props) {
@@ -42,6 +43,33 @@ class ItemsTable extends React.Component {
             );
         }
 
+        let items;
+        if (this.props.itemFilter === "bad") {
+            items = this.state.items.filter(item => {
+                let isBetter = false;
+                if (item.comparisons) {
+                    for (let i = 0; i < item.comparisons.length; i++) {
+                        const comparison = item.comparisons[i];
+                        if (comparison && comparison.result === ItemComparisonResult.ITEM_IS_BETTER) {
+                            isBetter = true;
+                            break;
+                        }
+                    }
+                }
+                return isBetter;
+            }).map((item) => {
+                return (
+                    <Item key={item.id} item={item}/>
+                    );
+                });
+        } else {
+            items = this.state.items.map((item) => {
+                return (
+                    <Item key={item.id} item={item}/>
+                    );
+                });
+        }
+
         return (
             <table className="item-table">
                 <tbody>
@@ -55,11 +83,7 @@ class ItemsTable extends React.Component {
                         <th>Secondary</th>
                         <th>Similar items</th>
                     </tr>
-                    {this.state.items.map((item) => {
-                        return (
-                            <Item key={item.id} item={item}/>
-                            );
-                        })}
+                    {items}
                 </tbody>
             </table>
         );
