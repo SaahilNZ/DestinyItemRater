@@ -25,7 +25,7 @@ class ArmourComparer {
             if (perkColumn) {
                 return perkColumn
                     .map(perkName => perks.get(perkName.toLowerCase()))
-                    .filter(perk => perk !== null && perk.isGood);
+                    .filter(perk => perk !== null && perk !== undefined && perk.isGood);
             }
             return [];
         })
