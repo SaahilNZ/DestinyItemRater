@@ -44,7 +44,8 @@ class Item extends React.Component {
                 <td>{this.props.item.power}</td>
                 <td>
                     <ul>
-                        {this.props.item.primaryPerks.map(perk =>
+                        {this.props.item.primaryPerks.filter(perk => perk != null)
+                            .map(perk =>
                             <li>
                                 <Perk perk={perk} />
                             </li>)}
@@ -52,7 +53,8 @@ class Item extends React.Component {
                 </td>
                 <td>
                     <ul>
-                        {this.props.item.secondaryPerks.map(perk =>
+                        {this.props.item.secondaryPerks.filter(perk => perk != null)
+                            .map(perk =>
                             <li>
                                 <Perk perk={perk} />
                             </li>)}

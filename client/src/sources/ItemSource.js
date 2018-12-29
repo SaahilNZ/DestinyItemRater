@@ -1,6 +1,6 @@
 class ItemSource {
     async fetch() {
-        return fetch("data/items.json").then(json => json.json());
+        return fetch("/items").then(json => json.json());
     }
 }
 

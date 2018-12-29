@@ -18,7 +18,7 @@ class PerkStore {
     }
 
     handleFetchPerks() {
-        this.perks = [];
+        this.perks = new Map();
     }
 
     handlePerksFailed(errorMessage) {

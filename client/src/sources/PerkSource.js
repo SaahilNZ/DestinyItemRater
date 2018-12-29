@@ -3,7 +3,7 @@ import DestinyPerk from '../model/DestinyPerk';
 
 class PerkSource {
     async fetch() {
-        return await fetch("data/d2-armour-perks.csv")
+        return await fetch("/perks")
             .then(response => response.text())
             .then(csv => Papa.parse(csv))
             .then(parsed => this.populatePerkMap(parsed))

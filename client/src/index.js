@@ -37,8 +37,12 @@ class MainApp extends React.Component {
                     <input className={"tab-link " + (this.state.showBadItems ? "tab-link-active" : "")}
                         type="button" value="Bad Items" onClick={this.showBadItems} />
                 </div>
-                { this.state.showAllItems ? <ItemsTable /> : null}
-                { this.state.showBadItems ? <ItemsTable itemFilter="bad"/> : null }
+                <div className={this.state.showAllItems ? "" : "hidden"}>
+                    <ItemsTable />
+                </div>
+                <div className={this.state.showBadItems ? "" : "hidden"}>
+                    <ItemsTable itemFilter="bad" />
+                </div>
             </div>
         );
     }
