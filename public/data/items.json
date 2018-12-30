@@ -1,23 +1,5 @@
 [
   {
-    "id": "6917529084123644740",
-    "item": "Reverie Dawn Hood",
-    "class": "warlock",
-    "tier": "Legendary",
-    "type": "Helmet",
-    "power": 608,
-    "perks": [
-      ["Mobile Warlock Armor"],
-      ["", ""],
-      [
-        "Fusion Rifle Targeting",
-        "Submachine Gun Targeting",
-        "Remote Connection"
-      ],
-      ["Fusion Rifle Reserves", "Linear Fusion Rifle Reserves"]
-    ]
-  },
-  {
     "id": "6917529084949166388",
     "item": "Ancient Apocalypse Hood",
     "class": "warlock",
@@ -65,7 +47,7 @@
     "class": "warlock",
     "tier": "Legendary",
     "type": "Helmet",
-    "power": 600,
+    "power": 641,
     "perks": [
       ["Mobile Warlock Armor"],
       ["", ""],
@@ -74,17 +56,31 @@
     ]
   },
   {
-    "id": "6917529084700521135",
-    "item": "Ancient Apocalypse Hood",
+    "id": "6917529085661711546",
+    "item": "Annealed Shaper Crown",
     "class": "warlock",
     "tier": "Legendary",
     "type": "Helmet",
-    "power": 603,
+    "power": 649,
     "perks": [
       ["Restorative Warlock Armor"],
       ["", ""],
-      ["Ashes to Assets", "Heavy Lifting"],
-      ["Linear Fusion Rifle Reserves", "Shotgun Reserves"]
+      ["Sniper Rifle Targeting", "Heavy Lifting"],
+      ["Sniper Rifle Reserves", "Heavy Ammo Finder"]
+    ]
+  },
+  {
+    "id": "6917529083660248389",
+    "item": "Scatterhorn Hood",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Helmet",
+    "power": 649,
+    "perks": [
+      ["Restorative Warlock Armor"],
+      ["", ""],
+      ["Remote Connection", "Scatter Projectile Targeting"],
+      ["Heavy Ammo Finder", "Machine Gun Reserves"]
     ]
   },
   {
@@ -93,7 +89,7 @@
     "class": "warlock",
     "tier": "Legendary",
     "type": "Helmet",
-    "power": 611,
+    "power": 643,
     "perks": [
       ["Mobile Warlock Armor"],
       ["", ""],
@@ -125,7 +121,7 @@
     "class": "warlock",
     "tier": "Legendary",
     "type": "Gauntlets",
-    "power": 602,
+    "power": 650,
     "perks": [
       ["Mobile Warlock Armor"],
       ["", ""],
@@ -134,17 +130,35 @@
     ]
   },
   {
-    "id": "6917529084943194167",
-    "item": "Karnstein Armlets",
+    "id": "6917529085525613817",
+    "item": "Reverie Dawn Gloves",
     "class": "warlock",
-    "tier": "Exotic",
+    "tier": "Legendary",
     "type": "Gauntlets",
-    "power": 609,
+    "power": 642,
     "perks": [
-      ["Vampire's Caress"],
+      ["Mobile Warlock Armor"],
       ["", ""],
-      ["Fusion Rifle Loader", "Fastball", "Momentum Transfer"],
-      ["Sniper Rifle Scavenger", "Sword Scavenger"]
+      [
+        "Grenade Launcher Loader",
+        "Momentum Transfer",
+        "Enhanced Shotgun Loader"
+      ],
+      ["Fusion Rifle Scavenger", "Linear Fusion Rifle Scavenger"]
+    ]
+  },
+  {
+    "id": "6917529085459168441",
+    "item": "Prodigal Gloves",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Gauntlets",
+    "power": 618,
+    "perks": [
+      ["Restorative Warlock Armor"],
+      ["", ""],
+      ["Sidearm Loader", "Rifle Loader"],
+      ["Grenade Launcher Scavenger", "Sniper Rifle Scavenger"]
     ]
   },
   {
@@ -162,17 +176,17 @@
     ]
   },
   {
-    "id": "6917529084467248251",
-    "item": "Vigil of Heroes",
+    "id": "6917529085829398540",
+    "item": "Annealed Shaper Gloves",
     "class": "warlock",
     "tier": "Legendary",
     "type": "Gauntlets",
-    "power": 614,
+    "power": 650,
     "perks": [
       ["Restorative Warlock Armor"],
       ["", ""],
-      ["Fastball", "Impact Induction"],
-      ["Linear Fusion Rifle Scavenger", "Machine Gun Scavenger"]
+      ["Fusion Rifle Loader", "Energy Weapon Loader"],
+      ["Rocket Launcher Scavenger", "Sniper Rifle Scavenger"]
     ]
   },
   {
@@ -195,7 +209,7 @@
     "class": "warlock",
     "tier": "Legendary",
     "type": "Gauntlets",
-    "power": 636,
+    "power": 645,
     "perks": [
       ["Mobile Warlock Armor"],
       ["", ""],
@@ -204,31 +218,17 @@
     ]
   },
   {
-    "id": "6917529084585686515",
+    "id": "6917529085829393945",
     "item": "Tangled Web Gloves",
     "class": "warlock",
     "tier": "Legendary",
     "type": "Gauntlets",
-    "power": 632,
+    "power": 650,
     "perks": [
       ["Restorative Warlock Armor"],
       ["", ""],
-      ["Submachine Gun Loader", "Impact Induction"],
-      ["Fusion Rifle Scavenger", "Machine Gun Scavenger"]
-    ]
-  },
-  {
-    "id": "6917529082312870550",
-    "item": "Iron Remembrance Gloves",
-    "class": "warlock",
-    "tier": "Legendary",
-    "type": "Gauntlets",
-    "power": 610,
-    "perks": [
-      ["Restorative Warlock Armor"],
-      ["", ""],
-      ["Grenade Launcher Loader", "Hand Cannon Loader"],
-      ["Shotgun Scavenger", "Heavy Ammo Finder"]
+      ["Rocket Launcher Loader", "Light Arms Loader"],
+      ["Sniper Rifle Scavenger", "Sword Scavenger"]
     ]
   },
   {
@@ -264,17 +264,35 @@
     ]
   },
   {
-    "id": "6917529085132193455",
-    "item": "Tangled Web Robes",
+    "id": "6917529085808425164",
+    "item": "Vigil of Heroes",
     "class": "warlock",
     "tier": "Legendary",
     "type": "Chest Armor",
-    "power": 612,
+    "power": 649,
     "perks": [
       ["Restorative Warlock Armor"],
       ["", ""],
-      ["Unflinching Shotgun Aim", "Unflinching Machine Gun"],
-      ["Auto Rifle Reserves", "Primary Ammo Finder"]
+      ["Unflinching Grenade Launcher Aim", "Unflinching Sidearm Aim"],
+      ["Hand Cannon Reserves", "Special Ammo Finder"]
+    ]
+  },
+  {
+    "id": "6917529085823381623",
+    "item": "Chromatic Fire",
+    "class": "warlock",
+    "tier": "Exotic",
+    "type": "Chest Armor",
+    "power": 650,
+    "perks": [
+      ["Crystalline Transistor"],
+      ["", ""],
+      [
+        "Unflinching Auto Rifle Aim",
+        "Unflinching Scout Rifle Aim",
+        "Unflinching Rifle Aim"
+      ],
+      ["Bow Reserves", "Sidearm Reserves"]
     ]
   },
   {
@@ -283,7 +301,7 @@
     "class": "warlock",
     "tier": "Exotic",
     "type": "Chest Armor",
-    "power": 617,
+    "power": 650,
     "perks": [
       ["Battle-Hearth"],
       ["", ""],
@@ -296,17 +314,35 @@
     ]
   },
   {
-    "id": "6917529078676405419",
-    "item": "Prodigal Robes",
+    "id": "6917529086115602802",
+    "item": "Vigil of Heroes",
     "class": "warlock",
     "tier": "Legendary",
     "type": "Chest Armor",
-    "power": 609,
+    "power": 650,
     "perks": [
       ["Restorative Warlock Armor"],
       ["", ""],
-      ["Unflinching Hand Cannon Aim", "Unflinching Light Arms Aim"],
-      ["Hand Cannon Reserves", "Scout Rifle Reserves"]
+      ["Unflinching Energy Aim", "Unflinching Rifle Aim"],
+      ["Hand Cannon Reserves", "Pulse Rifle Reserves"]
+    ]
+  },
+  {
+    "id": "6917529086131768228",
+    "item": "Robes of the Great Hunt",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Chest Armor",
+    "power": 623,
+    "perks": [
+      ["Mobile Warlock Armor"],
+      ["", ""],
+      [
+        "Unflinching Bow Aim",
+        "Unflinching Kinetic Aim",
+        "Unflinching Rifle Aim"
+      ],
+      ["Hand Cannon Reserves", "Pulse Rifle Reserves"]
     ]
   },
   {
@@ -325,6 +361,20 @@
         "Enhanced Hand Cannon Dexterity"
       ],
       ["Scout Rifle Scavenger", "Submachine Gun Scavenger"]
+    ]
+  },
+  {
+    "id": "6917529073969402536",
+    "item": "Lunafaction Boots",
+    "class": "warlock",
+    "tier": "Exotic",
+    "type": "Leg Armor",
+    "power": 650,
+    "perks": [
+      ["Alchemical Etchings"],
+      ["", ""],
+      ["Outreach"],
+      ["Primary Ammo Finder"]
     ]
   },
   {
@@ -348,7 +398,7 @@
     "class": "warlock",
     "tier": "Legendary",
     "type": "Leg Armor",
-    "power": 636,
+    "power": 645,
     "perks": [
       ["Restorative Warlock Armor"],
       ["", ""],
@@ -371,35 +421,31 @@
     ]
   },
   {
-    "id": "6917529069379387130",
-    "item": "Geomag Stabilizers",
-    "class": "warlock",
-    "tier": "Exotic",
-    "type": "Leg Armor",
-    "power": 600,
-    "perks": [
-      ["Close Enough"],
-      ["", ""],
-      [
-        "Energy Dexterity",
-        "Oversize Weapon Dexterity",
-        "Enhanced Rocket Launcher Dexterity"
-      ],
-      ["Hand Cannon Scavenger", "Special Ammo Finder"]
-    ]
-  },
-  {
-    "id": "6917529084949171494",
-    "item": "Tangled Web Boots",
+    "id": "6917529085459168373",
+    "item": "Reverie Dawn Boots",
     "class": "warlock",
     "tier": "Legendary",
     "type": "Leg Armor",
-    "power": 610,
+    "power": 639,
+    "perks": [
+      ["Mobile Warlock Armor"],
+      ["", ""],
+      ["Rocket Launcher Dexterity", "Bomber", "Outreach"],
+      ["Pulse Rifle Scavenger", "Special Ammo Finder"]
+    ]
+  },
+  {
+    "id": "6917529085814070254",
+    "item": "Prodigal Steps",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Leg Armor",
+    "power": 650,
     "perks": [
       ["Restorative Warlock Armor"],
       ["", ""],
-      ["Bomber", "Oversize Weapon Dexterity"],
-      ["Hand Cannon Scavenger", "Primary Ammo Finder"]
+      ["Auto Rifle Dexterity", "Sidearm Dexterity"],
+      ["Auto Rifle Scavenger", "Pulse Rifle Scavenger"]
     ]
   },
   {
@@ -417,6 +463,18 @@
     ]
   },
   {
+    "id": "6917529081854391698",
+    "item": "Reverie Dawn Bond",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Warlock Bond",
+    "power": 643,
+    "perks": [
+      ["Insulation", "Innervation", "Recuperation"],
+      ["Shotgun Reserves", "Submachine Gun Scavenger"]
+    ]
+  },
+  {
     "id": "6917529079881120880",
     "item": "Prodigal Bond",
     "class": "warlock",
@@ -429,15 +487,27 @@
     ]
   },
   {
-    "id": "6917529083544407529",
+    "id": "6917529085664782056",
+    "item": "Prodigal Bond",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Warlock Bond",
+    "power": 649,
+    "perks": [
+      ["Innervation", "Better Already"],
+      ["Grenade Launcher Scavenger", "Primary Ammo Finder"]
+    ]
+  },
+  {
+    "id": "6917529086122203451",
     "item": "Bond of the Great Hunt",
     "class": "warlock",
     "tier": "Legendary",
     "type": "Warlock Bond",
-    "power": 581,
+    "power": 629,
     "perks": [
       ["Insulation", "Recuperation", "Better Already"],
-      ["Auto Rifle Reserves", "Fusion Rifle Scavenger"]
+      ["Shotgun Scavenger", "Submachine Gun Scavenger"]
     ]
   },
   {
@@ -478,55 +548,43 @@
     ]
   },
   {
-    "id": "6917529082092192167",
-    "item": "Bond of Remembrance",
+    "id": "6917529086219963850",
+    "item": "Tangled Web Bond",
     "class": "warlock",
     "tier": "Legendary",
     "type": "Warlock Bond",
-    "power": 600,
+    "power": 623,
     "perks": [
-      ["Innervation", "Invigoration"],
-      ["Grenade Launcher Reserves", "Shotgun Reserves"]
+      ["Recuperation", "Better Already"],
+      ["Pulse Rifle Reserves", "Grenade Launcher Scavenger"]
     ]
   },
   {
-    "id": "6917529080493532784",
-    "item": "Bond of the Great Hunt",
-    "class": "warlock",
-    "tier": "Legendary",
-    "type": "Warlock Bond",
-    "power": 600,
-    "perks": [
-      ["Invigoration", "Recuperation", "Better Already"],
-      ["Rocket Launcher Reserves", "Submachine Gun Reserves"]
-    ]
-  },
-  {
-    "id": "6917529083660248389",
-    "item": "Scatterhorn Hood",
+    "id": "6917529086122207232",
+    "item": "Hood of the Great Hunt",
     "class": "warlock",
     "tier": "Legendary",
     "type": "Helmet",
-    "power": 639,
-    "perks": [
-      ["Restorative Warlock Armor"],
-      ["", ""],
-      ["Remote Connection", "Scatter Projectile Targeting"],
-      ["Heavy Ammo Finder", "Machine Gun Reserves"]
-    ]
-  },
-  {
-    "id": "6917529074887270536",
-    "item": "Reverie Dawn Gloves",
-    "class": "warlock",
-    "tier": "Legendary",
-    "type": "Gauntlets",
-    "power": 637,
+    "power": 650,
     "perks": [
       ["Mobile Warlock Armor"],
       ["", ""],
-      ["Pulse Rifle Loader", "Impact Induction", "Light Arms Loader"],
-      ["Sword Scavenger", "Special Ammo Finder"]
+      ["Bow Targeting", "Sniper Rifle Targeting", "Hands-On"],
+      ["Shotgun Reserves", "Sniper Rifle Reserves"]
+    ]
+  },
+  {
+    "id": "6917529084585686515",
+    "item": "Tangled Web Gloves",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Gauntlets",
+    "power": 650,
+    "perks": [
+      ["Restorative Warlock Armor"],
+      ["", ""],
+      ["Submachine Gun Loader", "Impact Induction"],
+      ["Fusion Rifle Scavenger", "Machine Gun Scavenger"]
     ]
   },
   {
@@ -535,7 +593,7 @@
     "class": "warlock",
     "tier": "Legendary",
     "type": "Chest Armor",
-    "power": 630,
+    "power": 650,
     "perks": [
       ["Restorative Warlock Armor"],
       ["", ""],
@@ -544,29 +602,33 @@
     ]
   },
   {
-    "id": "6917529073969402536",
-    "item": "Lunafaction Boots",
+    "id": "6917529069379387130",
+    "item": "Geomag Stabilizers",
     "class": "warlock",
     "tier": "Exotic",
     "type": "Leg Armor",
-    "power": 630,
+    "power": 600,
     "perks": [
-      ["Alchemical Etchings"],
+      ["Close Enough"],
       ["", ""],
-      ["Outreach"],
-      ["Primary Ammo Finder"]
+      [
+        "Energy Dexterity",
+        "Oversize Weapon Dexterity",
+        "Enhanced Rocket Launcher Dexterity"
+      ],
+      ["Hand Cannon Scavenger", "Special Ammo Finder"]
     ]
   },
   {
-    "id": "6917529081854391698",
-    "item": "Reverie Dawn Bond",
+    "id": "6917529085826416375",
+    "item": "Ancient Apocalypse Bond",
     "class": "warlock",
     "tier": "Legendary",
     "type": "Warlock Bond",
-    "power": 636,
+    "power": 650,
     "perks": [
-      ["Insulation", "Innervation", "Recuperation"],
-      ["Shotgun Reserves", "Submachine Gun Scavenger"]
+      ["Invigoration", "Recuperation"],
+      ["Scout Rifle Scavenger", "Heavy Ammo Finder"]
     ]
   },
   {
@@ -1124,6 +1186,20 @@
     "perks": [[""], ["", "", ""], [""], [""]]
   },
   {
+    "id": "6917529084943194167",
+    "item": "Karnstein Armlets",
+    "class": "warlock",
+    "tier": "Exotic",
+    "type": "Gauntlets",
+    "power": 609,
+    "perks": [
+      ["Vampire's Caress"],
+      ["", ""],
+      ["Fusion Rifle Loader", "Fastball", "Momentum Transfer"],
+      ["Sniper Rifle Scavenger", "Sword Scavenger"]
+    ]
+  },
+  {
     "id": "6917529083663271730",
     "item": "Prodigal Gloves",
     "class": "warlock",
@@ -1198,6 +1274,20 @@
     ]
   },
   {
+    "id": "6917529085462210435",
+    "item": "Symmetrists' Palms",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Gauntlets",
+    "power": 10,
+    "perks": [
+      ["Restorative Warlock Armor"],
+      ["", ""],
+      ["Hand Cannon Loader", "Rocket Launcher Loader"],
+      ["Sniper Rifle Scavenger", "Special Ammo Finder"]
+    ]
+  },
+  {
     "id": "6917529079751977743",
     "item": "Karnstein Armlets",
     "class": "warlock",
@@ -1268,6 +1358,20 @@
     ]
   },
   {
+    "id": "6917529084467248251",
+    "item": "Vigil of Heroes",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Gauntlets",
+    "power": 614,
+    "perks": [
+      ["Restorative Warlock Armor"],
+      ["", ""],
+      ["Fastball", "Impact Induction"],
+      ["Linear Fusion Rifle Scavenger", "Machine Gun Scavenger"]
+    ]
+  },
+  {
     "id": "6917529067817297478",
     "item": "Scatterhorn Bond",
     "class": "warlock",
@@ -1309,6 +1413,52 @@
     ]
   },
   {
+    "id": "6917529084949171494",
+    "item": "Tangled Web Boots",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Leg Armor",
+    "power": 610,
+    "perks": [
+      ["Restorative Warlock Armor"],
+      ["", ""],
+      ["Bomber", "Oversize Weapon Dexterity"],
+      ["Hand Cannon Scavenger", "Primary Ammo Finder"]
+    ]
+  },
+  {
+    "id": "6917529084700521135",
+    "item": "Ancient Apocalypse Hood",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Helmet",
+    "power": 603,
+    "perks": [
+      ["Restorative Warlock Armor"],
+      ["", ""],
+      ["Ashes to Assets", "Heavy Lifting"],
+      ["Linear Fusion Rifle Reserves", "Shotgun Reserves"]
+    ]
+  },
+  {
+    "id": "6917529084123644740",
+    "item": "Reverie Dawn Hood",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Helmet",
+    "power": 608,
+    "perks": [
+      ["Mobile Warlock Armor"],
+      ["", ""],
+      [
+        "Fusion Rifle Targeting",
+        "Submachine Gun Targeting",
+        "Remote Connection"
+      ],
+      ["Fusion Rifle Reserves", "Linear Fusion Rifle Reserves"]
+    ]
+  },
+  {
     "id": "6917529079651656237",
     "item": "Vigil of Heroes",
     "class": "warlock",
@@ -1345,6 +1495,18 @@
     "perks": [
       ["Invigoration", "Better Already"],
       ["Hand Cannon Scavenger", "Shotgun Scavenger"]
+    ]
+  },
+  {
+    "id": "6917529083544407529",
+    "item": "Bond of the Great Hunt",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Warlock Bond",
+    "power": 581,
+    "perks": [
+      ["Insulation", "Recuperation", "Better Already"],
+      ["Auto Rifle Reserves", "Fusion Rifle Scavenger"]
     ]
   },
   {
@@ -1404,6 +1566,20 @@
     ]
   },
   {
+    "id": "6917529074887270536",
+    "item": "Reverie Dawn Gloves",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Gauntlets",
+    "power": 637,
+    "perks": [
+      ["Mobile Warlock Armor"],
+      ["", ""],
+      ["Pulse Rifle Loader", "Impact Induction", "Light Arms Loader"],
+      ["Sword Scavenger", "Special Ammo Finder"]
+    ]
+  },
+  {
     "id": "6917529081429018383",
     "item": "Crown of Tempests",
     "class": "warlock",
@@ -1415,6 +1591,20 @@
       ["", ""],
       ["Auto Rifle Targeting"],
       ["Special Ammo Finder"]
+    ]
+  },
+  {
+    "id": "6917529082312870550",
+    "item": "Iron Remembrance Gloves",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Gauntlets",
+    "power": 610,
+    "perks": [
+      ["Restorative Warlock Armor"],
+      ["", ""],
+      ["Grenade Launcher Loader", "Hand Cannon Loader"],
+      ["Shotgun Scavenger", "Heavy Ammo Finder"]
     ]
   },
   {
@@ -1441,6 +1631,20 @@
     "perks": [
       ["Innervation", "Recuperation"],
       ["Auto Rifle Scavenger", "Pulse Rifle Scavenger"]
+    ]
+  },
+  {
+    "id": "6917529086112802602",
+    "item": "Frostreach Hood",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Helmet",
+    "power": 10,
+    "perks": [
+      ["Heavy Warlock Armor"],
+      ["", ""],
+      ["Heavy Lifting"],
+      ["Rocket Launcher Reserves"]
     ]
   },
   {
@@ -1515,6 +1719,20 @@
     ]
   },
   {
+    "id": "6917529086115606825",
+    "item": "Iron Fellowship Gloves",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Gauntlets",
+    "power": 627,
+    "perks": [
+      ["Mobile Warlock Armor"],
+      ["", ""],
+      ["Sidearm Loader", "Impact Induction"],
+      ["Grenade Launcher Scavenger", "Rocket Launcher Scavenger"]
+    ]
+  },
+  {
     "id": "6917529081782754718",
     "item": "Prodigal Gloves",
     "class": "warlock",
@@ -1526,6 +1744,98 @@
       ["", ""],
       ["Fastball", "Impact Induction"],
       ["Rocket Launcher Scavenger", "Shotgun Scavenger"]
+    ]
+  },
+  {
+    "id": "6917529080493532784",
+    "item": "Bond of the Great Hunt",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Warlock Bond",
+    "power": 600,
+    "perks": [
+      ["Invigoration", "Recuperation", "Better Already"],
+      ["Rocket Launcher Reserves", "Submachine Gun Reserves"]
+    ]
+  },
+  {
+    "id": "6917529086205018552",
+    "item": "Iron Fellowship Hood",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Helmet",
+    "power": 631,
+    "perks": [
+      ["Mobile Warlock Armor"],
+      ["", ""],
+      ["Pulse Rifle Targeting", "Scout Rifle Targeting"],
+      ["Special Ammo Finder", "Machine Gun Reserves"]
+    ]
+  },
+  {
+    "id": "6917529086205013265",
+    "item": "Iron Fellowship Robes",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Chest Armor",
+    "power": 631,
+    "perks": [
+      ["Mobile Warlock Armor"],
+      ["", ""],
+      ["Unflinching Sidearm Aim", "Unflinching Submachine Gun Aim"],
+      ["Auto Rifle Reserves", "Primary Ammo Finder"]
+    ]
+  },
+  {
+    "id": "6917529086205019584",
+    "item": "Iron Fellowship Boots",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Leg Armor",
+    "power": 631,
+    "perks": [
+      ["Mobile Warlock Armor"],
+      ["", ""],
+      ["Fusion Rifle Dexterity", "Outreach"],
+      ["Arrow Scavenger", "Pulse Rifle Scavenger"]
+    ]
+  },
+  {
+    "id": "6917529082092192167",
+    "item": "Bond of Remembrance",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Warlock Bond",
+    "power": 600,
+    "perks": [
+      ["Innervation", "Invigoration"],
+      ["Grenade Launcher Reserves", "Shotgun Reserves"]
+    ]
+  },
+  {
+    "id": "6917529086205014234",
+    "item": "Iron Fellowship Bond",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Warlock Bond",
+    "power": 631,
+    "perks": [
+      ["Insulation", "Recuperation"],
+      ["Sidearm Reserves", "Rocket Launcher Scavenger"]
+    ]
+  },
+  {
+    "id": "6917529086208308976",
+    "item": "Symmetrists' Habit",
+    "class": "warlock",
+    "tier": "Legendary",
+    "type": "Chest Armor",
+    "power": 10,
+    "perks": [
+      ["Restorative Warlock Armor"],
+      ["", ""],
+      ["Unflinching Submachine Gun Aim", "Unflinching Sniper Aim"],
+      ["Sidearm Reserves", "Special Ammo Finder"]
     ]
   },
   {
