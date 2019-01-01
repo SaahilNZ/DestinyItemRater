@@ -1,5 +1,5 @@
 import React from 'react';
-import Perk from './Perk';
+import Perk from './Perk.jsx';
 import ItemComparisonResult from '../services/ItemComparisonResult';
 
 class Item extends React.Component {

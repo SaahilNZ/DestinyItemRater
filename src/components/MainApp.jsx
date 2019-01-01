@@ -1,7 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import ItemsTable from './components/ItemsTable';
+import ItemsTable from './ItemsTable.jsx';
 
 class MainApp extends React.Component {
     constructor(props) {
@@ -48,7 +46,4 @@ class MainApp extends React.Component {
     }
 }
 
-ReactDOM.render(
-    <MainApp />,
-    document.getElementById('root')
-);
+export default MainApp;

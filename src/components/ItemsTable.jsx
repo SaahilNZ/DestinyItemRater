@@ -1,7 +1,7 @@
 import React from 'react';
 import ItemStore from '../stores/ItemStore';
 import ItemActions from '../actions/ItemActions';
-import Item from './Item';
+import Item from './Item.jsx';
 import PerkActions from '../actions/PerkActions';
 import ItemComparisonResult from '../services/ItemComparisonResult';
 
