@@ -31,9 +31,9 @@ class ItemStore {
                 if (item.perks[2]) primaryPerkNames = item.perks[2];
                 if (item.perks[3]) secondaryPerkNames = item.perks[3];
             }
-            let primaryPerks = primaryPerkNames.filter(name => !(name === ""))
+            let primaryPerks = primaryPerkNames.filter(name => !(name === "") && name !== null && name !== undefined)
                             .map(perkName => allPerks.get(perkName.toLowerCase()));
-            let secondaryPerks = secondaryPerkNames.filter(name => !(name === ""))
+            let secondaryPerks = secondaryPerkNames.filter(name => !(name === "") && name !== null && name !== undefined)
                             .map(perkName => allPerks.get(perkName.toLowerCase()));
 
             return {

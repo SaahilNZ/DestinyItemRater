@@ -24,6 +24,7 @@ class ArmourComparer {
             let perkColumn = item.perks[column];
             if (perkColumn) {
                 return perkColumn
+                    .filter(name => name !== "" && name !== null && name !== undefined)
                     .map(perkName => perks.get(perkName.toLowerCase()))
                     .filter(perk => perk !== null && perk !== undefined && perk.isGood);
             }
