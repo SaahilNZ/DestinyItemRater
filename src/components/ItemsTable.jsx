@@ -2,6 +2,7 @@ import React from 'react';
 import ItemStore from '../stores/ItemStore';
 import ItemActions from '../actions/ItemActions';
 import Item from './Item.jsx';
+import ItemDefinitionActions from '../actions/ItemDefinitionActions';
 import PerkActions from '../actions/PerkActions';
 import ItemComparisonResult from '../services/ItemComparisonResult';
 
@@ -15,6 +16,7 @@ class ItemsTable extends React.Component {
     componentDidMount() {
         ItemStore.listen(this.onChange);
 
+        ItemDefinitionActions.fetchItemDefinitions();
         PerkActions.fetchPerks();
         ItemActions.fetchItems();
     }

@@ -50,9 +50,12 @@ export const build = gulp.series(bundle);
 
 export function server() {
   return nodemon({
-    script: paths.server,
-    tasks: ['build']
+    script: paths.server
   })
 }
 
 export const serve = gulp.series(build, server);
+
+gulp.watch(['*.js', 'src/**/*.js', 'src/**/*.jsx', 'routes/**/*.js'], build);
+
+export default serve;

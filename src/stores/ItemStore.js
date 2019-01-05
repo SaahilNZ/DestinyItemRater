@@ -1,5 +1,6 @@
 import ItemActions from '../actions/ItemActions';
 import alt from "../alt";
+import ItemDefinitionStore from './ItemDefinitionStore';
 import PerkStore from './PerkStore';
 
 class ItemStore {
@@ -17,7 +18,8 @@ class ItemStore {
     }
 
     onItemsUpdated(items) {
-        this.waitFor(PerkStore);
+        this.waitFor([PerkStore, ItemDefinitionStore]);
+        let itemDefinitions = ItemDefinitionStore.getState().itemDefinitions;
         let allPerks = PerkStore.getState().perks;
         this.items = items.map((item) => {
             let primaryPerkNames = [];
