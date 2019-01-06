@@ -1,6 +1,7 @@
 import alt from "../alt";
 import ItemSource from "../sources/ItemSource";
 import ComparisonService from '../services/ComparisonService';
+import ItemStore from "../stores/ItemStore";
 
 class ItemActions {
 
@@ -11,7 +12,7 @@ class ItemActions {
             try {
                 let items = await source.fetch();
                 this.onItemsUpdated(items);
-                this.compareItems(items);
+                this.compareItems(ItemStore.getState().items);
                 
             } catch (e) {
                 this.onItemsFailedToLoad(e.message);

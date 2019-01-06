@@ -7,15 +7,16 @@ class ItemDefinitionActions {
     }
     
     fetchItemDefinitions() {
-        return async (dispatch) => {
+        return (dispatch) => {
             dispatch();
             let source = new ItemDefinitionSource();
-            try {
-                let itemDefinitions = await source.fetch();
-                this.updateItemDefinitions(itemDefinitions);
-            } catch(e) {
-                this.itemDefinitionsFailed(e.message);
-            }
+            source.fetch()
+                .then(itemDefinitions => {
+                    this.updateItemDefinitions(itemDefinitions);
+                })
+                .catch(errorMessage => {
+                    this.itemDefinitionsFailed(errorMessage);
+                });
         }
     }
     

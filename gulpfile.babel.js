@@ -1,7 +1,8 @@
 import gulp from "gulp";
-import webpack from "webpack-stream";
+import webpackStream from "webpack-stream";
 import path from "path";
 import nodemon from "gulp-nodemon";
+import webpack from "webpack";
 
 const paths = {
   javascript: path.resolve(__dirname, "public/js/"),
@@ -11,7 +12,10 @@ const paths = {
 
 export function bundle() {
   return gulp.src("src/index.js").pipe(
-    webpack({
+    webpackStream({
+      optimization: {
+        minimize: false
+      },
       entry: {
         main: ["babel-polyfill", paths.app + "/index.js"]
       },

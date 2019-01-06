@@ -12,35 +12,21 @@ class ArmourComparer {
 
         // determine good perks on each item
         let perks = PerkStore.getState().perks;
-        let item1GoodPerks = this.getGoodPerks(item1, perks);
-        let item2GoodPerks = this.getGoodPerks(item2, perks);
+        let item1GoodPerks = this.getGoodPerks(item1);
+        let item2GoodPerks = this.getGoodPerks(item2);
 
         return this.comparePerks(item1GoodPerks, item2GoodPerks, perks);
     }
 
-    getGoodPerks(item, perks) {
-        let columns = this.getRateablePerkColumns(item);
-        let goodPerksInColumns = columns.map(column => {
-            let perkColumn = item.perks[column];
-            if (perkColumn) {
-                return perkColumn
-                    .filter(name => name !== "" && name !== null && name !== undefined)
-                    .map(perkName => perks.get(perkName.toLowerCase()))
-                    .filter(perk => perk !== null && perk !== undefined && perk.isGood);
-            }
-            return [];
-        })
-        return goodPerksInColumns;
-    }
-
-    getRateablePerkColumns(item) {
-        let columns = [2,3];
-        if (item.type === "Warlock Bond" ||
-            item.type === "Hunter Cloak" ||
-            item.type === "Titan Mark") {
-            columns = [0,1];
-        }
-        return columns;
+    getGoodPerks(item) {
+        return [
+            item.primaryPerks
+                .filter(perk => perk !== null && perk !== undefined)
+                .filter(perk => perk.isGood),
+            item.secondaryPerks
+                .filter(perk => perk !== null && perk !== undefined)
+                .filter(perk => perk.isGood)
+        ];
     }
 
     comparePerks(item1Perks, item2Perks, perks) {
