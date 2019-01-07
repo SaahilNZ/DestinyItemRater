@@ -2,7 +2,8 @@ import gulp from "gulp";
 import webpackStream from "webpack-stream";
 import path from "path";
 import nodemon from "gulp-nodemon";
-import webpack from "webpack";
+import fs from 'fs';
+import { execSync } from "child_process";
 
 const paths = {
   javascript: path.resolve(__dirname, "public/js/"),
@@ -53,6 +54,12 @@ export function bundle() {
 export const build = gulp.series(bundle);
 
 export function server() {
+  if (process.env.NODE_ENV === 'development') {
+    if (!fs.existsSync("key.pem") || !fs.existsSync("cert.pem")) {
+      execSync("openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -subj '/CN=www.mydom.com/O=My Company Name LTD./C=US'");
+    }
+  }
+
   return nodemon({
     script: paths.server
   })

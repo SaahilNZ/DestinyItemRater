@@ -6,7 +6,9 @@
 
 var app = require("../app");
 var debug = require("debug")("destiny-item-rater:server");
-var http = require("http");
+var https = require("https");
+var fs = require("fs");
+var path = require("path");
 
 /**
  * Get port from environment and store in Express.
@@ -19,7 +21,13 @@ app.set("port", port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+const options = {
+    key: fs.readFileSync(path.join(__dirname, "../key.pem")),
+    cert: fs.readFileSync(path.join(__dirname, "../cert.pem")),
+    passphrase: process.env.CERT_PASSPHRASE
+};
+
+var server = https.createServer(options, app);
 
 /**
  * Listen on provided port, on all network interfaces.
