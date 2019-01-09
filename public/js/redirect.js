@@ -2,8 +2,12 @@ window.onload = async () => {
     let urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get("state") === localStorage.getItem("state")) {
         let authCode = urlParams.get("code");
-        let url = `/auth/bungie?auth_code=${authCode}`;
-        fetch(url)
+        let url = "/auth/bungie";
+        fetch(url, {
+            headers: {
+                "auth_code": authCode
+            }
+        })
             .then(response => response.json())
             .then(json => {
                 var date = new Date();

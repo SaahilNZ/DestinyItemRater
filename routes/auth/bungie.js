@@ -8,7 +8,7 @@ require('dotenv').config();
 const TOKEN_URL = 'https://www.bungie.net/platform/app/oauth/token/';
 
 router.get('/', function(req, res) {
-    var code = req.query.auth_code;
+    var code = req.headers.auth_code;
     fetch(TOKEN_URL, {
         method: "POST",
         body: querystring.stringify({
