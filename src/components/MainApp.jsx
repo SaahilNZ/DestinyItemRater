@@ -28,18 +28,32 @@ class MainApp extends React.Component {
                 this.setState({
                     signedIn: true
                 });
-            }
-        } else {
-            if (refreshToken) {
-                if (refreshTokenExpiry && date.getTime() < refreshTokenExpiry) {
-                    if (await refreshAccessToken(refreshToken)) {
-                        this.setState({
-                            signedIn: true
-                        });
+            } else {
+                if (refreshToken) {
+                    if (refreshTokenExpiry && date.getTime() < refreshTokenExpiry) {
+                        if (await refreshAccessToken(refreshToken)) {
+                            this.setState({
+                                signedIn: true
+                            });
+                        }
+                    } else {
+                        this.clearLocalStorage();
                     }
+                } else {
+                    this.clearLocalStorage();
                 }
             }
+        } else {
+            this.clearLocalStorage();
         }
+    }
+
+    clearLocalStorage() {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("expires_in");
+        localStorage.removeItem("membership_id");
+        localStorage.removeItem("refresh_expires_in");
+        localStorage.removeItem("refresh_token");
     }
 
     async refreshAccessToken(refreshToken) {
