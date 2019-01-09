@@ -8,6 +8,8 @@ var indexRouter = require('./routes/index');
 var itemsRouter = require('./routes/api/items');
 var itemDefinitionsRouter = require('./routes/api/itemdefinitions');
 var perksRouter = require('./routes/api/perks');
+var authRouter = require('./routes/auth/bungie');
+var redirectRouter = require('./routes/redirect');
 
 var app = express();
 
@@ -22,9 +24,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/redirect', redirectRouter);
 app.use('/api/items', itemsRouter);
 app.use('/api/itemdefinitions', itemDefinitionsRouter);
 app.use('/api/perks', perksRouter);
+app.use('/auth/bungie', authRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

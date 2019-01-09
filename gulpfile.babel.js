@@ -1,9 +1,11 @@
 import gulp from "gulp";
 import webpackStream from "webpack-stream";
+import webpack from "webpack";
 import path from "path";
 import nodemon from "gulp-nodemon";
 import fs from 'fs';
 import { execSync } from "child_process";
+require('dotenv').config();
 
 const paths = {
   javascript: path.resolve(__dirname, "public/js/"),
@@ -14,6 +16,9 @@ const paths = {
 export function bundle() {
   return gulp.src("src/index.js").pipe(
     webpackStream({
+      plugins: [
+        new webpack.DefinePlugin({"process.env.BUNGIE_CLIENT_ID": process.env.BUNGIE_CLIENT_ID})
+      ],
       optimization: {
         minimize: false
       },
