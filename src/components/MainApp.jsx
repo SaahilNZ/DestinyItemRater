@@ -31,11 +31,7 @@ class MainApp extends React.Component {
             } else {
                 if (refreshToken) {
                     if (refreshTokenExpiry && date.getTime() < refreshTokenExpiry) {
-                        if (await refreshAccessToken(refreshToken)) {
-                            this.setState({
-                                signedIn: true
-                            });
-                        }
+                        await this.refreshAccessToken(refreshToken);
                     } else {
                         this.clearLocalStorage();
                     }
@@ -57,33 +53,23 @@ class MainApp extends React.Component {
     }
 
     async refreshAccessToken(refreshToken) {
-        console.log("refresh");
-        const TOKEN_URL = "https://www.bungie.net/platform/app/oauth/token/";
-        let token = await fetch(TOKEN_URL, {
-            method: "POST",
-            body: stringify({
-                grant_type: "refresh_token",
-                refresh_token: refreshToken
-            }),
+        let url = "/auth/bungie/refresh";
+        fetch(url, {
             headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
+                refresh_token: refreshToken
             }
-        }).then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                return null;
-            }
-        });
-        if (token) {
-            let date = new Date();
-            let accessTokenExpiry = date.getTime() + (token.expires_in * 1000);
-            localStorage.setItem("access_token", JSON.stringify(token.access_token));
-            localStorage.setItem("expires_in", JSON.stringify(accessTokenExpiry));
-            return true;
-        } else {
-            return false;
-        }
+        })
+            .then(response => response.json())
+            .then(json => {
+                let date = new Date();
+                let accessTokenExpiry = date.getTime() + (json.expires_in * 1000);
+                localStorage.setItem("access_token", JSON.stringify(json.access_token));
+                localStorage.setItem("expires_in", JSON.stringify(accessTokenExpiry));
+                this.setState({
+                    signedIn: true
+                });
+            })
+            .catch(error => console.log(error));
     }
 
     showAllItems() {

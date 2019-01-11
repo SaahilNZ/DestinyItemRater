@@ -1,6 +1,11 @@
 class ItemSource {
     async fetch() {
-        return fetch("/api/items").then(json => json.json());
+        let accessToken = localStorage.getItem("access_token");
+        return fetch("/api/items", {
+            headers: {
+                "access_token": accessToken
+            }
+        }).then(json => json.json());
     }
 }
 
