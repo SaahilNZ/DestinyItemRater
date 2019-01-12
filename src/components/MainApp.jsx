@@ -90,11 +90,16 @@ class MainApp extends React.Component {
         if (this.state.signedIn) {
             return (
                 <div>
-                    <div className="tab">
-                        <input className={"tab-link " + (this.state.showAllItems ? "tab-link-active" : "")}
-                            type="button" value="All Items" onClick={this.showAllItems} />
-                        <input className={"tab-link " + (this.state.showBadItems ? "tab-link-active" : "")}
-                            type="button" value="Bad Items" onClick={this.showBadItems} />
+                    <div className="header">
+                        <div className="tab">
+                            <input className={"tab-link float-left " + (this.state.showAllItems ? "tab-link-active" : "")}
+                                type="button" value="All Items" onClick={this.showAllItems} />
+                            <input className={"tab-link float-left " + (this.state.showBadItems ? "tab-link-active" : "")}
+                                type="button" value="Bad Items" onClick={this.showBadItems} />
+                            {/* Display profiles (default to first) */}
+                            <input className="tab-link float-right"
+                                type="button" value="Log Out" onClick={this.logOut} />
+                        </div>
                     </div>
                     <div className={this.state.showAllItems ? "" : "hidden"}>
                         <ItemsTable />
@@ -118,6 +123,11 @@ class MainApp extends React.Component {
         localStorage.setItem("state", state);
         let authUrl = `https://www.bungie.net/en/oauth/authorize?client_ID=${process.env.BUNGIE_CLIENT_ID}&response_type=code&state=${state}`;
         window.location.href = authUrl;
+    }
+
+    logOut() {
+        localStorage.clear();
+        window.location.href = "/";
     }
 }
 

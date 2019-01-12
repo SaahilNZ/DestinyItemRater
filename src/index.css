@@ -7,7 +7,6 @@
 
 .tab-link {
     background-color: inherit;
-    float: left;
     border: none;
     outline: none;
     text-decoration: none;
@@ -22,6 +21,14 @@
 
 .tab-link-active {
     background-color: #ddd;
+}
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
 }
 
 .hidden {
