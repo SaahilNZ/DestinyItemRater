@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 var itemsRouter = require('./routes/api/items');
 var itemDefinitionsRouter = require('./routes/api/itemdefinitions');
 var perksRouter = require('./routes/api/perks');
+var membershipsRouter = require('./routes/api/memberships');
 var authRouter = require('./routes/auth/bungie');
 var redirectRouter = require('./routes/redirect');
 
@@ -28,6 +29,7 @@ app.use('/redirect', redirectRouter);
 app.use('/api/items', itemsRouter);
 app.use('/api/itemdefinitions', itemDefinitionsRouter);
 app.use('/api/perks', perksRouter);
+app.use('/api/memberships', membershipsRouter);
 app.use('/auth/bungie', authRouter);
 
 // catch 404 and forward to error handler

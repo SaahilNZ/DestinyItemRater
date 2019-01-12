@@ -48,10 +48,9 @@ class MainApp extends React.Component {
         }
 
         if (membershipId) {
-            let profileUrl = `https://www.bungie.net/platform/User/GetMembershipsById/${JSON.parse(membershipId)}/-1/`;
-            fetch(profileUrl, {
+            fetch('/api/memberships', {
                 headers: {
-                    "X-Api-Key": process.env.BUNGIE_API_KEY
+                    membership_id: membershipId
                 }
             })
                 .then(response => response.json())
@@ -67,7 +66,6 @@ class MainApp extends React.Component {
                     });
                 })
                 .catch(error => console.log(error));
-            
         }
     }
 
@@ -136,10 +134,10 @@ class MainApp extends React.Component {
                     {this.state.selectedAccount && (
                         <div>
                             <div className={this.state.showAllItems ? "" : "hidden"}>
-                                <ItemsTable />
+                                <ItemsTable account={this.state.selectedAccount} />
                             </div>
                             <div className={this.state.showBadItems ? "" : "hidden"}>
-                                <ItemsTable itemFilter="bad" />
+                                <ItemsTable account={this.state.selectedAccount} itemFilter="bad" />
                             </div>
                         </div>)
                     }
