@@ -2,17 +2,21 @@ import React from 'react';
 import ItemsTable from './ItemsTable.jsx';
 import uuid from 'uuid';
 import {stringify} from 'querystring';
+import AccountSelector from './AccountSelector.jsx';
 
 class MainApp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             signedIn: false,
+            selectedAccount: null,
+            accounts: [],
             showAllItems: true,
             showBadItems: false
         }
         this.showAllItems = this.showAllItems.bind(this);
         this.showBadItems = this.showBadItems.bind(this);
+        this.selectAccount = this.selectAccount.bind(this);
     }
 
     async componentDidMount() {
@@ -41,6 +45,29 @@ class MainApp extends React.Component {
             }
         } else {
             this.clearLocalStorage();
+        }
+
+        if (membershipId) {
+            let profileUrl = `https://www.bungie.net/platform/User/GetMembershipsById/${JSON.parse(membershipId)}/-1/`;
+            fetch(profileUrl, {
+                headers: {
+                    "X-Api-Key": process.env.BUNGIE_API_KEY
+                }
+            })
+                .then(response => response.json())
+                .then(response => {
+                    response.Response.destinyMemberships.map(account => {
+                        this.setState({
+                            accounts: this.state.accounts.concat({
+                                membershipType: account.membershipType,
+                                membershipId: account.membershipId,
+                                displayName: account.displayName
+                            })
+                        });
+                    });
+                })
+                .catch(error => console.log(error));
+            
         }
     }
 
@@ -96,17 +123,26 @@ class MainApp extends React.Component {
                                 type="button" value="All Items" onClick={this.showAllItems} />
                             <input className={"tab-link float-left " + (this.state.showBadItems ? "tab-link-active" : "")}
                                 type="button" value="Bad Items" onClick={this.showBadItems} />
-                            {/* Display profiles (default to first) */}
-                            <input className="tab-link float-right"
-                                type="button" value="Log Out" onClick={this.logOut} />
+                            <div className="header-account float-right">
+                                <div className="header-separator"></div>
+                                <AccountSelector selectedAccount={this.state.selectedAccount}
+                                    accounts={this.state.accounts} onClick={this.selectAccount} />
+                                <div className="header-separator"></div>
+                                <input className="tab-link"
+                                    type="button" value="Log Out" onClick={this.logOut} />
+                            </div>
                         </div>
                     </div>
-                    <div className={this.state.showAllItems ? "" : "hidden"}>
-                        <ItemsTable />
-                    </div>
-                    <div className={this.state.showBadItems ? "" : "hidden"}>
-                        <ItemsTable itemFilter="bad" />
-                    </div>
+                    {this.state.selectedAccount && (
+                        <div>
+                            <div className={this.state.showAllItems ? "" : "hidden"}>
+                                <ItemsTable />
+                            </div>
+                            <div className={this.state.showBadItems ? "" : "hidden"}>
+                                <ItemsTable itemFilter="bad" />
+                            </div>
+                        </div>)
+                    }
                 </div>
             );
         } else {
@@ -116,6 +152,12 @@ class MainApp extends React.Component {
                 </div>
             );
         }
+    }
+
+    selectAccount(e, account) {
+        this.setState({
+            selectedAccount: account
+        });
     }
 
     logIn() {

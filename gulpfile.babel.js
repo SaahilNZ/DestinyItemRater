@@ -17,7 +17,8 @@ export function bundle() {
   return gulp.src("src/index.js").pipe(
     webpackStream({
       plugins: [
-        new webpack.DefinePlugin({"process.env.BUNGIE_CLIENT_ID": process.env.BUNGIE_CLIENT_ID})
+        new webpack.DefinePlugin({"process.env.BUNGIE_CLIENT_ID": process.env.BUNGIE_CLIENT_ID}),
+        new webpack.DefinePlugin({"process.env.BUNGIE_API_KEY": JSON.stringify(process.env.BUNGIE_API_KEY)})
       ],
       optimization: {
         minimize: false
