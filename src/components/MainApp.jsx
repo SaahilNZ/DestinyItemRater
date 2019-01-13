@@ -3,6 +3,7 @@ import ItemsTable from './ItemsTable.jsx';
 import uuid from 'uuid';
 import {stringify} from 'querystring';
 import AccountSelector from './AccountSelector.jsx';
+import ItemActions from '../actions/ItemActions.js';
 
 class MainApp extends React.Component {
     constructor(props) {
@@ -25,6 +26,8 @@ class MainApp extends React.Component {
         let membershipId = localStorage.getItem("membership_id");
         let refreshTokenExpiry = localStorage.getItem("refresh_expires_in");
         let refreshToken = localStorage.getItem("refresh_token");
+        
+        localStorage.removeItem("profile_id");
 
         if (accessToken) {
             let date = new Date();
@@ -64,6 +67,13 @@ class MainApp extends React.Component {
                             })
                         });
                     });
+                    
+                    if (this.state.accounts.length > 0) {
+                        console.log("accounts exist");
+                        this.setState({
+                            selectedAccount: this.state.accounts[0]
+                        });
+                    }
                 })
                 .catch(error => console.log(error));
         }
@@ -73,6 +83,7 @@ class MainApp extends React.Component {
         localStorage.removeItem("access_token");
         localStorage.removeItem("expires_in");
         localStorage.removeItem("membership_id");
+        localStorage.removeItem("selected_profile");
         localStorage.removeItem("refresh_expires_in");
         localStorage.removeItem("refresh_token");
     }
@@ -134,10 +145,10 @@ class MainApp extends React.Component {
                     {this.state.selectedAccount && (
                         <div>
                             <div className={this.state.showAllItems ? "" : "hidden"}>
-                                <ItemsTable account={this.state.selectedAccount} />
+                                <ItemsTable />
                             </div>
                             <div className={this.state.showBadItems ? "" : "hidden"}>
-                                <ItemsTable account={this.state.selectedAccount} itemFilter="bad" />
+                                <ItemsTable itemFilter="bad" />
                             </div>
                         </div>)
                     }
@@ -156,6 +167,9 @@ class MainApp extends React.Component {
         this.setState({
             selectedAccount: account
         });
+        
+        localStorage.setItem("selected_profile", JSON.stringify(account));
+        ItemActions.fetchItems();
     }
 
     logIn() {

@@ -53,46 +53,48 @@ class ItemStore {
                     let primaryColumn = 5;
                     let secondaryColumn = 6;
                     let itemSockets = bungieResponse.Response.itemComponents.sockets.data[item.itemInstanceId];
-                    if (itemSockets.sockets[primaryColumn]) {
-                        let socket = itemSockets.sockets[primaryColumn];
-                        if (socket.reusablePlugHashes === null || socket.reusablePlugHashes === undefined) {
-                            let plugName = "";
-                            let plugDefinition = itemDefinitions.get(socket.plugHash);
-                            if (plugDefinition !== null && plugDefinition !== undefined) {
-                                plugName = plugDefinition.name;
-                            }
-                            primaryPerkNames = [plugName];
-                        } else {
-                            primaryPerkNames = socket.reusablePlugHashes.map(
-                                plugHash => {
-                                    let plugDefinition = itemDefinitions.get(plugHash);
-                                    if (plugDefinition === null || plugDefinition === undefined) {
-                                        return null;
-                                    }
-                                    return plugDefinition.name;
+                    if (itemSockets) {
+                        if (itemSockets.sockets[primaryColumn]) {
+                            let socket = itemSockets.sockets[primaryColumn];
+                            if (socket.reusablePlugHashes === null || socket.reusablePlugHashes === undefined) {
+                                let plugName = "";
+                                let plugDefinition = itemDefinitions.get(socket.plugHash);
+                                if (plugDefinition !== null && plugDefinition !== undefined) {
+                                    plugName = plugDefinition.name;
                                 }
-                            );
+                                primaryPerkNames = [plugName];
+                            } else {
+                                primaryPerkNames = socket.reusablePlugHashes.map(
+                                    plugHash => {
+                                        let plugDefinition = itemDefinitions.get(plugHash);
+                                        if (plugDefinition === null || plugDefinition === undefined) {
+                                            return null;
+                                        }
+                                        return plugDefinition.name;
+                                    }
+                                );
+                            }
                         }
-                    }
-                    if (itemSockets.sockets[secondaryColumn]) {
-                        let socket = itemSockets.sockets[secondaryColumn];
-                        if (socket.reusablePlugHashes === null || socket.reusablePlugHashes === undefined) {
-                            let plugName = "";
-                            let plugDefinition = itemDefinitions.get(socket.plugHash);
-                            if (plugDefinition !== null && plugDefinition !== undefined) {
-                                plugName = plugDefinition.name;
-                            }
-                            secondaryPerkNames = [plugName];
-                        } else {
-                            secondaryPerkNames = socket.reusablePlugHashes.map(
-                                plugHash => {
-                                    let plugDefinition = itemDefinitions.get(plugHash);
-                                    if (plugDefinition === null || plugDefinition === undefined) {
-                                        return null;
-                                    }
-                                    return plugDefinition.name;
+                        if (itemSockets.sockets[secondaryColumn]) {
+                            let socket = itemSockets.sockets[secondaryColumn];
+                            if (socket.reusablePlugHashes === null || socket.reusablePlugHashes === undefined) {
+                                let plugName = "";
+                                let plugDefinition = itemDefinitions.get(socket.plugHash);
+                                if (plugDefinition !== null && plugDefinition !== undefined) {
+                                    plugName = plugDefinition.name;
                                 }
-                            );
+                                secondaryPerkNames = [plugName];
+                            } else {
+                                secondaryPerkNames = socket.reusablePlugHashes.map(
+                                    plugHash => {
+                                        let plugDefinition = itemDefinitions.get(plugHash);
+                                        if (plugDefinition === null || plugDefinition === undefined) {
+                                            return null;
+                                        }
+                                        return plugDefinition.name;
+                                    }
+                                );
+                            }
                         }
                     }
 
