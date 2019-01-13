@@ -3,7 +3,11 @@ import ItemsTable from './ItemsTable.jsx';
 import uuid from 'uuid';
 import {stringify} from 'querystring';
 import AccountSelector from './AccountSelector.jsx';
+import ItemStore from '../stores/ItemStore.js';
 import ItemActions from '../actions/ItemActions.js';
+import ItemComparisonResult from '../services/ItemComparisonResult';
+import Papa from 'papaparse';
+import saveAs from 'file-saver';
 
 class MainApp extends React.Component {
     constructor(props) {
@@ -69,7 +73,6 @@ class MainApp extends React.Component {
                     });
                     
                     if (this.state.accounts.length > 0) {
-                        console.log("accounts exist");
                         this.setState({
                             selectedAccount: this.state.accounts[0]
                         });
@@ -132,6 +135,12 @@ class MainApp extends React.Component {
                                 type="button" value="All Items" onClick={this.showAllItems} />
                             <input className={"tab-link float-left " + (this.state.showBadItems ? "tab-link-active" : "")}
                                 type="button" value="Bad Items" onClick={this.showBadItems} />
+                            {this.state.selectedAccount &&
+                            <div>
+                                <div className="header-separator float-left"></div>
+                                <input className="tab-link float-left" type="button"
+                                    value="Export CSV" onClick={this.exportCsv} />
+                            </div>}
                             <div className="header-account float-right">
                                 <div className="header-separator"></div>
                                 <AccountSelector selectedAccount={this.state.selectedAccount}
@@ -161,6 +170,34 @@ class MainApp extends React.Component {
                 </div>
             );
         }
+    }
+
+    exportCsv() {
+        let items = ItemStore.getState().items;
+        let badItems = items.filter(item => {
+            let isBetter = false;
+            if (item.comparisons) {
+                for (let i = 0; i < item.comparisons.length; i++) {
+                    const comparison = item.comparisons[i];
+                    if (comparison && comparison.result === ItemComparisonResult.ITEM_IS_BETTER) {
+                        isBetter = true;
+                        break;
+                    }
+                }
+            }
+            return isBetter;
+        }).map(item => {
+            return {
+                "Id": `${JSON.stringify(item.id)}`,
+                "Notes": "",
+                "Tag": "junk",
+                "Hash": item.itemHash
+            }
+        });
+
+        var csv = Papa.unparse(badItems);
+        var blob = new Blob([csv], {type: "text/csv;charset=utf-8"});
+        saveAs(blob, "junk-items.csv");
     }
 
     selectAccount(e, account) {

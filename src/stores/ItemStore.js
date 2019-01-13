@@ -105,6 +105,7 @@ class ItemStore {
                     
                     return {
                         id: item.itemInstanceId,
+                        itemHash: item.itemHash,
                         name: itemDef.name,
                         class: itemDef.class,
                         type: itemDef.itemType,
