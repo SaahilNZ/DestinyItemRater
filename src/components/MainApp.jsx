@@ -22,6 +22,7 @@ class MainApp extends React.Component {
         this.showAllItems = this.showAllItems.bind(this);
         this.showBadItems = this.showBadItems.bind(this);
         this.selectAccount = this.selectAccount.bind(this);
+        this.exportCsv = this.exportCsv.bind(this);
     }
 
     async componentDidMount() {
@@ -172,9 +173,100 @@ class MainApp extends React.Component {
         }
     }
 
+    sortItemsByPower(items) {
+        let sortedItems = {
+            hunter: {
+                helmets: [],
+                gauntlets: [],
+                chest_armour: [],
+                leg_armour: [],
+                class_items: []
+            },
+            warlock: {
+                helmets: [],
+                gauntlets: [],
+                chest_armour: [],
+                leg_armour: [],
+                class_items: []
+            },
+            titan: {
+                helmets: [],
+                gauntlets: [],
+                chest_armour: [],
+                leg_armour: [],
+                class_items: []
+            }
+        }
+
+        items.forEach(item => {
+            if (item.class === "Hunter") {
+                if (item.type === "Helmet") {
+                    sortedItems.hunter.helmets = 
+                        sortedItems.hunter.helmets.concat(item)
+                } else if (item.type === "Gauntlets") {
+                    sortedItems.hunter.gauntlets = 
+                        sortedItems.hunter.gauntlets.concat(item)
+                } else if (item.type === "Chest Armor") {
+                    sortedItems.hunter.chest_armour = 
+                        sortedItems.hunter.chest_armour.concat(item)
+                } else if (item.type === "Leg Armor") {
+                    sortedItems.hunter.leg_armour = 
+                        sortedItems.hunter.leg_armour.concat(item)
+                } else if (item.type === "Hunter Cloak") {
+                    sortedItems.hunter.class_items = 
+                        sortedItems.hunter.class_items.concat(item)
+                }
+            } else if (item.class === "Warlock") {
+                if (item.type === "Helmet") {
+                    sortedItems.warlock.helmets = 
+                        sortedItems.warlock.helmets.concat(item)
+                } else if (item.type === "Gauntlets") {
+                    sortedItems.warlock.gauntlets = 
+                        sortedItems.warlock.gauntlets.concat(item)
+                } else if (item.type === "Chest Armor") {
+                    sortedItems.warlock.chest_armour = 
+                        sortedItems.warlock.chest_armour.concat(item)
+                } else if (item.type === "Leg Armor") {
+                    sortedItems.warlock.leg_armour = 
+                        sortedItems.warlock.leg_armour.concat(item)
+                } else if (item.type === "Warlock Bond") {
+                    sortedItems.warlock.class_items = 
+                        sortedItems.warlock.class_items.concat(item)
+                }
+            } else if (item.class === "Titan") {
+                if (item.type === "Helmet") {
+                    sortedItems.titan.helmets = 
+                        sortedItems.titan.helmets.concat(item)
+                } else if (item.type === "Gauntlets") {
+                    sortedItems.titan.gauntlets = 
+                        sortedItems.titan.gauntlets.concat(item)
+                } else if (item.type === "Chest Armor") {
+                    sortedItems.titan.chest_armour = 
+                        sortedItems.titan.chest_armour.concat(item)
+                } else if (item.type === "Leg Armor") {
+                    sortedItems.titan.leg_armour = 
+                        sortedItems.titan.leg_armour.concat(item)
+                } else if (item.type === "Titan Mark") {
+                    sortedItems.titan.class_items = 
+                        sortedItems.titan.class_items.concat(item)
+                }
+            }
+        });
+
+        for (var classType in sortedItems) {
+            sortedItems[classType].helmets.sort((a, b) => b.power - a.power);
+            sortedItems[classType].gauntlets.sort((a, b) => b.power - a.power);
+            sortedItems[classType].chest_armour.sort((a, b) => b.power - a.power);
+            sortedItems[classType].leg_armour.sort((a, b) => b.power - a.power);
+            sortedItems[classType].class_items.sort((a, b) => b.power - a.power);
+        }
+
+        return sortedItems;
+    }
+
     exportCsv() {
         let items = ItemStore.getState().items;
-        let maxPower = 650;
+        let infuseCount = 4;
         let badItems = items.filter(item => {
             let isBetter = false;
             if (item.comparisons) {
@@ -187,16 +279,25 @@ class MainApp extends React.Component {
                 }
             }
             return isBetter;
-        }).map(item => {
-            return {
-                "Id": `${JSON.stringify(item.id)}`,
-                "Notes": "",
-                "Tag": item.power < maxPower - 20 ? "junk" : "infuse",
-                "Hash": item.itemHash
-            }
         });
 
-        var csv = Papa.unparse(badItems);
+        let taggedItems = [];
+        let sortedItems = this.sortItemsByPower(badItems);
+        for (var classType in sortedItems) {
+            for (var itemType in sortedItems[classType]) {
+                for (var i = 0; i < sortedItems[classType][itemType].length; i++) {
+                    var item = sortedItems[classType][itemType][i];
+                    taggedItems.push({
+                        "Id": `${JSON.stringify(item.id)}`,
+                        "Notes": "",
+                        "Tag": (i < infuseCount ? "infuse" : "junk"),
+                        "Hash": item.itemHash
+                    });
+                }
+            }
+        }
+
+        var csv = Papa.unparse(taggedItems);
         var blob = new Blob([csv], {type: "text/csv;charset=utf-8"});
         saveAs(blob, "junk-items.csv");
     }
