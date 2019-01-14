@@ -174,6 +174,7 @@ class MainApp extends React.Component {
 
     exportCsv() {
         let items = ItemStore.getState().items;
+        let maxPower = 650;
         let badItems = items.filter(item => {
             let isBetter = false;
             if (item.comparisons) {
@@ -190,7 +191,7 @@ class MainApp extends React.Component {
             return {
                 "Id": `${JSON.stringify(item.id)}`,
                 "Notes": "",
-                "Tag": "junk",
+                "Tag": item.power < maxPower - 20 ? "junk" : "infuse",
                 "Hash": item.itemHash
             }
         });

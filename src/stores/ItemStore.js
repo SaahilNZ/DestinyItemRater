@@ -102,13 +102,13 @@ class ItemStore {
                                     .map(perkName => allPerks.get(perkName.toLowerCase()));
                     let secondaryPerks = secondaryPerkNames.filter(name => name !== "" && name !== null && name !== undefined)
                                     .map(perkName => allPerks.get(perkName.toLowerCase()));
-                    
                     return {
                         id: item.itemInstanceId,
                         itemHash: item.itemHash,
                         name: itemDef.name,
                         class: itemDef.class,
                         type: itemDef.itemType,
+                        tier: itemDef.tier,
                         power: itemInstance.primaryStat.value,
                         primaryPerks: primaryPerks,
                         secondaryPerks: secondaryPerks,

@@ -13,6 +13,7 @@ class ItemDefinitionSource {
             map.set(itemDef.hash, {
                 name: itemDef.name,
                 itemType: itemDef.itemType,
+                tier: itemDef.tier,
                 class: itemDef.classType
             });
         });

@@ -9,6 +9,15 @@ class ArmourComparer {
         if (item1.type !== item2.type) {
             return ItemComparisonResult.ITEM_IS_INCOMPARABLE;
         }
+        if (item1.tier === "Exotic") {
+            if (item1.name !== item2.name) {
+                return ItemComparisonResult.ITEM_IS_INCOMPARABLE;
+            }
+        } else {
+            if (item2.tier === "Exotic") {
+                return ItemComparisonResult.ITEM_IS_INCOMPARABLE;
+            }
+        }
 
         // determine good perks on each item
         let perks = PerkStore.getState().perks;
