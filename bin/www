@@ -17,6 +17,8 @@ var path = require("path");
 var port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
+var hostname = process.env.HOSTNAME || "localhost";
+
 /**
  * Create HTTP server.
  */
@@ -33,7 +35,7 @@ var server = https.createServer(options, app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+server.listen(port, hostname);
 server.on("error", onError);
 server.on("listening", onListening);
 
