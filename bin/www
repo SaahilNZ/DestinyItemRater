@@ -9,6 +9,7 @@ var debug = require("debug")("destiny-item-rater:server");
 var https = require("https");
 var fs = require("fs");
 var path = require("path");
+require('dotenv').config();
 
 /**
  * Get port from environment and store in Express.
