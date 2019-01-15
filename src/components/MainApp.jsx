@@ -17,12 +17,18 @@ class MainApp extends React.Component {
             selectedAccount: null,
             accounts: [],
             showAllItems: true,
-            showBadItems: false
+            showBadItems: false,
+            showSearch: false,
+            searchString: "",
+            copyResult: ""
         }
         this.showAllItems = this.showAllItems.bind(this);
         this.showBadItems = this.showBadItems.bind(this);
         this.selectAccount = this.selectAccount.bind(this);
         this.exportCsv = this.exportCsv.bind(this);
+        this.generateIdSearchString = this.generateIdSearchString.bind(this);
+        this.closeSearch = this.closeSearch.bind(this);
+        this.copySearch = this.copySearch.bind(this);
     }
 
     async componentDidMount() {
@@ -140,6 +146,8 @@ class MainApp extends React.Component {
                             <div>
                                 <div className="header-separator float-left"></div>
                                 <input className="tab-link float-left" type="button"
+                                    value="Generate DIM Search Query" onClick={this.generateIdSearchString} />
+                                <input className="tab-link float-left" type="button"
                                     value="Export CSV" onClick={this.exportCsv} />
                             </div>}
                             <div className="header-account float-right">
@@ -160,8 +168,20 @@ class MainApp extends React.Component {
                             <div className={this.state.showBadItems ? "" : "hidden"}>
                                 <ItemsTable itemFilter="bad" />
                             </div>
-                        </div>)
-                    }
+                        </div>
+                    )}
+                    {this.state.showSearch && (
+                        <div className="popup-tint">
+                            <div className="popup">
+                                <textarea ref={(textarea) => this.searchTextArea = textarea} value={this.state.searchString} />
+                                {this.state.copyResult}
+                                <div className="popup-button-container">
+                                    <input className="popup-button" type="button" value="Copy" onClick={this.copySearch} />
+                                    <input className="popup-button" type="button" value="Close" onClick={this.closeSearch} />
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             );
         } else {
@@ -262,6 +282,43 @@ class MainApp extends React.Component {
         }
 
         return sortedItems;
+    }
+
+    generateIdSearchString() {
+        let items = ItemStore.getState().items;
+        let badItems = items.filter(item => {
+            let isBetter = false;
+            if (item.comparisons) {
+                for (let i = 0; i < item.comparisons.length; i++) {
+                    const comparison = item.comparisons[i];
+                    if (comparison && comparison.result === ItemComparisonResult.ITEM_IS_BETTER) {
+                        isBetter = true;
+                        break;
+                    }
+                }
+            }
+            return isBetter;
+        }).map(item => `id:${item.id}`);
+        
+        this.setState({
+            searchString: badItems.join(" or "),
+            copyResult: "",
+            showSearch: true
+        });
+    }
+
+    copySearch() {
+        this.searchTextArea.select();
+        document.execCommand('copy');
+        this.setState({
+            copyResult: "Copied"
+        });
+    }
+
+    closeSearch() {
+        this.setState({
+            showSearch: false
+        });
     }
 
     exportCsv() {
