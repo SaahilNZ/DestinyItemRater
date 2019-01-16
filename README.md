@@ -49,3 +49,5 @@ yarn start
 This will bundle the JavaScript files, and then start up the server, while watching for changes in the source JavaScript files.
 <br>
 *Note: During the first run of the application, the server may ask for a passphrase for the SSL certificate. When this happens, enter in the passphrase you supplied for the CERT_PASSPHRASE in the '.env' file.*
+<br><br>
+The website will now be running on https://localhost:3000
