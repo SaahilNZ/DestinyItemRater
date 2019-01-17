@@ -1,7 +1,10 @@
 import ItemComparisonResult from './ItemComparisonResult';
-import PerkStore from '../stores/PerkStore';
 
-class ArmourComparer {
+export default class ArmourComparer {
+    constructor(perkStore) {
+        this.perkStore = perkStore;
+    }
+
     compare(item1, item2) {
         if (item1.class !== item2.class) {
             return ItemComparisonResult.ITEM_IS_INCOMPARABLE;
@@ -10,7 +13,7 @@ class ArmourComparer {
             return ItemComparisonResult.ITEM_IS_INCOMPARABLE;
         }
         if (item1.tier === "Exotic") {
-            if (item1.name !== item2.name) {
+            if (item1.itemHash !== item2.itemHash) {
                 return ItemComparisonResult.ITEM_IS_INCOMPARABLE;
             }
         } else {
@@ -20,7 +23,7 @@ class ArmourComparer {
         }
 
         // determine good perks on each item
-        let perks = PerkStore.getState().perks;
+        let perks = this.perkStore.getState().perks;
         let item1GoodPerks = this.getGoodPerks(item1);
         let item2GoodPerks = this.getGoodPerks(item2);
 
@@ -159,5 +162,3 @@ class ArmourComparer {
         return configs;
     }
 }
-
-export default new ArmourComparer();
