@@ -16,27 +16,32 @@ function getPerkData() {
   );
 
   let perks = [];
-  papa.parse(perkFile.toString()).data.slice(1).forEach(perk => {
-    if (perk[0].trim() !== "") {
-      let upgrades = [];
-      if (perk[2] !== "") {
-        upgrades.push(perk[2]);
+  papa
+    .parse(perkFile.toString())
+    .data.slice(1)
+    .forEach(perk => {
+      if (perk[0].trim() !== "") {
+        let upgrades = [];
+        if (perk[2] !== "") {
+          upgrades.push(perk[2]);
+        }
+        if (perk[3] !== "") {
+          upgrades.push(perk[3]);
+        }
+        perks.push({
+          name: perk[0],
+          isGood: perk[1] === "good",
+          upgrades: upgrades
+        });
       }
-      if (perk[3] !== "") {
-        upgrades.push(perk[3]);
-      }
-      perks.push({
-        name: perk[0],
-        isGood: perk[1] === "good",
-        upgrades: upgrades
-      });
-    }
-  });
-  
+    });
+
   let perkMap = new Map();
   perks.forEach(perk => {
-    perkMap.set(perk.name.toLowerCase(),
-      new DestinyPerk(perk.name, perk.isGood, perk.upgrades));
+    perkMap.set(
+      perk.name.toLowerCase(),
+      new DestinyPerk(perk.name, perk.isGood, perk.upgrades)
+    );
   });
   return perkMap;
 }
@@ -91,6 +96,7 @@ describe("ArmourComparer", () => {
         ItemComparisonResult.ITEM_IS_INCOMPARABLE
       );
     });
+
     it("should return incomparable with mismatched types", () => {
       let item1 = {
         id: "6917529086448177966",
@@ -133,6 +139,7 @@ describe("ArmourComparer", () => {
         ItemComparisonResult.ITEM_IS_INCOMPARABLE
       );
     });
+
     it("should return incomparable if item 1 is exotic, but item 2 is not the same exotic", () => {
       let item1 = {
         id: "6917529081429018383",
@@ -176,6 +183,7 @@ describe("ArmourComparer", () => {
         ItemComparisonResult.ITEM_IS_INCOMPARABLE
       );
     });
+
     it("should return worse if item 1 contains all of item 2's good perks, and has more good perks than item 2", () => {
       let item1 = {
         id: "6917529084467248251",
@@ -237,6 +245,7 @@ describe("ArmourComparer", () => {
         ItemComparisonResult.ITEM_IS_WORSE
       );
     });
+
     it("should return better if item 2 contains all of item 1's good perk perks, and has more good perks than item 1", () => {
       let item1 = {
         id: "6917529080384581496",
@@ -298,6 +307,7 @@ describe("ArmourComparer", () => {
         ItemComparisonResult.ITEM_IS_BETTER
       );
     });
+
     it("should return incomparable if item 1 and item 2 don't share any good perk configurations", () => {
       let item1 = {
         id: "6917529075494009441",
@@ -346,6 +356,7 @@ describe("ArmourComparer", () => {
         ItemComparisonResult.ITEM_IS_INCOMPARABLE
       );
     });
+
     it("should return equivalent if item 1 and item 2 have the exact same good perk configurations", () => {
       let item1 = {
         id: "6917529083663271730",
@@ -390,6 +401,104 @@ describe("ArmourComparer", () => {
         secondaryPerks: [
           { name: "Grenade Launcher Scavenger", isGood: true, upgrades: [] },
           { name: "Sniper Rifle Scavenger", isGood: true, upgrades: [] }
+        ]
+      };
+      assert(
+        armourComparer.compare(item1, item2),
+        ItemComparisonResult.ITEM_IS_EQUIVALENT
+      );
+    });
+
+    it("should return worse if item 1 has all of item 2's good perk configurations, as well as an upgraded perk", () => {
+      let item1 = {
+        class: "Warlock",
+        type: "Helmet",
+        tier: "Legendary",
+        primaryPerks: [
+          {
+            name: "Enhanced Ashes To Assets",
+            isGood: true,
+            upgrades: []
+          },
+          {
+            name: "Heavy Lifting",
+            isGood: true,
+            upgrades: ["Enhanced Heavy Lifting"]
+          }
+        ],
+        secondaryPerks: [
+          { name: "Fusion Rifle Reserves", isGood: true, upgrades: [] },
+          { name: "Sword Reserves", isGood: false, upgrades: [] }
+        ]
+      };
+      let item2 = {
+        class: "Warlock",
+        type: "Helmet",
+        tier: "Legendary",
+        primaryPerks: [
+          {
+            name: "Ashes To Assets",
+            isGood: true,
+            upgrades: ["Enhanced Ashes To Assets"]
+          },
+          {
+            name: "Heavy Lifting",
+            isGood: true,
+            upgrades: ["Enhanced Heavy Lifting"]
+          }
+        ],
+        secondaryPerks: [
+          { name: "Fusion Rifle Reserves", isGood: true, upgrades: [] },
+          { name: "Sword Reserves", isGood: false, upgrades: [] }
+        ]
+      };
+      assert(
+        armourComparer.compare(item1, item2),
+        ItemComparisonResult.ITEM_IS_WORSE
+      );
+    });
+
+    it("should return equivalent if item 1 and item 2 have the same good perk configurations, but the perks are in different columns", () => {
+      let item1 = {
+        class: "Warlock",
+        type: "Helmet",
+        tier: "Legendary",
+        primaryPerks: [
+          {
+            name: "Ashes To Assets",
+            isGood: true,
+            upgrades: ["Enhanced Ashes To Assets"]
+          },
+          {
+            name: "Heavy Lifting",
+            isGood: true,
+            upgrades: ["Enhanced Heavy Lifting"]
+          }
+        ],
+        secondaryPerks: [
+          { name: "Fusion Rifle Reserves", isGood: true, upgrades: [] },
+          { name: "Sword Reserves", isGood: false, upgrades: [] }
+        ]
+      };
+      let item2 = {
+        class: "Warlock",
+        type: "Helmet",
+        tier: "Legendary",
+        primaryPerks: [
+          { name: "Fusion Rifle Reserves", isGood: true, upgrades: [] },
+          { name: "Sword Reserves", isGood: false, upgrades: [] }
+        ],
+        secondaryPerks: [
+          {
+            name: "Ashes To Assets",
+            isGood: true,
+            upgrades: ["Enhanced Ashes To Assets"]
+          },
+          {
+            name: "Heavy Lifting",
+            isGood: true,
+            upgrades: ["Enhanced Heavy Lifting"]
+          }
         ]
       };
       assert(
