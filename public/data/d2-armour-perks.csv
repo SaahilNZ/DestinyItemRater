@@ -1,15 +1,15 @@
 Perk,Rating,Upgrade 1,Upgrade 2
-Auto Rifle Targeting,bad,Scatter Projectile Targeting,
-Bow Targeting,bad,Precision Weapon Targeting,Enhanced Bow Targeting
-Fusion Rifle Targeting,bad,Scatter Projectile Targeting,
-Hand Cannon Targeting,bad,Precision Weapon Targeting,Enhanced Hand Cannon Targeting
-Linear Fusion Rifle Targeting,bad,Precision Weapon Targeting,Enhanced Linear Fusion Targeting
-Pulse Rifle Targeting,bad,Scatter Projectile Targeting,
-Scout Rifle Targeting,bad,Precision Weapon Targeting,
+Auto Rifle Targeting,good,Scatter Projectile Targeting,
+Bow Targeting,good,Precision Weapon Targeting,Enhanced Bow Targeting
+Fusion Rifle Targeting,good,Scatter Projectile Targeting,
+Hand Cannon Targeting,good,Precision Weapon Targeting,Enhanced Hand Cannon Targeting
+Linear Fusion Rifle Targeting,good,Precision Weapon Targeting,Enhanced Linear Fusion Targeting
+Pulse Rifle Targeting,good,Scatter Projectile Targeting,
+Scout Rifle Targeting,good,Precision Weapon Targeting,
 Shotgun Targeting,good,,
-Sidearm Targeting,bad,Scatter Projectile Targeting,
-Submachine Gun Targeting,bad,Scatter Projectile Targeting,
-Sniper Rifle Targeting,bad,Precision Weapon Targeting,Enhanced Sniper Rifle Targeting
+Sidearm Targeting,good,Scatter Projectile Targeting,
+Submachine Gun Targeting,good,Scatter Projectile Targeting,
+Sniper Rifle Targeting,good,Precision Weapon Targeting,Enhanced Sniper Rifle Targeting
 Machine Gun Targeting,good,,
 Light Reactor,good,,
 Ashes To Assets,good,Enhanced Ashes To Assets,
@@ -36,23 +36,23 @@ Rocket Launcher Reserves,good,,
 Shotgun Reserves,good,,
 Sniper Rifle Reserves,good,,
 Machine Gun Reserves,good,,
-Sword Reserves,bad,,
+Sword Reserves,good,,
 Special Ammo Finder,bad,,
 Heavy Ammo Finder,bad,,
     ,,,
-Auto Rifle Loader,bad,Rifle Loader,
-Bow Reloader,bad,Light Arms Loader,
-Fusion Rifle Loader,bad,Rifle Loader,
-Hand Cannon Loader,bad,Light Arms Loader,Enhanced Hand Cannon Loader
-Linear Fusion Rifle Loader,bad,Rifle Loader,
-Pulse Rifle Loader,bad,Rifle Loader,
-Scout Rifle Loader,bad,Rifle Loader,
-Shotgun Loader,bad,Large Weapon Loader,Enhanced Shotgun Loader
-Sidearm Loader,bad,Light Arms Loader,
-Submachine Gun Loader,bad,Light Arms Loader,
-Sniper Rifle Loader,bad,Rifle Loader,
-Rocket Launcher Loader,bad,Large Weapon Loader,Enhanced Rocket Launcher Loader
-Grenade Launcher Loader,bad,Large Weapon Loader,Enhanced Grenade Launcher Loader
+Auto Rifle Loader,good,Rifle Loader,
+Bow Reloader,good,Light Arms Loader,
+Fusion Rifle Loader,good,Rifle Loader,
+Hand Cannon Loader,good,Light Arms Loader,Enhanced Hand Cannon Loader
+Linear Fusion Rifle Loader,good,Rifle Loader,
+Pulse Rifle Loader,good,Rifle Loader,
+Scout Rifle Loader,good,Rifle Loader,
+Shotgun Loader,good,Large Weapon Loader,Enhanced Shotgun Loader
+Sidearm Loader,good,Light Arms Loader,
+Submachine Gun Loader,good,Light Arms Loader,
+Sniper Rifle Loader,good,Rifle Loader,
+Rocket Launcher Loader,good,Large Weapon Loader,Enhanced Rocket Launcher Loader
+Grenade Launcher Loader,good,Large Weapon Loader,Enhanced Grenade Launcher Loader
 Machine Gun Loader,good,,
 Fastball,good,,
 Impact Induction,good,Enhanced Impact Induction,
@@ -77,21 +77,21 @@ Rocket Launcher Scavenger,good,,
 Shotgun Scavenger,good,,
 Sniper Rifle Scavenger,good,,
 Machine Gun Scavenger,good,,
-Sword Scavenger,bad,,
+Sword Scavenger,good,,
 ,,,
-Unflinching Auto Rifle Aim,bad,Unflinching Rifle Aim,
-Unflinching Bow Aim,bad,Unflinching Light Arms Aim,Enhanced Unflinching Bow Aim
-Unflinching Fusion Rifle Aim,bad,Unflinching Rifle Aim,
-Unflinching Hand Cannon Aim,bad,Unflinching Light Arms Aim,
-Unflinching Linear Fusion Aim,bad,Unflinching Rifle Aim,Enhanced Unflinching Linear Fusion Aim
-Unflinching Pulse Rifle Aim,bad,Unflinching Rifle Aim,
-Unflinching Scout Rifle Aim,bad,Unflinching Rifle Aim,Enhanced Unflinching Scout Rifle Aim
-Unflinching Shotgun Aim,bad,Unflinching Large Arms,
-Unflinching Sidearm Aim,bad,Unflinching Light Arms Aim,
-Unflinching Submachine Gun Aim,bad,Unflinching Light Arms Aim,
-Unflinching Sniper Aim,bad,Unflinching Rifle Aim,Enhanced Unflinching Sniper Aim
-Unflinching Grenade Launcher Aim,bad,Unflinching Large Arms,
-Unflinching Rocket Launcher Aim,bad,Unflinching Large Arms,
+Unflinching Auto Rifle Aim,good,Unflinching Rifle Aim,
+Unflinching Bow Aim,good,Unflinching Light Arms Aim,Enhanced Unflinching Bow Aim
+Unflinching Fusion Rifle Aim,good,Unflinching Rifle Aim,
+Unflinching Hand Cannon Aim,good,Unflinching Light Arms Aim,
+Unflinching Linear Fusion Aim,good,Unflinching Rifle Aim,Enhanced Unflinching Linear Fusion Aim
+Unflinching Pulse Rifle Aim,good,Unflinching Rifle Aim,
+Unflinching Scout Rifle Aim,good,Unflinching Rifle Aim,Enhanced Unflinching Scout Rifle Aim
+Unflinching Shotgun Aim,good,Unflinching Large Arms,
+Unflinching Sidearm Aim,good,Unflinching Light Arms Aim,
+Unflinching Submachine Gun Aim,good,Unflinching Light Arms Aim,
+Unflinching Sniper Aim,good,Unflinching Rifle Aim,Enhanced Unflinching Sniper Aim
+Unflinching Grenade Launcher Aim,good,Unflinching Large Arms,
+Unflinching Rocket Launcher Aim,good,Unflinching Large Arms,
 Unflinching Machine Gun,good,,
 Unflinching Kinetic Aim,bad,,
 Unflinching Energy Aim,bad,,
@@ -102,7 +102,7 @@ Unflinching Large Arms,good,,
 Enhanced Unflinching Bow Aim,good,,
 Enhanced Unflinching Sniper Aim,good,,
 Enhanced Unflinching Linear Fusion Aim,good,,
-Enhanced Unflinching Scout Rifle Aim,bad,,
+Enhanced Unflinching Scout Rifle Aim,good,,
 ,,,
 Auto Rifle Reserves,bad,,
 Bow Reserves,bad,,
@@ -113,19 +113,19 @@ Sidearm Reserves,bad,,
 Submachine Gun Reserves,bad,,
 Primary Ammo Finder,bad,,
 ,,,
-Auto Rifle Dexterity,bad,Rifle Dexterity,
-Bow Dexterity,bad,Oversize Weapon Dexterity,
-Fusion Rifle Dexterity,bad,Rifle Dexterity,
-Hand Cannon Dexterity,bad,Light Arms Dexterity,Enhanced Hand Cannon Dexterity
-Linear Fusion Dexterity,bad,Rifle Dexterity,
-Pulse Rifle Dexterity,bad,Rifle Dexterity,
-Scout Rifle Dexterity,bad,Rifle Dexterity,
-Shotgun Dexterity,bad,Oversize Weapon Dexterity,Enhanced Shotgun Dexterity
-Sidearm Dexterity,bad,Light Arms Dexterity,
-Submachine Gun Dexterity,bad,Light Arms Dexterity,
-Sniper Rifle Dexterity,bad,Rifle Dexterity,Enhanced Sniper Rifle Dexterity
-Rocket Launcher Dexterity,bad,Oversize Weapon Dexterity,Enhanced Rocket Launcher Dexterity
-Grenade Launcher Dexterity,bad,Oversize Weapon Dexterity,Enhanced Grenade Launcher Dexterity
+Auto Rifle Dexterity,good,Rifle Dexterity,
+Bow Dexterity,good,Oversize Weapon Dexterity,
+Fusion Rifle Dexterity,good,Rifle Dexterity,
+Hand Cannon Dexterity,good,Light Arms Dexterity,Enhanced Hand Cannon Dexterity
+Linear Fusion Dexterity,good,Rifle Dexterity,
+Pulse Rifle Dexterity,good,Rifle Dexterity,
+Scout Rifle Dexterity,good,Rifle Dexterity,
+Shotgun Dexterity,good,Oversize Weapon Dexterity,Enhanced Shotgun Dexterity
+Sidearm Dexterity,good,Light Arms Dexterity,
+Submachine Gun Dexterity,good,Light Arms Dexterity,
+Sniper Rifle Dexterity,good,Rifle Dexterity,Enhanced Sniper Rifle Dexterity
+Rocket Launcher Dexterity,good,Oversize Weapon Dexterity,Enhanced Rocket Launcher Dexterity
+Grenade Launcher Dexterity,good,Oversize Weapon Dexterity,Enhanced Grenade Launcher Dexterity
 Machine Gun Dexterity,good,,
 Perpetuation,bad,,
 Traction,good,,
