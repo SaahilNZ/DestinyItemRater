@@ -19,7 +19,8 @@ class MainApp extends React.Component {
             showAllItems: true,
             showBadItems: false,
             showSearch: false,
-            searchString: "",
+            junkSearchString: "",
+            infuseSearchString: "",
             copyResult: ""
         }
         this.showAllItems = this.showAllItems.bind(this);
@@ -173,10 +174,24 @@ class MainApp extends React.Component {
                     {this.state.showSearch && (
                         <div className="popup-tint">
                             <div className="popup">
-                                <textarea ref={(textarea) => this.searchTextArea = textarea} value={this.state.searchString} />
+                                <div className="popup-flex">
+                                    <div className="copy-panel">
+                                        <p>Junk items:</p>
+                                        <textarea ref={(textarea) => this.junkSearchTextArea = textarea} value={this.state.junkSearchString} />
+                                        <div className="popup-button-container">
+                                            <input className="popup-button" type="button" value="Copy" onClick={() => this.copySearch("junk")} />
+                                        </div>
+                                    </div>
+                                    <div className="copy-panel">
+                                        <p>Infusion items:</p>
+                                        <textarea ref={(textarea) => this.infuseSearchTextArea = textarea} value={this.state.infuseSearchString} />
+                                        <div className="popup-button-container">
+                                            <input className="popup-button" type="button" value="Copy" onClick={() => this.copySearch("infuse")} />
+                                        </div>
+                                    </div>
+                                </div>
                                 {this.state.copyResult}
                                 <div className="popup-button-container">
-                                    <input className="popup-button" type="button" value="Copy" onClick={this.copySearch} />
                                     <input className="popup-button" type="button" value="Close" onClick={this.closeSearch} />
                                 </div>
                             </div>
@@ -286,6 +301,8 @@ class MainApp extends React.Component {
 
     generateIdSearchString() {
         let items = ItemStore.getState().items;
+        let maxInfuseCount = 4;
+        let maxPower = 650;
         let badItems = items.filter(item => {
             let isBetter = false;
             if (item.comparisons) {
@@ -298,21 +315,48 @@ class MainApp extends React.Component {
                 }
             }
             return isBetter;
-        }).map(item => `id:${item.id}`);
+        });
+
+        let junkItems = [];
+        let infusionItems = [];
+        let sortedItems = this.sortItemsByPower(badItems);
+        for (var classType in sortedItems) {
+            for (var itemType in sortedItems[classType]) {
+                let infuseCount = 0;
+                for (var i = 0; i < sortedItems[classType][itemType].length; i++) {
+                    var item = sortedItems[classType][itemType][i];
+                    if (item.power === maxPower || infuseCount < maxInfuseCount) {
+                        infusionItems.push(item);
+                        infuseCount += 1;
+                    } else {
+                        junkItems.push(item);
+                    }
+                }
+            }
+        }
         
         this.setState({
-            searchString: badItems.join(" or "),
+            junkSearchString: junkItems.map(item => `id:${item.id}`).join(" or "),
+            infuseSearchString: infusionItems.map(item => `id:${item.id}`).join(" or "),
             copyResult: "",
             showSearch: true
         });
     }
 
-    copySearch() {
-        this.searchTextArea.select();
-        document.execCommand('copy');
-        this.setState({
-            copyResult: "Copied"
-        });
+    copySearch(textArea) {
+        if (textArea === "junk") {
+            this.junkSearchTextArea.select();
+            document.execCommand('copy');
+            this.setState({
+                copyResult: "Copied junk items"
+            });
+        } else if (textArea === "infuse") {
+            this.infuseSearchTextArea.select();
+            document.execCommand('copy');
+            this.setState({
+                copyResult: "Copied infusion items"
+            });
+        }
     }
 
     closeSearch() {
@@ -323,7 +367,8 @@ class MainApp extends React.Component {
 
     exportCsv() {
         let items = ItemStore.getState().items;
-        let infuseCount = 4;
+        let maxInfuseCount = 4;
+        let maxPower = 650;
         let badItems = items.filter(item => {
             let isBetter = false;
             if (item.comparisons) {
@@ -342,12 +387,18 @@ class MainApp extends React.Component {
         let sortedItems = this.sortItemsByPower(badItems);
         for (var classType in sortedItems) {
             for (var itemType in sortedItems[classType]) {
+                let infuseCount = 0;
                 for (var i = 0; i < sortedItems[classType][itemType].length; i++) {
                     var item = sortedItems[classType][itemType][i];
+                    let tag = "junk";
+                    if (item.power === maxPower || infuseCount < maxInfuseCount) {
+                        tag = "infuse";
+                        infuseCount += 1;
+                    }
                     taggedItems.push({
                         "Id": `${JSON.stringify(item.id)}`,
                         "Notes": "",
-                        "Tag": (i < infuseCount ? "infuse" : "junk"),
+                        "Tag": tag,
                         "Hash": item.itemHash
                     });
                 }

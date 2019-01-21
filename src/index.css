@@ -80,12 +80,22 @@
 
 .popup {
     z-index: 4;
-    padding: 2em;
+    padding: 1em;
     background: #f1f1f1;
     position: fixed;
     top: 25%;
     left: 25%;
     width: 50%;
+}
+
+.popup-flex {
+    display: flex;
+    flex-direction: row;
+}
+
+.copy-panel {
+    margin: 1em;
+    flex-grow: 1;
 }
 
 .popup textarea {
