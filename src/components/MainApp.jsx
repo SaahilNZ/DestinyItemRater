@@ -299,10 +299,108 @@ class MainApp extends React.Component {
         return sortedItems;
     }
 
+    getMaxPowerByItemType(items) {
+        let maxPowers = {
+            hunter: {
+                helmets: 0,
+                gauntlets: 0,
+                chest_armour: 0,
+                leg_armour: 0,
+                class_items: 0
+            },
+            warlock: {
+                helmets: 0,
+                gauntlets: 0,
+                chest_armour: 0,
+                leg_armour: 0,
+                class_items: 0
+            },
+            titan: {
+                helmets: 0,
+                gauntlets: 0,
+                chest_armour: 0,
+                leg_armour: 0,
+                class_items: 0
+            }
+        }
+
+        items.forEach(item => {
+            if (item.class === "Hunter") {
+                if (item.type === "Helmet") {
+                    if (item.power > maxPowers.hunter.helmets) { 
+                        maxPowers.hunter.helmets = item.power;
+                    }
+                } else if (item.type === "Gauntlets") {
+                    if (item.power > maxPowers.hunter.gauntlets) { 
+                        maxPowers.hunter.gauntlets = item.power;
+                    }
+                } else if (item.type === "Chest Armor") {
+                    if (item.power > maxPowers.hunter.chest_armour) { 
+                        maxPowers.hunter.chest_armour = item.power;
+                    }
+                } else if (item.type === "Leg Armor") {
+                    if (item.power > maxPowers.hunter.leg_armour) { 
+                        maxPowers.hunter.leg_armour = item.power;
+                    }
+                } else if (item.type === "Hunter Cloak") {
+                    if (item.power > maxPowers.hunter.class_items) { 
+                        maxPowers.hunter.class_items = item.power;
+                    }
+                }
+            } else if (item.class === "Warlock") {
+                if (item.type === "Helmet") {
+                    if (item.power > maxPowers.warlock.helmets) { 
+                        maxPowers.warlock.helmets = item.power;
+                    }
+                } else if (item.type === "Gauntlets") {
+                    if (item.power > maxPowers.warlock.gauntlets) { 
+                        maxPowers.warlock.gauntlets = item.power;
+                    }
+                } else if (item.type === "Chest Armor") {
+                    if (item.power > maxPowers.warlock.chest_armour) { 
+                        maxPowers.warlock.chest_armour = item.power;
+                    }
+                } else if (item.type === "Leg Armor") {
+                    if (item.power > maxPowers.warlock.leg_armour) { 
+                        maxPowers.warlock.leg_armour = item.power;
+                    }
+                } else if (item.type === "Warlock Bond") {
+                    if (item.power > maxPowers.warlock.class_items) { 
+                        maxPowers.warlock.class_items = item.power;
+                    }
+                }
+            } else if (item.class === "Titan") {
+                if (item.type === "Helmet") {
+                    if (item.power > maxPowers.titan.helmets) { 
+                        maxPowers.titan.helmets = item.power;
+                    }
+                } else if (item.type === "Gauntlets") {
+                    if (item.power > maxPowers.titan.gauntlets) { 
+                        maxPowers.titan.gauntlets = item.power;
+                    }
+                } else if (item.type === "Chest Armor") {
+                    if (item.power > maxPowers.titan.chest_armour) { 
+                        maxPowers.titan.chest_armour = item.power;
+                    }
+                } else if (item.type === "Leg Armor") {
+                    if (item.power > maxPowers.titan.leg_armour) { 
+                        maxPowers.titan.leg_armour = item.power;
+                    }
+                } else if (item.type === "Titan Mark") {
+                    if (item.power > maxPowers.titan.class_items) { 
+                        maxPowers.titan.class_items = item.power;
+                    }
+                }
+            }
+        });
+
+        return maxPowers;
+    }
+
     generateIdSearchString() {
         let items = ItemStore.getState().items;
         let maxInfuseCount = 4;
-        let maxPower = 650;
+        let maxPowers = this.getMaxPowerByItemType(items);
         let badItems = items.filter(item => {
             let isBetter = false;
             if (item.comparisons) {
@@ -322,6 +420,7 @@ class MainApp extends React.Component {
         let sortedItems = this.sortItemsByPower(badItems);
         for (var classType in sortedItems) {
             for (var itemType in sortedItems[classType]) {
+                let maxPower = maxPowers[classType][itemType];
                 let infuseCount = 0;
                 for (var i = 0; i < sortedItems[classType][itemType].length; i++) {
                     var item = sortedItems[classType][itemType][i];
@@ -368,7 +467,7 @@ class MainApp extends React.Component {
     exportCsv() {
         let items = ItemStore.getState().items;
         let maxInfuseCount = 4;
-        let maxPower = 650;
+        let maxPowers = this.getMaxPowerByItemType(items);
         let badItems = items.filter(item => {
             let isBetter = false;
             if (item.comparisons) {
@@ -387,6 +486,7 @@ class MainApp extends React.Component {
         let sortedItems = this.sortItemsByPower(badItems);
         for (var classType in sortedItems) {
             for (var itemType in sortedItems[classType]) {
+                let maxPower = maxPowers[classType][itemType];
                 let infuseCount = 0;
                 for (var i = 0; i < sortedItems[classType][itemType].length; i++) {
                     var item = sortedItems[classType][itemType][i];
