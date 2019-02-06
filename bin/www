@@ -13,6 +13,23 @@ var fs = require("fs");
 var path = require("path");
 require('dotenv').config();
 
+// validate that environment variables were set
+let errors = "";
+if (!process.env.BUNGIE_API_KEY) {
+    errors += "  The 'BUNGIE_API_KEY' environment variable has not been set.\n";
+}
+if (!process.env.BUNGIE_CLIENT_ID) {
+    errors += "  The 'BUNGIE_CLIENT_ID' environment variable has not been set.\n";
+}
+if (!process.env.BUNGIE_CLIENT_SECRET) {
+    errors += "  The 'BUNGIE_CLIENT_SECRET' environment variable has not been set.\n";
+}
+if (errors) {
+    console.error('Terminating. One or more environment variables were not set:');
+    console.error(errors);
+    process.exit(1);
+}
+
 /**
  * Get port from environment and store in Express.
  */
