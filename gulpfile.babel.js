@@ -71,6 +71,11 @@ export function server() {
 
   return nodemon({
     script: paths.server
+  }).on('restart', files => {
+    if (files) {
+      let changed = files.map(f => path.basename(f));
+      console.log(`Detected changes in '${changed}'. Restarting...`)
+    }
   })
 }
 
