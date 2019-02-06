@@ -6,7 +6,7 @@ Displays a table showing all of your Destiny 2 items, as well as items similar t
 
 ## Getting Started
 
-### Prerequisites
+### 1. Install prerequisites
 
 - [Node.js](https://nodejs.org)
 - [Yarn Package Manager](https://yarnpkg.com)
@@ -20,41 +20,47 @@ choco install yarn
 choco install openssl.light
 ```
 
-### Installation
+### 2. Register on Bungie.net
 
-In order to set up this website, you will need to register an app at:
+In order to make requests to the Bungie.net API, you need to register for an API key [here](https://www.bungie.net/en/Application).
 
-https://www.bungie.net/en/Application
+Click **Create New App** and specify the following information:
 
-With the following information:
-- OAuth Client Type must be set to 'Confidential'
-- Redirect URL must be set to 'https://localhost:3000/redirect'
-- Scope must have the following items checked
-    - Read your Destiny vault and character inventory.
-    - Read your Destiny vendor and advisor information.
-    - Move or equip Destiny gear and other items.
-    - Access items like your notifications, memberships, and recent activity.
-- Origin Header must be set to 'https://localhost:3000'
+- **OAuth Client Type** must be set to `Confidential`
+- **Redirect URL** must be set to `https://localhost:3000/redirect`
+- **Scope** must have the following items checked
+    - `Read your Destiny vault and character inventory.`
+    - `Read your Destiny vendor and advisor information.`
+    - `Move or equip Destiny gear and other items.`
+    - `Access items like your notifications, memberships, and recent activity.`
+- **Origin Header** must be set to `https://localhost:3000`
 
-After submitting the application, make a note of the API Key, OAuth client_id and OAuth client_secret.
+After submitting the application, make a note of the following values in the **API Keys** section:
+- `API Key`
+- `OAuth client_id`
+- `OAuth client_secret`
 
-You will then need to create a file named '.env' at the project's root directory with the following information, replacing the values with their respective information:
-```
-BUNGIE_API_KEY<Your Bungie API Key>
-BUNGIE_CLIENT_ID=<Your Bungie OAuth client_id>
-BUNGIE_CLIENT_SECRET=<Your Bungie OAuth client_secret>
-CERT_PASSPHRASE=<A passphrase for your SSL certificate>
-```
+### 3. Create the `.env` file
 
-After this, in a command line type:
+Next, copy the `.env.template` file in the root directory and rename the copy to `.env`. Replace the variable values with the following information:
+
+| Variable               | Value                                                    |
+| ---------------------- | -------------------------------------------------------- |
+| `BUNGIE_API_KEY`       | The `Api Key` value from Bungie.net                      |
+| `BUNGIE_CLIENT_ID`     | The `OAuth client_id` value from Bungie.net              |
+| `BUNGIE_CLIENT_SECRET` | The `OAuth client_secret` value from Bungie.net          |
+| `CERT_PASSPHRASE`      | The passphrase to use when generating an SSL certificate |
+
+### 4. Install dependencies
+
+Next, restore all package dependencies using the following command:
 ```
 yarn install
 ```
-This will install all the required dependencies of the project.
 
-### Running the Website
+## Running the Website
 
-In order to run the web server, open a command line and type:
+To run the web server, run the following command:
 
 ```
 yarn start
@@ -64,4 +70,4 @@ This will bundle the JavaScript files, and then start up the server, while watch
 
 > NOTE: When running the app for the first time in non-production mode, you will be prompted to enter a passphrase for the SSL certificate. This passphrase should be the same value that is set for `CERT_PASSPHRASE` in your `.env` file.
 
-The website will now be running on https://localhost:3000
+The website will now be running on https://localhost:3000.
