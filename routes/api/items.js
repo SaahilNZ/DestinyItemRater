@@ -1,10 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var fetch = require('node-fetch');
-require('dotenv').config();
 
 /* GET armour items. */
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
     var selectedProfile = JSON.parse(req.headers.selected_profile)
     var profileId = selectedProfile.membershipId;
     var platformId = selectedProfile.membershipType;
