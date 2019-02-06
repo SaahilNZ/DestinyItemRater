@@ -7,6 +7,8 @@ import fs from 'fs';
 import { execSync } from "child_process";
 require('dotenv').config();
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const paths = {
   javascript: path.resolve(__dirname, "public/js/"),
   app: path.resolve(__dirname, "src/"),
@@ -17,8 +19,8 @@ export function bundle() {
   return gulp.src("src/index.js").pipe(
     webpackStream({
       plugins: [
-        new webpack.DefinePlugin({"process.env.BUNGIE_CLIENT_ID": process.env.BUNGIE_CLIENT_ID}),
-        new webpack.DefinePlugin({"process.env.BUNGIE_API_KEY": JSON.stringify(process.env.BUNGIE_API_KEY)})
+        new webpack.DefinePlugin({ "process.env.BUNGIE_CLIENT_ID": process.env.BUNGIE_CLIENT_ID }),
+        new webpack.DefinePlugin({ "process.env.BUNGIE_API_KEY": JSON.stringify(process.env.BUNGIE_API_KEY) })
       ],
       optimization: {
         minimize: false
@@ -53,15 +55,16 @@ export function bundle() {
         ]
       }
     })
-  )
-  .pipe(gulp.dest(paths.javascript));
+  ).pipe(gulp.dest(paths.javascript));
 }
 
 export const build = gulp.series(bundle);
 
 export function server() {
-  if (process.env.NODE_ENV === 'development') {
+  console.log(`Production: ${isProduction}`);
+  if (!isProduction) {
     if (!fs.existsSync("key.pem") || !fs.existsSync("cert.pem")) {
+      console.log('SSL cert is missing - generating one with OpenSSL...');
       execSync("openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -subj '/CN=www.mydom.com/O=My Company Name LTD./C=US'");
     }
   }
