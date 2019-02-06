@@ -65,7 +65,7 @@ export function server() {
   if (!isProduction) {
     if (!fs.existsSync("key.pem") || !fs.existsSync("cert.pem")) {
       console.log('SSL cert is missing - generating one with OpenSSL...');
-      execSync("openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -subj '/CN=www.mydom.com/O=My Company Name LTD./C=US'");
+      execSync('openssl req -x509 -nodes -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -subj "/CN=www.mydom.com/O=My Company Name LTD./C=US"');
     }
   }
 
