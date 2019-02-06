@@ -11,7 +11,12 @@ var debug = require("debug")("destiny-item-rater:server");
 var https = require("https");
 var fs = require("fs");
 var path = require("path");
-require('dotenv').config();
+
+// if we aren't running in production, load env vars from a .env file
+const isProduction = process.env.NODE_ENV === 'production';
+if (!isProduction) {
+    require('dotenv').config();
+}
 
 // validate that environment variables were set
 let errors = "";
