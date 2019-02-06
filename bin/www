@@ -23,10 +23,18 @@ var hostname = process.env.HOSTNAME || "localhost";
 /**
  * Create HTTP server.
  */
+const keyPath = path.join(__dirname, "../key.pem");
+const certPath = path.join(__dirname, "../cert.pem");
+if (!fs.existsSync(keyPath)) {
+    throw `SSL key not found at '${keyPath}'. Is OpenSSL configured?`
+}
+if (!fs.existsSync(certPath)) {
+    throw `SSL cert not found at '${certPath}'. Is OpenSSL configured?`
+}
 
 const options = {
-    key: fs.readFileSync(path.join(__dirname, "../key.pem")),
-    cert: fs.readFileSync(path.join(__dirname, "../cert.pem")),
+    key: fs.readFileSync(keyPath),
+    cert: fs.readFileSync(certPath),
     passphrase: process.env.CERT_PASSPHRASE
 };
 
@@ -74,15 +82,15 @@ function onError(error) {
     // handle specific listen errors with friendly messages
     switch (error.code) {
         case "EACCES":
-        console.error(bind + " requires elevated privileges");
-        process.exit(1);
-        break;
+            console.error(bind + " requires elevated privileges");
+            process.exit(1);
+            break;
         case "EADDRINUSE":
-        console.error(bind + " is already in use");
-        process.exit(1);
-        break;
+            console.error(bind + " is already in use");
+            process.exit(1);
+            break;
         default:
-        throw error;
+            throw error;
     }
 }
 
