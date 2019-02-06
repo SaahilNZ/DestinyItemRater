@@ -4,6 +4,8 @@
  * Module dependencies.
  */
 
+console.log('Loading modules...');
+
 var app = require("../app");
 var debug = require("debug")("destiny-item-rater:server");
 var https = require("https");
@@ -15,6 +17,7 @@ require('dotenv').config();
  * Get port from environment and store in Express.
  */
 
+console.log('Retreving port...');
 var port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
@@ -23,6 +26,7 @@ var hostname = process.env.HOSTNAME || "localhost";
 /**
  * Create HTTP server.
  */
+console.log('Creating HTTP server...');
 const keyPath = path.join(__dirname, "../key.pem");
 const certPath = path.join(__dirname, "../cert.pem");
 if (!fs.existsSync(keyPath)) {
@@ -44,6 +48,7 @@ var server = https.createServer(options, app);
  * Listen on provided port, on all network interfaces.
  */
 
+console.log(`Listening on port ${port}...`);
 server.listen(port, hostname);
 server.on("error", onError);
 server.on("listening", onListening);
