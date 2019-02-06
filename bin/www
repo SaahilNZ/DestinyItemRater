@@ -24,6 +24,9 @@ if (!process.env.BUNGIE_CLIENT_ID) {
 if (!process.env.BUNGIE_CLIENT_SECRET) {
     errors += "  The 'BUNGIE_CLIENT_SECRET' environment variable has not been set.\n";
 }
+if (!process.env.CERT_PASSPHRASE) {
+    errors += "  The 'CERT_PASSPHRASE' environment variable has not been set.\n";
+}
 if (errors) {
     console.error('Terminating. One or more environment variables were not set:');
     console.error(errors);
