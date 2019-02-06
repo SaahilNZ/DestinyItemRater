@@ -10,17 +10,17 @@ Displays a table showing all of your Destiny 2 items, as well as items similar t
 
 - [Node.js](https://nodejs.org)
 - [Yarn Package Manager](https://yarnpkg.com)
+- [OpenSSL](https://www.openssl.org/)
 
 If you are on Windows and have [Chocolatey](https://chocolatey.org/) installed, you can run the following commands in PowerShell:
 
 ``` powershell
 choco install nodejs
 choco install yarn
+choco install openssl.light
 ```
 
 ### Installation
-
-You will also need OpenSSL installed and configured in order to create an SSL certificate for the server.
 
 In order to set up this website, you will need to register an app at:<br>
 https://www.bungie.net/en/Application <br>
