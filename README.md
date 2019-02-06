@@ -1,13 +1,24 @@
 # Destiny Item Rater
 
-A web-based tool to compare and rate all of your Destiny 2 items.<br>
+A web-based tool to compare and rate all of your Destiny 2 items.
+
 Displays a table showing all of your Destiny 2 items, as well as items similar to them. This tool also allows you to export all items considered "bad" as a CSV to import into [Destiny Item Manager](https://github.com/DestinyItemManager/DIM) with "junk" and "infuse" tags, or as an ID-based search query for Destiny Item Manager.
 
 ## Getting Started
 
-### Installation
+### Prerequisites
 
-This website uses [Yarn Package Manager](https://yarnpkg.com/) to install dependencies and run the server.
+- [Node.js](https://nodejs.org)
+- [Yarn Package Manager](https://yarnpkg.com)
+
+If you are on Windows and have [Chocolatey](https://chocolatey.org/) installed, you can run the following commands in PowerShell:
+
+``` powershell
+choco install nodejs
+choco install yarn
+```
+
+### Installation
 
 You will also need OpenSSL installed and configured in order to create an SSL certificate for the server.
 
