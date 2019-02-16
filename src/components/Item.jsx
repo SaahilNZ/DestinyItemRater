@@ -27,8 +27,8 @@ class Item extends React.Component {
                                 break;
                         }
                         return (
-                        <li key={comparison.id}>
-                            <div className={className}>{comparison.id}</div>
+                        <li key={comparison.item2}>
+                            <div className={className}>{comparison.item2}</div>
                         </li>);
                     })}
                 </ul>

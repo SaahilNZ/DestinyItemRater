@@ -5,8 +5,6 @@ import ItemComparisonResult from "../src/services/ItemComparisonResult";
 import { armourComparerTest, newItem, newPerk } from './MockItemBuilder';
 
 describe("ArmourComparer", () => {
-  // let perkStore = TestHelper.getPerks();
-  // let armourComparer = new ArmourComparer(perkStore);
   describe("compare()", () => {
     TestHelper.getPermutations(['hunter', 'warlock', 'titan']).forEach((classes) => {
       let class1 = classes[0];

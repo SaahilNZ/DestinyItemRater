@@ -5,6 +5,7 @@ import Item from './Item.jsx';
 import ItemDefinitionActions from '../actions/ItemDefinitionActions';
 import PerkActions from '../actions/PerkActions';
 import ItemComparisonResult from '../services/ItemComparisonResult';
+import ComparisonStore from '../stores/ComparisonStore';
 
 class ItemsTable extends React.Component {
     constructor(props) {
@@ -45,9 +46,16 @@ class ItemsTable extends React.Component {
             );
         }
 
+        let allComparisons = ComparisonStore.getState().comparisons;
         let items;
         if (this.props.itemFilter === "bad") {
-            items = this.state.items.filter(item => {
+            items = this.state.items.map(item => {
+                let comparisons = allComparisons.filter(comparison =>
+                    comparison.item1 === item.id);
+                let newItem = item;
+                newItem.comparisons = comparisons;
+                return newItem;
+            }).filter(item => {
                 let isBetter = false;
                 if (item.comparisons) {
                     for (let i = 0; i < item.comparisons.length; i++) {
@@ -65,7 +73,13 @@ class ItemsTable extends React.Component {
                     );
                 });
         } else {
-            items = this.state.items.map((item) => {
+            items = this.state.items.map(item => {
+                let comparisons = allComparisons.filter(comparison =>
+                    comparison.item1 === item.id);
+                let newItem = item;
+                newItem.comparisons = comparisons;
+                return newItem;
+            }).map((item) => {
                 return (
                     <Item key={item.id} item={item}/>
                     );

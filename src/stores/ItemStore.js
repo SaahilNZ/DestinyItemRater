@@ -9,11 +9,9 @@ class ItemStore {
         this.errorMessage = null;
         this.bindListeners({
             onItemsFetching: ItemActions.fetchItems,
-            onItemsComparing: ItemActions.compareItems,
 
             onItemsUpdated: ItemActions.onItemsUpdated,
-            onItemsFailedToLoad: ItemActions.onItemsFailedToLoad,
-            onItemsCompared: ItemActions.onItemsCompared
+            onItemsFailedToLoad: ItemActions.onItemsFailedToLoad
         })        
     }
 
@@ -122,19 +120,6 @@ class ItemStore {
 
     onItemsFetching() {
         this.items = [];
-    }
-
-    onItemsComparing() {
-        this.items.forEach(item => item.comparisons = null);
-    }
-
-    onItemsCompared(comparisons) {
-        comparisons.forEach(comparison => {
-            let item = this.items.find(i => i.id === comparison.id);
-            if (item) {
-                item.comparisons = comparison.comparisons;
-            } 
-        });
     }
 
     onItemsFailedToLoad(errorMessage) {
