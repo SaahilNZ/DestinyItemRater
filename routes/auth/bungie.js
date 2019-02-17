@@ -3,11 +3,10 @@ var router = express.Router();
 var http = require('http');
 var querystring = require('querystring');
 var fetch = require('node-fetch');
-require('dotenv').config();
 
 const TOKEN_URL = 'https://www.bungie.net/platform/app/oauth/token/';
 
-router.get('/', function(req, res) {
+router.get('/', function (req, res) {
     var code = req.headers.auth_code;
     fetch(TOKEN_URL, {
         method: "POST",
@@ -26,7 +25,7 @@ router.get('/', function(req, res) {
         .catch(error => console.log(error));
 });
 
-router.get('/refresh', function(req, res) {
+router.get('/refresh', function (req, res) {
     var refresh = JSON.parse(req.headers.refresh_token);
     fetch(TOKEN_URL, {
         method: "POST",

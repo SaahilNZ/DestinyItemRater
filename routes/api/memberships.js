@@ -1,9 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var fetch = require('node-fetch');
-require('dotenv').config();
 
-router.get('/', function(req, res) {
+router.get('/', function (req, res) {
     var membershipId = req.headers.membership_id;
     let url = `https://www.bungie.net/platform/User/GetMembershipsById/${JSON.parse(membershipId)}/-1/`;
     fetch(url, {
