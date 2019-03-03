@@ -1,9 +1,9 @@
 import ArmourComparer from './ArmourComparer'
-import PerkStore from '../stores/PerkStore';
+import ItemStore from '../stores/ItemStore'
 
 class ComparisonService {
     compare(item1, item2) {
-        let comparer = new ArmourComparer(PerkStore);
+        let comparer = new ArmourComparer(ItemStore);
         return comparer.compare(item1, item2);
     }
 

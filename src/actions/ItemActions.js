@@ -9,8 +9,8 @@ class ItemActions {
             dispatch();
             let source = new ItemSource();
             try {
-                let items = await source.fetch();
-                this.onItemsUpdated(items);
+                let bungieResponse = await source.fetch();
+                this.onItemsLoadedForAccount(bungieResponse);
                 ComparisonActions.compareItems();
                 
             } catch (e) {
@@ -21,12 +21,20 @@ class ItemActions {
 
     // Events
 
-    onItemsUpdated(items) {
-        return items;
-    }
-
     onItemsFailedToLoad(errorMessage) {
         return errorMessage;
+    }
+
+    onItemsLoadedForAccount(bungieResponse) {
+        return bungieResponse;
+    }
+
+    onItemDefinitionsLoaded(itemDefs) {
+        return itemDefs;
+    }
+
+    onPerkRatingsLoaded(perkRatings) {
+        return perkRatings;
     }
 }
 

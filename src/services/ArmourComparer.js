@@ -111,6 +111,9 @@ export default class ArmourComparer {
     }
 
     getPerkUpgrades(perk, perks) {
+        if (perks === null || perks === undefined) {
+            return [];
+        }
         let upgradePerks = perk.upgrades
             .map(perkName => perks.get(perkName.toLowerCase()));
         let upgrades = upgradePerks.concat();

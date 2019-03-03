@@ -1,14 +1,12 @@
 import React from 'react';
 import ItemsTable from './ItemsTable.jsx';
 import uuid from 'uuid';
-import {stringify} from 'querystring';
 import AccountSelector from './AccountSelector.jsx';
 import ItemStore from '../stores/ItemStore.js';
 import ItemActions from '../actions/ItemActions.js';
 import ItemComparisonResult from '../services/ItemComparisonResult';
 import Papa from 'papaparse';
 import saveAs from 'file-saver';
-import ComparisonStore from '../stores/ComparisonStore.js';
 
 class MainApp extends React.Component {
     constructor(props) {
@@ -402,18 +400,13 @@ class MainApp extends React.Component {
         let items = ItemStore.getState().items;
         let maxInfuseCount = 4;
         let maxPowers = this.getMaxPowerByItemType(items);
-        let allComparisons = ComparisonStore.getState().comparisons;
         let badItems = items.filter(item => {
             let isBetter = false;
-            let comparisons = allComparisons.filter(comparison =>
-                comparison.item1 === item.id);
-            if (comparisons) {
-                for (let i = 0; i < item.comparisons.length; i++) {
-                    const comparison = item.comparisons[i];
-                    if (comparison && comparison.result === ItemComparisonResult.ITEM_IS_BETTER) {
-                        isBetter = true;
-                        break;
-                    }
+            for (let i = 0; i < item.comparisons.length; i++) {
+                const comparison = item.comparisons[i];
+                if (comparison && comparison.result === ItemComparisonResult.ITEM_IS_BETTER) {
+                    isBetter = true;
+                    break;
                 }
             }
             return isBetter;

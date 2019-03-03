@@ -1,26 +1,49 @@
 import ItemActions from '../actions/ItemActions';
 import alt from "../alt";
-import ItemDefinitionStore from './ItemDefinitionStore';
-import PerkStore from './PerkStore';
+import ItemDefinitionActions from '../actions/ItemDefinitionActions';
+import PerkActions from '../actions/PerkActions';
+import ComparisonService from '../services/ComparisonService';
+
+const armorTypeHashes = [
+    138197802,      // General
+    3448274439,     // Helmet
+    3551918588,     // Gauntlets
+    14239492,       // Chest Armor
+    20886954,       // Leg Armor,
+    1585787867      // Class Armor
+];
 
 class ItemStore {
     constructor() {
         this.items = [];
+        this.itemDefs = new Map();
+        this.perkRatings = new Map();
         this.errorMessage = null;
         this.bindListeners({
             onItemsFetching: ItemActions.fetchItems,
+            onItemDefinitionsFetching: ItemDefinitionActions.fetchItemDefinitions,
+            onPerkRatingsFetching: PerkActions.fetchPerks,
 
-            onItemsUpdated: ItemActions.onItemsUpdated,
-            onItemsFailedToLoad: ItemActions.onItemsFailedToLoad
+            onItemsFailedToLoad: ItemActions.onItemsFailedToLoad,
+            onItemsLoadedForAccount: ItemActions.onItemsLoadedForAccount,
+            onItemDefinitionsLoaded: ItemDefinitionActions.updateItemDefinitions,
+            onPerkRatingsLoaded: PerkActions.updatePerks
         })        
     }
 
-    onItemsUpdated(bungieResponse) {
-        this.waitFor([PerkStore, ItemDefinitionStore]);
-        let itemDefinitions = ItemDefinitionStore.getState().itemDefinitions;
-        let allPerks = PerkStore.getState().perks;
-        const armourTypes = ["Helmet", "Gauntlets", "Chest Armor", "Leg Armor", "Warlock Bond", "Hunter Cloak", "Titan Mark"]
-        
+    onItemsFetching() {
+        this.items = [];
+    }
+
+    onItemDefinitionsFetching() {
+        this.itemDefs = new Map();
+    }
+
+    onPerkRatingsFetching() {
+        this.perkRatings = new Map();
+    }
+
+    onItemsLoadedForAccount(bungieResponse) {
         let rawItems = [];
         bungieResponse.Response.profileInventory.data.items.forEach(item => {
             rawItems.push(item);
@@ -40,86 +63,153 @@ class ItemStore {
         let allItems = Array.from(new Set(rawItems));
 
         this.items = allItems.filter(item => item.itemInstanceId !== null && item.itemInstanceId !== undefined)
+            .filter(item => armorTypeHashes.includes(item.bucketHash))
             .map((item) => {
-                let itemDef = itemDefinitions.get(item.itemHash);
-                if (itemDef === null || itemDef === undefined) return null;
                 let itemInstance = bungieResponse.Response.itemComponents.instances.data[item.itemInstanceId];
                 if (itemInstance === null || itemInstance === undefined) return null;
-                if (armourTypes.includes(itemDef.itemType)) {
-                    let primaryPerkNames = [];
-                    let secondaryPerkNames = [];
-                    let primaryColumn = 5;
-                    let secondaryColumn = 6;
-                    let itemSockets = bungieResponse.Response.itemComponents.sockets.data[item.itemInstanceId];
-                    if (itemSockets) {
-                        if (itemSockets.sockets[primaryColumn]) {
-                            let socket = itemSockets.sockets[primaryColumn];
-                            if (socket.reusablePlugHashes === null || socket.reusablePlugHashes === undefined) {
-                                let plugName = "";
-                                let plugDefinition = itemDefinitions.get(socket.plugHash);
-                                if (plugDefinition !== null && plugDefinition !== undefined) {
-                                    plugName = plugDefinition.name;
-                                }
-                                primaryPerkNames = [plugName];
-                            } else {
-                                primaryPerkNames = socket.reusablePlugHashes.map(
-                                    plugHash => {
-                                        let plugDefinition = itemDefinitions.get(plugHash);
-                                        if (plugDefinition === null || plugDefinition === undefined) {
-                                            return null;
-                                        }
-                                        return plugDefinition.name;
-                                    }
-                                );
-                            }
-                        }
-                        if (itemSockets.sockets[secondaryColumn]) {
-                            let socket = itemSockets.sockets[secondaryColumn];
-                            if (socket.reusablePlugHashes === null || socket.reusablePlugHashes === undefined) {
-                                let plugName = "";
-                                let plugDefinition = itemDefinitions.get(socket.plugHash);
-                                if (plugDefinition !== null && plugDefinition !== undefined) {
-                                    plugName = plugDefinition.name;
-                                }
-                                secondaryPerkNames = [plugName];
-                            } else {
-                                secondaryPerkNames = socket.reusablePlugHashes.map(
-                                    plugHash => {
-                                        let plugDefinition = itemDefinitions.get(plugHash);
-                                        if (plugDefinition === null || plugDefinition === undefined) {
-                                            return null;
-                                        }
-                                        return plugDefinition.name;
-                                    }
-                                );
-                            }
+                
+                let primaryPerkHashes = [];
+                let secondaryPerkHashes = [];
+                let primaryColumn = 5;
+                let secondaryColumn = 6;
+                let itemSockets = bungieResponse.Response.itemComponents.sockets.data[item.itemInstanceId];
+                if (itemSockets) {
+                    if (itemSockets.sockets[primaryColumn]) {
+                        let socket = itemSockets.sockets[primaryColumn];
+                        if (socket.reusablePlugHashes === null || socket.reusablePlugHashes === undefined) {
+                            primaryPerkHashes = [socket.plugHash];
+                        } else {
+                            primaryPerkHashes = socket.reusablePlugHashes;
                         }
                     }
-
-                    let primaryPerks = primaryPerkNames.filter(name => name !== "" && name !== null && name !== undefined)
-                                    .map(perkName => allPerks.get(perkName.toLowerCase()));
-                    let secondaryPerks = secondaryPerkNames.filter(name => name !== "" && name !== null && name !== undefined)
-                                    .map(perkName => allPerks.get(perkName.toLowerCase()));
-                    return {
-                        id: item.itemInstanceId,
-                        itemHash: item.itemHash,
-                        name: itemDef.name,
-                        class: itemDef.class,
-                        type: itemDef.itemType,
-                        tier: itemDef.tier,
-                        power: itemInstance.primaryStat.value,
-                        primaryPerks: primaryPerks,
-                        secondaryPerks: secondaryPerks,
-                        comparisons: null
-                    };
+                    if (itemSockets.sockets[secondaryColumn]) {
+                        let socket = itemSockets.sockets[secondaryColumn];
+                        if (socket.reusablePlugHashes === null || socket.reusablePlugHashes === undefined) {
+                            secondaryPerkHashes = [socket.plugHash];
+                        } else {
+                            secondaryPerkHashes = socket.reusablePlugHashes;
+                        }
+                    }
                 }
-                return null;
+                let primaryPerks = primaryPerkHashes.map(perkHash => {
+                    return {
+                        name: null,
+                        isGood: false,
+                        hash: perkHash,
+                        upgrades: []
+                    };
+                });
+                let secondaryPerks = secondaryPerkHashes.map(perkHash => {
+                    return {
+                        name: null,
+                        isGood: false,
+                        hash: perkHash,
+                        upgrades: []
+                    };
+                });
+                let primaryStat = itemInstance.primaryStat;
+                return {
+                    id: item.itemInstanceId,
+                    itemHash: item.itemHash,
+                    name: null,
+                    class: null,
+                    type: null,
+                    tier: null,
+                    power: primaryStat !== null && primaryStat !== undefined ? primaryStat.value : null,
+                    primaryPerks: primaryPerks,
+                    secondaryPerks: secondaryPerks,
+                    comparisons: []
+                };
             }).filter(item => item !== null);
+        if (this.itemDefs.size > 0) {
+            this.applyItemDefinitions();
+        }
+        if (this.perkRatings.size > 0) {
+            this.applyPerkRatings();
+        }
+        this.compareItems();
         this.errorMessage = null;
     }
 
-    onItemsFetching() {
-        this.items = [];
+    onItemDefinitionsLoaded(itemDefs) {
+        this.itemDefs = itemDefs;
+        this.applyItemDefinitions();
+        this.compareItems();
+    }
+
+    onPerkRatingsLoaded(perkRatings) {
+        this.perkRatings = perkRatings;
+        this.applyPerkRatings();
+        this.compareItems();
+    }
+
+    applyItemDefinitions() {
+        const armourTypes = ["Helmet", "Gauntlets", "Chest Armor", "Leg Armor", "Warlock Bond", "Hunter Cloak", "Titan Mark"];
+        this.items.forEach((item, index) => {
+            let itemDef = this.itemDefs.get(item.itemHash);
+            if (armourTypes.includes(itemDef.itemType)) {
+                item.primaryPerks.forEach(perk => {
+                    perk.name = "";
+                    let plugDefinition = this.itemDefs.get(perk.hash);
+                    if (plugDefinition !== null && plugDefinition !== undefined) {
+                        perk.name = plugDefinition.name;
+                    }
+                });
+                item.secondaryPerks.forEach(perk => {
+                    perk.name = "";
+                    let plugDefinition = this.itemDefs.get(perk.hash);
+                    if (plugDefinition !== null && plugDefinition !== undefined) {
+                        perk.name = plugDefinition.name;
+                    }
+                });
+                item.name = itemDef.name;
+                item.class = itemDef.class;
+                item.type = itemDef.itemType;
+                item.tier = itemDef.tier;
+            } else {
+                this.items[index] = null;
+            }
+        });
+        this.items = this.items.filter(item => item !== null);
+    }
+
+    applyPerkRatings() {
+        this.items.forEach(item => {
+            item.primaryPerks.forEach(perk => {
+                let perkRating = this.perkRatings.get(perk.name.toLowerCase());
+                if (perkRating !== null && perkRating !== undefined) {
+                    perk.isGood = perkRating.isGood;
+                    perk.upgrades = perkRating.upgrades;
+                } else {
+                    perk = null;
+                }
+            });
+            item.secondaryPerks.forEach(perk => {
+                let perkRating = this.perkRatings.get(perk.name.toLowerCase());
+                if (perkRating !== null && perkRating !== undefined) {
+                    perk.isGood = perkRating.isGood;
+                    perk.upgrades = perkRating.upgrades;
+                } else {
+                    perk = null;
+                }
+            });
+        });
+    }
+
+    compareItems() {
+        this.items.forEach(item => {
+            let comparisons = [];
+            for (let i = 0; i < this.items.length; i++) {
+                const item2 = this.items[i];
+                if (item.id !== item2.id) {
+                    comparisons.push({
+                        id: item2.id,
+                        result: ComparisonService.compare(item, item2)
+                    });
+                }
+            }
+            item.comparisons = comparisons;
+        });
     }
 
     onItemsFailedToLoad(errorMessage) {
