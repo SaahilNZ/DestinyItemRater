@@ -118,12 +118,22 @@
 
 .item-table {
     width: 100%;
+    font-family: monospace;
 }
 
 .item-table, th, td {
     border-color: black;
     border-width: 1px;
     border-style: solid;
+}
+
+.item-table ul {
+    list-style: none;
+    padding: 0;
+}
+
+.item-table ul li {
+    margin-bottom: 4px;
 }
 
 td {
