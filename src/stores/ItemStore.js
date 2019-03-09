@@ -68,53 +68,39 @@ class ItemStore {
                 let itemInstance = bungieResponse.Response.itemComponents.instances.data[item.itemInstanceId];
                 if (itemInstance === null || itemInstance === undefined) return null;
 
-                let primaryPerkHashes = [];
-                let secondaryPerkHashes = [];
+                let perkColumnHashes = [];
                 let itemSockets = bungieResponse.Response.itemComponents.sockets.data[item.itemInstanceId];
                 if (itemSockets) {
-                    let primaryColumn = 5;
-                    let secondaryColumn = 6;
+                    let columnIndices = [5, 6];
 
                     // hack for Gambit Prime gear
-                    let primarySocket = itemSockets.sockets[primaryColumn];
+                    let primarySocket = itemSockets.sockets[columnIndices[0]];
                     if (primarySocket && primarySocket.plugHash == 4248210736) { // Default Shader
-                        primaryColumn++;
-                        secondaryColumn++;
+                        columnIndices = [6, 7];
                     }
 
-                    if (itemSockets.sockets[primaryColumn]) {
-                        let socket = itemSockets.sockets[primaryColumn];
-                        if (socket.reusablePlugHashes === null || socket.reusablePlugHashes === undefined) {
-                            primaryPerkHashes = [socket.plugHash];
-                        } else {
-                            primaryPerkHashes = socket.reusablePlugHashes;
+                    perkColumnHashes = columnIndices.map(i => {
+                        let socket = itemSockets.sockets[i];
+                        if (!socket) {
+                            return [];
                         }
-                    }
-                    if (itemSockets.sockets[secondaryColumn]) {
-                        let socket = itemSockets.sockets[secondaryColumn];
                         if (socket.reusablePlugHashes === null || socket.reusablePlugHashes === undefined) {
-                            secondaryPerkHashes = [socket.plugHash];
+                            return [socket.plugHash];
                         } else {
-                            secondaryPerkHashes = socket.reusablePlugHashes;
+                            return socket.reusablePlugHashes;
                         }
-                    }
+                    });
                 }
-                let primaryPerks = primaryPerkHashes.map(perkHash => {
-                    return {
-                        name: null,
-                        isGood: false,
-                        hash: perkHash,
-                        upgrades: []
-                    };
-                });
-                let secondaryPerks = secondaryPerkHashes.map(perkHash => {
-                    return {
-                        name: null,
-                        isGood: false,
-                        hash: perkHash,
-                        upgrades: []
-                    };
-                });
+                let perkColumns = perkColumnHashes.map(column =>
+                    column.map(perkHash => {
+                        return {
+                            name: null,
+                            isGood: false,
+                            hash: perkHash,
+                            upgrades: []
+                        }
+                    }));
+
                 let primaryStat = itemInstance.primaryStat;
                 return {
                     id: item.itemInstanceId,
@@ -124,10 +110,7 @@ class ItemStore {
                     type: null,
                     tier: null,
                     power: primaryStat !== null && primaryStat !== undefined ? primaryStat.value : null,
-                    perkColumns: [
-                        primaryPerks,
-                        secondaryPerks
-                    ],
+                    perkColumns: perkColumns,
                     comparisons: []
                 };
             }).filter(item => item !== null);
