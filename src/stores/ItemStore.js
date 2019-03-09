@@ -28,7 +28,7 @@ class ItemStore {
             onItemsLoadedForAccount: ItemActions.onItemsLoadedForAccount,
             onItemDefinitionsLoaded: ItemDefinitionActions.updateItemDefinitions,
             onPerkRatingsLoaded: PerkActions.updatePerks
-        })        
+        })
     }
 
     onItemsFetching() {
@@ -67,13 +67,21 @@ class ItemStore {
             .map((item) => {
                 let itemInstance = bungieResponse.Response.itemComponents.instances.data[item.itemInstanceId];
                 if (itemInstance === null || itemInstance === undefined) return null;
-                
+
                 let primaryPerkHashes = [];
                 let secondaryPerkHashes = [];
-                let primaryColumn = 5;
-                let secondaryColumn = 6;
                 let itemSockets = bungieResponse.Response.itemComponents.sockets.data[item.itemInstanceId];
                 if (itemSockets) {
+                    let primaryColumn = 5;
+                    let secondaryColumn = 6;
+
+                    // hack for Gambit Prime gear
+                    let primarySocket = itemSockets.sockets[primaryColumn];
+                    if (primarySocket && primarySocket.plugHash == 4248210736) { // Default Shader
+                        primaryColumn++;
+                        secondaryColumn++;
+                    }
+
                     if (itemSockets.sockets[primaryColumn]) {
                         let socket = itemSockets.sockets[primaryColumn];
                         if (socket.reusablePlugHashes === null || socket.reusablePlugHashes === undefined) {
