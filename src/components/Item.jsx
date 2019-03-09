@@ -61,6 +61,15 @@ class Item extends React.Component {
                     </ul>
                 </td>
                 <td>
+                    <ul>
+                        {this.props.item.perkColumns[2].filter(perk => perk != null)
+                            .map(perk =>
+                                <li>
+                                    <Perk perk={perk} />
+                                </li>)}
+                    </ul>
+                </td>
+                <td>
                     {comparisons}
                 </td>
             </tr>

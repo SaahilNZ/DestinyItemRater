@@ -71,12 +71,12 @@ class ItemStore {
                 let perkColumnHashes = [];
                 let itemSockets = bungieResponse.Response.itemComponents.sockets.data[item.itemInstanceId];
                 if (itemSockets) {
-                    let columnIndices = [5, 6];
+                    let columnIndices = [0, 5, 6];
 
                     // hack for Gambit Prime gear
-                    let primarySocket = itemSockets.sockets[columnIndices[0]];
+                    let primarySocket = itemSockets.sockets[columnIndices[1]];
                     if (primarySocket && primarySocket.plugHash == 4248210736) { // Default Shader
-                        columnIndices = [6, 7];
+                        columnIndices = [0, 6, 7];
                     }
 
                     perkColumnHashes = columnIndices.map(i => {

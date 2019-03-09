@@ -61,15 +61,15 @@ class ItemsTable extends React.Component {
                 return isBetter;
             }).map((item) => {
                 return (
-                    <Item key={item.id} item={item}/>
-                    );
-                });
+                    <Item key={item.id} item={item} />
+                );
+            });
         } else {
             items = this.state.items.map((item) => {
                 return (
-                    <Item key={item.id} item={item}/>
-                    );
-                });
+                    <Item key={item.id} item={item} />
+                );
+            });
         }
 
         return (
@@ -81,6 +81,7 @@ class ItemsTable extends React.Component {
                         <th>Class</th>
                         <th>Type</th>
                         <th>Power</th>
+                        <th>Intrinsic</th>
                         <th>Primary</th>
                         <th>Secondary</th>
                         <th>Similar items</th>

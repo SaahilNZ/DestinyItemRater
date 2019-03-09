@@ -73,13 +73,18 @@ class ArmorItemBuilder {
     return this;
   }
 
-  addPrimaryPerk(perk) {
+  addIntrinsicPerk(perk) {
     this.item.perkColumns[0].push(perk);
     return this;
   }
 
-  addSecondaryPerk(perk) {
+  addPrimaryPerk(perk) {
     this.item.perkColumns[1].push(perk);
+    return this;
+  }
+
+  addSecondaryPerk(perk) {
+    this.item.perkColumns[2].push(perk);
     return this;
   }
 
@@ -97,6 +102,7 @@ export function newItem() {
           type: "Helmet",
           perkColumns: [
             [],
+            [],
             []
           ]
         }, "Hunter Cloak"),
@@ -105,6 +111,7 @@ export function newItem() {
           type: "Helmet",
           perkColumns: [
             [],
+            [],
             []
           ]
         }, "Warlock Bond"),
@@ -112,6 +119,7 @@ export function newItem() {
           class: "Titan",
           type: "Helmet",
           perkColumns: [
+            [],
             [],
             []
           ]
