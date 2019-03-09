@@ -11,7 +11,7 @@ class TestHelper {
       );
     });
     return new MockStore({
-      perks: perkMap,
+      perkRatings: perkMap,
       errorMessage: null
     });
   }
