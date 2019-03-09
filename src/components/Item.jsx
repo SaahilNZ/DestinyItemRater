@@ -44,29 +44,35 @@ class Item extends React.Component {
                 <td>{this.props.item.power}</td>
                 <td>
                     <ul>
-                        {this.props.item.perkColumns[0].filter(perk => perk != null)
-                            .map(perk =>
+                        {
+                            (this.props.item.perkColumns[0] || []).filter(perk => perk != null).map(perk =>
                                 <li>
                                     <Perk perk={perk} />
-                                </li>)}
+                                </li>
+                            )
+                        }
                     </ul>
                 </td>
                 <td>
                     <ul>
-                        {this.props.item.perkColumns[1].filter(perk => perk != null)
-                            .map(perk =>
+                        {
+                            (this.props.item.perkColumns[1] || []).filter(perk => perk != null).map(perk =>
                                 <li>
                                     <Perk perk={perk} />
-                                </li>)}
+                                </li>
+                            )
+                        }
                     </ul>
                 </td>
                 <td>
                     <ul>
-                        {this.props.item.perkColumns[2].filter(perk => perk != null)
-                            .map(perk =>
+                        {
+                            (this.props.item.perkColumns[2] || []).filter(perk => perk != null).map(perk =>
                                 <li>
                                     <Perk perk={perk} />
-                                </li>)}
+                                </li>
+                            )
+                        }
                     </ul>
                 </td>
                 <td>
