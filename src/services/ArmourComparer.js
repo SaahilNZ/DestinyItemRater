@@ -31,14 +31,8 @@ export default class ArmourComparer {
     }
 
     getGoodPerks(item) {
-        return [
-            item.primaryPerks
-                .filter(perk => perk !== null && perk !== undefined)
-                .filter(perk => perk.isGood),
-            item.secondaryPerks
-                .filter(perk => perk !== null && perk !== undefined)
-                .filter(perk => perk.isGood)
-        ];
+        return item.perkColumns.map(
+            column => column.filter(perk => perk !== null && perk !== undefined && perk.isGood));
     }
 
     comparePerks(item1Perks, item2Perks, perks) {

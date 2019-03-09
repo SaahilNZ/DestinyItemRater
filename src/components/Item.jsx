@@ -27,9 +27,9 @@ class Item extends React.Component {
                                 break;
                         }
                         return (
-                        <li key={comparison.item2}>
-                            <div className={className}>{comparison.id}</div>
-                        </li>);
+                            <li key={comparison.item2}>
+                                <div className={className}>{comparison.id}</div>
+                            </li>);
                     })}
                 </ul>
             );
@@ -44,20 +44,20 @@ class Item extends React.Component {
                 <td>{this.props.item.power}</td>
                 <td>
                     <ul>
-                        {this.props.item.primaryPerks.filter(perk => perk != null)
+                        {this.props.item.perkColumns[0].filter(perk => perk != null)
                             .map(perk =>
-                            <li>
-                                <Perk perk={perk} />
-                            </li>)}
+                                <li>
+                                    <Perk perk={perk} />
+                                </li>)}
                     </ul>
                 </td>
                 <td>
                     <ul>
-                        {this.props.item.secondaryPerks.filter(perk => perk != null)
+                        {this.props.item.perkColumns[1].filter(perk => perk != null)
                             .map(perk =>
-                            <li>
-                                <Perk perk={perk} />
-                            </li>)}
+                                <li>
+                                    <Perk perk={perk} />
+                                </li>)}
                     </ul>
                 </td>
                 <td>

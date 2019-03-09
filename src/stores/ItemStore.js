@@ -124,8 +124,10 @@ class ItemStore {
                     type: null,
                     tier: null,
                     power: primaryStat !== null && primaryStat !== undefined ? primaryStat.value : null,
-                    primaryPerks: primaryPerks,
-                    secondaryPerks: secondaryPerks,
+                    perkColumns: [
+                        primaryPerks,
+                        secondaryPerks
+                    ],
                     comparisons: []
                 };
             }).filter(item => item !== null);
@@ -156,19 +158,14 @@ class ItemStore {
         this.items.forEach((item, index) => {
             let itemDef = this.itemDefs.get(item.itemHash);
             if (armourTypes.includes(itemDef.itemType)) {
-                item.primaryPerks.forEach(perk => {
-                    perk.name = "";
-                    let plugDefinition = this.itemDefs.get(perk.hash);
-                    if (plugDefinition !== null && plugDefinition !== undefined) {
-                        perk.name = plugDefinition.name;
-                    }
-                });
-                item.secondaryPerks.forEach(perk => {
-                    perk.name = "";
-                    let plugDefinition = this.itemDefs.get(perk.hash);
-                    if (plugDefinition !== null && plugDefinition !== undefined) {
-                        perk.name = plugDefinition.name;
-                    }
+                item.perkColumns.forEach(column => {
+                    column.forEach(perk => {
+                        perk.name = "";
+                        let plugDefinition = this.itemDefs.get(perk.hash);
+                        if (plugDefinition !== null && plugDefinition !== undefined) {
+                            perk.name = plugDefinition.name;
+                        }
+                    });
                 });
                 item.name = itemDef.name;
                 item.class = itemDef.class;
@@ -183,23 +180,16 @@ class ItemStore {
 
     applyPerkRatings() {
         this.items.forEach(item => {
-            item.primaryPerks.forEach(perk => {
-                let perkRating = this.perkRatings.get(perk.name.toLowerCase());
-                if (perkRating !== null && perkRating !== undefined) {
-                    perk.isGood = perkRating.isGood;
-                    perk.upgrades = perkRating.upgrades;
-                } else {
-                    perk = null;
-                }
-            });
-            item.secondaryPerks.forEach(perk => {
-                let perkRating = this.perkRatings.get(perk.name.toLowerCase());
-                if (perkRating !== null && perkRating !== undefined) {
-                    perk.isGood = perkRating.isGood;
-                    perk.upgrades = perkRating.upgrades;
-                } else {
-                    perk = null;
-                }
+            item.perkColumns.forEach(column => {
+                column.forEach(perk => {
+                    let perkRating = this.perkRatings.get(perk.name.toLowerCase());
+                    if (perkRating !== null && perkRating !== undefined) {
+                        perk.isGood = perkRating.isGood;
+                        perk.upgrades = perkRating.upgrades;
+                    } else {
+                        perk = null;
+                    }
+                });
             });
         });
     }

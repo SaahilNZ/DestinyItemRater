@@ -19,7 +19,7 @@ class PerkBuilder {
     this.perk.isGood = false;
     return this;
   }
-  
+
   upgrade() {
     let upgradeName = uuid.v4();
     let upgradedPerk = new PerkBuilder(upgradeName);
@@ -42,7 +42,7 @@ class ArmorItemBuilder {
     this.item.type = "Helmet";
     return this;
   }
-  
+
   gauntlets() {
     this.item.type = "Gauntlets";
     return this;
@@ -52,12 +52,12 @@ class ArmorItemBuilder {
     this.item.type = "Chest Armor";
     return this;
   }
-  
+
   boots() {
     this.item.type = "Leg Armor";
     return this;
   }
-  
+
   classItem() {
     this.item.type = this.classItemType;
     return this;
@@ -74,12 +74,12 @@ class ArmorItemBuilder {
   }
 
   addPrimaryPerk(perk) {
-    this.item.primaryPerks.push(perk);
+    this.item.perkColumns[0].push(perk);
     return this;
   }
 
   addSecondaryPerk(perk) {
-    this.item.secondaryPerks.push(perk);
+    this.item.perkColumns[1].push(perk);
     return this;
   }
 
@@ -95,20 +95,26 @@ export function newItem() {
         hunter: () => new ArmorItemBuilder({
           class: "Hunter",
           type: "Helmet",
-          primaryPerks: [],
-          secondaryPerks: []
+          perkColumns: [
+            [],
+            []
+          ]
         }, "Hunter Cloak"),
         warlock: () => new ArmorItemBuilder({
           class: "Warlock",
           type: "Helmet",
-          primaryPerks: [],
-          secondaryPerks: []
+          perkColumns: [
+            [],
+            []
+          ]
         }, "Warlock Bond"),
         titan: () => new ArmorItemBuilder({
           class: "Titan",
           type: "Helmet",
-          primaryPerks: [],
-          secondaryPerks: []
+          perkColumns: [
+            [],
+            []
+          ]
         }, "Titan Mark")
       };
     }
@@ -124,7 +130,7 @@ export function armourComparerTest(defineItem1, defineItem2, expected, armourCom
   let item1 = defineItem1(newItem().armor().warlock().gauntlets()).build();
   let item2 = defineItem2(newItem().armor().warlock().gauntlets()).build();
   assert(
-      armourComparer.compare(item1, item2),
-      expected
+    armourComparer.compare(item1, item2),
+    expected
   );
 }
