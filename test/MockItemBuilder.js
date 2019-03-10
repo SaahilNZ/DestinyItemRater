@@ -5,6 +5,7 @@ class PerkBuilder {
   constructor(name) {
     this.perk = {
       name: name,
+      hash: name,
       isGood: false,
       upgrades: []
     };
