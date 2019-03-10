@@ -1,12 +1,21 @@
 import React from 'react';
 import ItemStore from '../stores/ItemStore';
 import ItemActions from '../actions/ItemActions';
-import Item from './Item.jsx';
+import Item from './Item';
 import ItemDefinitionActions from '../actions/ItemDefinitionActions';
 import PerkActions from '../actions/PerkActions';
 import ItemComparisonResult from '../services/ItemComparisonResult';
 
-class ItemsTable extends React.Component {
+export interface ItemsTableProps {
+    itemFilter?: string;
+}
+
+export interface ItemsTableState {
+    items: any[];
+    errorMessage: string;
+}
+
+class ItemsTable extends React.Component<ItemsTableProps, ItemsTableState> {
     constructor(props) {
         super(props);
         this.state = ItemStore.getState();

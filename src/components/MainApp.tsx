@@ -1,14 +1,29 @@
-import React from 'react';
-import ItemsTable from './ItemsTable.jsx';
+import React, { createRef } from 'react';
+import ItemsTable from './ItemsTable';
 import uuid from 'uuid';
-import AccountSelector from './AccountSelector.jsx';
+import AccountSelector from './AccountSelector';
 import ItemStore from '../stores/ItemStore.js';
 import ItemActions from '../actions/ItemActions.js';
 import ItemComparisonResult from '../services/ItemComparisonResult';
 import Papa from 'papaparse';
 import saveAs from 'file-saver';
 
-class MainApp extends React.Component {
+export interface MainAppState {
+    signedIn: boolean;
+    selectedAccount: any;
+    accounts: any[];
+    showAllItems: boolean;
+    showBadItems: boolean;
+    showSearch: boolean;
+    junkSearchString: string;
+    infuseSearchString: string;
+    copyResult: string;
+}
+
+class MainApp extends React.Component<{}, MainAppState> {
+    private junkSearchTextArea = createRef<HTMLTextAreaElement>();
+    private infuseSearchTextArea = createRef<HTMLTextAreaElement>();
+
     constructor(props) {
         super(props);
         this.state = {
@@ -33,9 +48,9 @@ class MainApp extends React.Component {
 
     async componentDidMount() {
         let accessToken = localStorage.getItem("access_token");
-        let accessTokenExpiry = localStorage.getItem("expires_in");
+        let accessTokenExpiry = +localStorage.getItem("expires_in");
         let membershipId = localStorage.getItem("membership_id");
-        let refreshTokenExpiry = localStorage.getItem("refresh_expires_in");
+        let refreshTokenExpiry = +localStorage.getItem("refresh_expires_in");
         let refreshToken = localStorage.getItem("refresh_token");
         
         localStorage.removeItem("profile_id");
@@ -176,14 +191,14 @@ class MainApp extends React.Component {
                                 <div className="popup-flex">
                                     <div className="copy-panel">
                                         <p>Junk items:</p>
-                                        <textarea ref={(textarea) => this.junkSearchTextArea = textarea} value={this.state.junkSearchString} />
+                                        <textarea ref={this.junkSearchTextArea} value={this.state.junkSearchString} />
                                         <div className="popup-button-container">
                                             <input className="popup-button" type="button" value="Copy" onClick={() => this.copySearch("junk")} />
                                         </div>
                                     </div>
                                     <div className="copy-panel">
                                         <p>Infusion items:</p>
-                                        <textarea ref={(textarea) => this.infuseSearchTextArea = textarea} value={this.state.infuseSearchString} />
+                                        <textarea ref={this.infuseSearchTextArea} value={this.state.infuseSearchString} />
                                         <div className="popup-button-container">
                                             <input className="popup-button" type="button" value="Copy" onClick={() => this.copySearch("infuse")} />
                                         </div>
@@ -441,13 +456,13 @@ class MainApp extends React.Component {
 
     copySearch(textArea) {
         if (textArea === "junk") {
-            this.junkSearchTextArea.select();
+            this.junkSearchTextArea.current.select();
             document.execCommand('copy');
             this.setState({
                 copyResult: "Copied junk items"
             });
         } else if (textArea === "infuse") {
-            this.infuseSearchTextArea.select();
+            this.infuseSearchTextArea.current.select();
             document.execCommand('copy');
             this.setState({
                 copyResult: "Copied infusion items"

@@ -1,8 +1,13 @@
 import React from 'react';
-import Perk from './Perk.jsx';
+import Perk from './Perk';
 import ItemComparisonResult from '../services/ItemComparisonResult';
+import DestinyItem from '../model/DestinyItem';
 
-class Item extends React.Component {
+export interface ItemProps {
+    item: DestinyItem;
+}
+
+class Item extends React.Component<ItemProps, {}> {
     render() {
         let comparisons = <div>Loading...</div>;
         if (this.props.item.comparisons) {

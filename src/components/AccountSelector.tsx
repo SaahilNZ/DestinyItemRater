@@ -1,9 +1,15 @@
 import React from 'react';
 
-class AccountSelector extends React.Component {
+export interface AccountSelectorProps {
+    accounts: any[];
+    selectedAccount: any;
+    onClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>, account: any): any;
+}
+
+class AccountSelector extends React.Component<AccountSelectorProps, {}> {
     render() {
         let accounts = this.props.accounts.map(account => {
-            let platform;
+            let platform: string;
             if (account.membershipType === 1) {
                 platform = "Xbox";
             } else if (account.membershipType === 2) {
@@ -11,7 +17,7 @@ class AccountSelector extends React.Component {
             } else if (account.membershipType === 4) {
                 platform = "PC";
             } else {
-                Platform = "?";
+                platform = "?";
             }
             return (<div key={account.membershipId}
                 className="tab-link" onClick={(e) => this.props.onClick(e, account)}>
@@ -20,7 +26,7 @@ class AccountSelector extends React.Component {
         });
         let selectedAccount = "No Account Selected";
         if (this.props.selectedAccount) {
-            let platform;
+            let platform: string;
             if (this.props.selectedAccount.membershipType === 1) {
                 platform = "Xbox";
             } else if (this.props.selectedAccount.membershipType === 2) {
@@ -28,7 +34,7 @@ class AccountSelector extends React.Component {
             } else if (this.props.selectedAccount.membershipType === 4) {
                 platform = "PC";
             } else {
-                Platform = "?";
+                platform = "?";
             }
             selectedAccount = `[${platform}] ${this.props.selectedAccount.displayName}`;
         }
