@@ -46,14 +46,12 @@ export default class ArmourComparer {
 
             let comparablePerks = [];
             item1PerkConfig.forEach(perk => {
-                comparablePerks.push(perk);
-                comparablePerks.push(...this.getPerkUpgrades(perk, perks));
+                comparablePerks.push([perk, ...this.getPerkUpgrades(perk, perks)]);
             });
 
             for (let i2 = 0; i2 < item2PerkConfigs.length; i2++) {
                 const item2PerkConfig = item2PerkConfigs[i2];
-                let includedPerks = comparablePerks.filter(x => item2PerkConfig.some(y => y.hash === x.hash));
-                if (includedPerks.length === item1PerkConfig.length) {
+                if (comparablePerks.every(set => set.some(x => item2PerkConfig.some(y => y.hash === x.hash)))) {
                     containsConfig = true;
                     break;
                 }
@@ -69,6 +67,18 @@ export default class ArmourComparer {
             if (item2PerkConfigs.length > item1PerkConfigs.length) {
                 return ItemComparisonResult.ITEM_IS_BETTER;
             }
+
+            // both items have the same number of configurations
+            // the better item is the one that has the highest number of good perks across all configurations
+            let item1TotalPerks = item1PerkConfigs.reduce((total, config) => total + config.length, 0);
+            let item2TotalPerks = item2PerkConfigs.reduce((total, config) => total + config.length, 0);
+
+            if (item2TotalPerks > item1TotalPerks) {
+                return ItemComparisonResult.ITEM_IS_BETTER;
+            } else if (item1TotalPerks > item2TotalPerks) {
+                return ItemComparisonResult.ITEM_IS_WORSE;
+            }
+
             return ItemComparisonResult.ITEM_IS_EQUIVALENT;
         } else {
             let containsAll = true;
