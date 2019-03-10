@@ -3,6 +3,7 @@ import ItemComparisonResult from './ItemComparisonResult';
 export default class ArmourComparer {
     constructor(perkStore) {
         this.perkStore = perkStore;
+        this.perks = this.perkStore.getState().perkRatings;
     }
 
     compare(item1, item2) {
@@ -23,11 +24,11 @@ export default class ArmourComparer {
         }
 
         // determine good perks on each item
-        let perks = this.perkStore.getState().perkRatings;
+        this.perks = this.perkStore.getState().perkRatings;
         let item1GoodPerks = this.getGoodPerks(item1);
         let item2GoodPerks = this.getGoodPerks(item2);
 
-        return this.comparePerks(item1GoodPerks, item2GoodPerks, perks);
+        return this.comparePerks(item1GoodPerks, item2GoodPerks);
     }
 
     getGoodPerks(item) {
@@ -35,35 +36,11 @@ export default class ArmourComparer {
             column => column.filter(perk => perk !== null && perk !== undefined && perk.isGood));
     }
 
-    comparePerks(item1Perks, item2Perks, perks) {
+    comparePerks(item1Perks, item2Perks) {
         let item1PerkConfigs = this.getPerkConfigs(item1Perks);
         let item2PerkConfigs = this.getPerkConfigs(item2Perks);
 
-        let isBetterOrEqual = true;
-        for (let i1 = 0; i1 < item1PerkConfigs.length; i1++) {
-            const item1PerkConfig = item1PerkConfigs[i1];
-            let containsConfig = false;
-
-            let comparablePerks = [];
-            item1PerkConfig.forEach(perk => {
-                comparablePerks.push([perk, ...this.getPerkUpgrades(perk, perks)]);
-            });
-
-            for (let i2 = 0; i2 < item2PerkConfigs.length; i2++) {
-                const item2PerkConfig = item2PerkConfigs[i2];
-                if (comparablePerks.every(set => set.some(x => item2PerkConfig.some(y => y.hash === x.hash)))) {
-                    containsConfig = true;
-                    break;
-                }
-            }
-
-            if (!containsConfig) {
-                isBetterOrEqual = false;
-                break;
-            }
-        }
-
-        if (isBetterOrEqual) {
+        if (item1PerkConfigs.every(i1Config => this.isConfigIncluded(item2PerkConfigs, i1Config))) {
             if (item2PerkConfigs.length > item1PerkConfigs.length) {
                 return ItemComparisonResult.ITEM_IS_BETTER;
             }
@@ -81,32 +58,7 @@ export default class ArmourComparer {
 
             return ItemComparisonResult.ITEM_IS_EQUIVALENT;
         } else {
-            let containsAll = true;
-            for (let i1 = 0; i1 < item2PerkConfigs.length; i1++) {
-                const item2PerkConfig = item2PerkConfigs[i1];
-                let containsConfig = false;
-
-                let comparablePerks = [];
-                item2PerkConfig.forEach(perk => {
-                    comparablePerks.push(perk);
-                    comparablePerks.push(...this.getPerkUpgrades(perk, perks));
-                });
-
-                for (let i2 = 0; i2 < item1PerkConfigs.length; i2++) {
-                    const item1PerkConfig = item1PerkConfigs[i2];
-                    if (comparablePerks.filter(
-                        p => item1PerkConfig.includes(p)).length === item2PerkConfig.length) {
-                        containsConfig = true;
-                        break;
-                    }
-                }
-
-                if (!containsConfig) {
-                    containsAll = false;
-                    break;
-                }
-            }
-            if (containsAll) {
+            if (item2PerkConfigs.every(i2Config => this.isConfigIncluded(item1PerkConfigs, i2Config))) {
                 return ItemComparisonResult.ITEM_IS_WORSE;
             }
 
@@ -114,12 +66,26 @@ export default class ArmourComparer {
         }
     }
 
-    getPerkUpgrades(perk, perks) {
-        if (perks === null || perks === undefined) {
+    isConfigIncluded(configs, configToFind) {
+        // identify comparable perks for each column
+        let columns = configToFind.map(perk => {
+            let upgradeNames = this.getPerkUpgrades(perk).map(perk => perk.name);
+            return [perk.name, ...upgradeNames];
+        });
+        for (let i = 0; i < configs.length; i++) {
+            const currentConfigNames = configs[i].map(perk => perk.name);
+            if (columns.every(comparablePerks => comparablePerks.some(x => currentConfigNames.some(y => y === x)))) {
+                return true;
+            }
+        }
+    }
+
+    getPerkUpgrades(perk) {
+        if (this.perks === null || this.perks === undefined) {
             return [];
         }
         let upgradePerks = perk.upgrades
-            .map(perkName => perks.get(perkName.toLowerCase()));
+            .map(perkName => this.perks.get(perkName.toLowerCase()));
         let upgrades = upgradePerks.concat();
         upgradePerks.forEach(upgrade => {
             upgrades = upgrades.concat(...this.getPerkUpgrades(upgrade));

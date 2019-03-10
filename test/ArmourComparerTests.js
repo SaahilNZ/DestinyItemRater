@@ -49,7 +49,7 @@ describe("ArmourComparer", () => {
         ItemComparisonResult.ITEM_IS_INCOMPARABLE
       );
     });
-    
+
     it("should return worse if item 1 has a good primary perk and item 2 has no good primary or secondary perks", () => {
       let perkStore = TestHelper.createMockPerkStore([]);
       let armourComparer = new ArmourComparer(perkStore);
@@ -60,7 +60,7 @@ describe("ArmourComparer", () => {
         armourComparer
       )
     });
-    
+
     it("should return equivalent if both items have the same good primary perk, no other good primary perks and no good secondary perks", () => {
       let goodPerk = newPerk().good().build();
       let perkStore = TestHelper.createMockPerkStore([goodPerk]);
@@ -72,7 +72,7 @@ describe("ArmourComparer", () => {
         armourComparer
       );
     });
-    
+
     it("should return better if item 2 has a good primary perk and item 1 has no good primary or secondary perks", () => {
       let goodPerk = newPerk().good().build();
       let perkStore = TestHelper.createMockPerkStore([goodPerk]);
@@ -84,7 +84,7 @@ describe("ArmourComparer", () => {
         armourComparer
       );
     });
-    
+
     it("should return worse if item 1 has a good secondary perk and item 2 has no good primary or secondary perks", () => {
       let goodPerk = newPerk().good().build();
       let perkStore = TestHelper.createMockPerkStore([goodPerk]);
@@ -96,7 +96,7 @@ describe("ArmourComparer", () => {
         armourComparer
       );
     });
-    
+
     it("should return equivalent if both items have the same good secondary perk, no other good secondary perks and no good primary perks", () => {
       let goodPerk = newPerk().good().build();
       let perkStore = TestHelper.createMockPerkStore([goodPerk]);
@@ -108,7 +108,7 @@ describe("ArmourComparer", () => {
         armourComparer
       );
     });
-    
+
     it("should return better if item 2 has a good secondary perk and item 1 has no good primary or secondary perks", () => {
       let goodPerk = newPerk().good().build();
       let perkStore = TestHelper.createMockPerkStore([goodPerk]);
@@ -120,7 +120,7 @@ describe("ArmourComparer", () => {
         armourComparer
       );
     });
-    
+
     it("should return worse if item 1 has a good primary perk that item 2 does not have, even though they both have the same good secondary perks", () => {
       let goodPerkA = newPerk().good().build();
       let goodPerkB = newPerk().good().build();
@@ -131,9 +131,9 @@ describe("ArmourComparer", () => {
         item2 => item2.addSecondaryPerk(goodPerkA),
         ItemComparisonResult.ITEM_IS_WORSE,
         armourComparer
-      ); 
+      );
     });
-    
+
     it("should return incomparable if item 1 has a good primary perk that item 2 does not have, and item 2 has a good secondary perk that item 1 does not have", () => {
       let goodPerkA = newPerk().good().build();
       let goodPerkB = newPerk().good().build();
@@ -146,7 +146,7 @@ describe("ArmourComparer", () => {
         armourComparer
       );
     });
-    
+
     it("should return worse if item 1 has a good secondary perk that item 2 does not have, even though they both have the same good primary perks", () => {
       let goodPerkA = newPerk().good().build();
       let goodPerkB = newPerk().good().build();
@@ -159,7 +159,7 @@ describe("ArmourComparer", () => {
         armourComparer
       );
     });
-    
+
     it("should return better if item 2 has a good secondary perk that item 1 does not have, even though they both have the same good primary perks", () => {
       let goodPerkA = newPerk().good().build();
       let goodPerkB = newPerk().good().build();
@@ -172,7 +172,7 @@ describe("ArmourComparer", () => {
         armourComparer
       );
     });
-    
+
     it("should return incomparable if item 1 has a good secondary perk that item 2 does not have, and item 2 has a good primary perk that item 1 does not have", () => {
       let goodPerkA = newPerk().good().build();
       let goodPerkB = newPerk().good().build();
@@ -183,9 +183,9 @@ describe("ArmourComparer", () => {
         item2 => item2.addPrimaryPerk(goodPerkB),
         ItemComparisonResult.ITEM_IS_INCOMPARABLE,
         armourComparer
-      ); 
+      );
     });
-    
+
     it("should return better if item 2 has a good primary perk that item 1 does not have, even though they both have the same good secondary perks", () => {
       let goodPerkA = newPerk().good().build();
       let goodPerkB = newPerk().good().build();
@@ -198,7 +198,7 @@ describe("ArmourComparer", () => {
         armourComparer
       );
     });
-    
+
     it("should return worse if item 1 has a good primary perk that item 2 does not have, even though they both share one good primary perk and neither have good secondary perks", () => {
       let goodPerkA = newPerk().good().build();
       let goodPerkB = newPerk().good().build();
@@ -211,7 +211,7 @@ describe("ArmourComparer", () => {
         armourComparer
       );
     });
-    
+
     it("should return incomparable if item 1 has a good primary perk that item 2 does not have, and item 2 has a good primary perk that item 1 does not have", () => {
       let goodPerkA = newPerk().good().build();
       let goodPerkB = newPerk().good().build();
@@ -224,7 +224,7 @@ describe("ArmourComparer", () => {
         armourComparer
       );
     });
-    
+
     it("should return better if item 2 has a good primary perk that item 1 does not have, even though they both share one good primary perk and neither have good secondary perks", () => {
       let goodPerkA = newPerk().good().build();
       let goodPerkB = newPerk().good().build();
@@ -237,7 +237,7 @@ describe("ArmourComparer", () => {
         armourComparer
       );
     });
-    
+
     it("should return worse if item 1 has a good secondary perk that item 2 does not have, even though they both share one good secondary perk and neither have good primary perks", () => {
       let goodPerkA = newPerk().good().build();
       let goodPerkB = newPerk().good().build();
@@ -250,7 +250,7 @@ describe("ArmourComparer", () => {
         armourComparer
       );
     });
-    
+
     it("should return incomparable if item 1 has a good secondary perk that item 2 does not have, and item 2 has a good secondary perk that item 1 does not have", () => {
       let goodPerkA = newPerk().good().build();
       let goodPerkB = newPerk().good().build();
@@ -263,7 +263,7 @@ describe("ArmourComparer", () => {
         armourComparer
       );
     });
-    
+
     it("should return better if item 2 has a good secondary perk that item 1 does not have, even though they both share one good secondary perk and neither have good primary perks", () => {
       let goodPerkA = newPerk().good().build();
       let goodPerkB = newPerk().good().build();
