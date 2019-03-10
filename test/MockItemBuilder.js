@@ -137,8 +137,5 @@ export function newPerk() {
 export function armourComparerTest(defineItem1, defineItem2, expected, armourComparer) {
   let item1 = defineItem1(newItem().armor().warlock().gauntlets()).build();
   let item2 = defineItem2(newItem().armor().warlock().gauntlets()).build();
-  assert(
-    armourComparer.compare(item1, item2),
-    expected
-  );
+  assert.strictEqual(armourComparer.compare(item1, item2), expected);
 }
