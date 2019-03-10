@@ -5,6 +5,7 @@ import path from "path";
 import nodemon from "gulp-nodemon";
 import fs from 'fs';
 import { execSync } from "child_process";
+import ts from 'gulp-typescript';
 require('dotenv').config();
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -15,8 +16,12 @@ const paths = {
   server: path.resolve(__dirname, "bin/www")
 };
 
+let tsProject = ts.createProject("tsconfig.json");
+
 export function bundle() {
-  return gulp.src("src/index.js").pipe(
+  return tsProject.src()
+    .pipe(tsProject())
+    .js.pipe(
     webpackStream({
       plugins: [
         new webpack.DefinePlugin({ "process.env.BUNGIE_CLIENT_ID": process.env.BUNGIE_CLIENT_ID })
@@ -25,11 +30,12 @@ export function bundle() {
         minimize: false
       },
       entry: {
-        main: ["babel-polyfill", paths.app + "/index.js"]
+        main: ["babel-polyfill", paths.app + "/index.tsx"]
       },
       output: {
         filename: "bundle.js"
       },
+      devtool: "source-map",
       module: {
         rules: [
           {
@@ -50,7 +56,12 @@ export function bundle() {
                 loader: "babel-loader"
               }
             ]
-          }
+          },
+          {
+            test: /\.tsx?$/,
+            use: "awesome-typescript-loader"
+          },
+          { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
         ]
       }
     })
@@ -80,6 +91,6 @@ export function server() {
 
 export const serve = gulp.series(build, server);
 
-gulp.watch(['*.js', 'src/**/*.js', 'src/**/*.jsx', 'routes/**/*.js'], build);
+gulp.watch(['*.js', 'src/**/*.js', 'src/**/*.jsx', 'src/**/*.ts', 'src/**/*.tsx', 'routes/**/*.js'], build);
 
 export default serve;
