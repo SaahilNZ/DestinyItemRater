@@ -277,6 +277,22 @@ describe("ArmourComparer", () => {
       );
     });
 
+    it("should return better if item 2 has all of item 1's good perk configurations, as well as an upgraded perk", () => {
+      let goodPerkABuilder = newPerk().good();
+      let goodPerkBBuilder = newPerk().good();
+      let enhancedPerkA = goodPerkABuilder.upgrade().good().build();
+      let goodPerkA = goodPerkABuilder.build();
+      let goodPerkB = goodPerkBBuilder.build();
+      let perkStore = TestHelper.createMockPerkStore([goodPerkA, goodPerkB, enhancedPerkA]);
+      let armourComparer = new ArmourComparer(perkStore);
+      armourComparerTest(
+        item1 => item1.addPrimaryPerk(goodPerkA).addPrimaryPerk(goodPerkB),
+        item2 => item2.addPrimaryPerk(enhancedPerkA).addPrimaryPerk(goodPerkB),
+        ItemComparisonResult.ITEM_IS_BETTER,
+        armourComparer
+      );
+    });
+
     it("should return worse if item 1 has all of item 2's good perk configurations, as well as an upgraded perk", () => {
       let goodPerkABuilder = newPerk().good();
       let goodPerkBBuilder = newPerk().good();
@@ -302,6 +318,22 @@ describe("ArmourComparer", () => {
         item1 => item1.addPrimaryPerk(goodPerkA).addSecondaryPerk(goodPerkB),
         item2 => item2.addSecondaryPerk(goodPerkA).addPrimaryPerk(goodPerkB),
         ItemComparisonResult.ITEM_IS_EQUIVALENT,
+        armourComparer
+      );
+    });
+
+    it("should return incomparable if both items share one good primary perk but not another, and only item 1 has a good secondary perk", () => {
+      let goodPerkA = newPerk().good().build();
+      let goodPerkB = newPerk().good().build();
+      let goodPerkC = newPerk().good().build();
+      let goodPerkX = newPerk().good().build();
+      let perkStore = TestHelper.createMockPerkStore([goodPerkA, goodPerkB, goodPerkC, goodPerkX]);
+      let armourComparer = new ArmourComparer(perkStore);
+      armourComparerTest(
+        item1 => item1.addPrimaryPerk(goodPerkA).addPrimaryPerk(goodPerkB)
+          .addSecondaryPerk(goodPerkX),
+        item2 => item2.addPrimaryPerk(goodPerkA).addPrimaryPerk(goodPerkC),
+        ItemComparisonResult.ITEM_IS_INCOMPARABLE,
         armourComparer
       );
     });

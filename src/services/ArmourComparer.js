@@ -40,44 +40,90 @@ export default class ArmourComparer {
         let item1PerkConfigs = this.getPerkConfigs(item1Perks);
         let item2PerkConfigs = this.getPerkConfigs(item2Perks);
 
-        if (item1PerkConfigs.every(i1Config => this.isConfigIncluded(item2PerkConfigs, i1Config))) {
+        let i1ConfigInclusion = this.scoreConfigInclusion(item1PerkConfigs, item2PerkConfigs);
+        if (i1ConfigInclusion === 2) {
+            // item 2 contains all of item 1's configurations and at least one improved version
+            return ItemComparisonResult.ITEM_IS_BETTER;
+        } else if (i1ConfigInclusion === 1) {
             if (item2PerkConfigs.length > item1PerkConfigs.length) {
+                // item 2 contains all of item 1's configurations, but also has additional good configurations
                 return ItemComparisonResult.ITEM_IS_BETTER;
+            } else {
+                // item 2 contains all of item 1's configurations, but no others
+                return ItemComparisonResult.ITEM_IS_EQUIVALENT;
             }
-
-            // both items have the same number of configurations
-            // the better item is the one that has the highest number of good perks across all configurations
-            let item1TotalPerks = item1PerkConfigs.reduce((total, config) => total + config.length, 0);
-            let item2TotalPerks = item2PerkConfigs.reduce((total, config) => total + config.length, 0);
-
-            if (item2TotalPerks > item1TotalPerks) {
-                return ItemComparisonResult.ITEM_IS_BETTER;
-            } else if (item1TotalPerks > item2TotalPerks) {
-                return ItemComparisonResult.ITEM_IS_WORSE;
-            }
-
-            return ItemComparisonResult.ITEM_IS_EQUIVALENT;
         } else {
-            if (item2PerkConfigs.every(i2Config => this.isConfigIncluded(item1PerkConfigs, i2Config))) {
+            let i2ConfigInclusion = this.scoreConfigInclusion(item2PerkConfigs, item1PerkConfigs);
+            if (i2ConfigInclusion >= item2PerkConfigs.length) {
+                // item 1 contains all of item 2's configurations
                 return ItemComparisonResult.ITEM_IS_WORSE;
+            } else {
+                // neither item includes all of the other's configurations
+                return ItemComparisonResult.ITEM_IS_INCOMPARABLE;
             }
-
-            return ItemComparisonResult.ITEM_IS_INCOMPARABLE;
         }
     }
 
-    isConfigIncluded(configs, configToFind) {
+    scoreConfigInclusion(configs1, configs2) {
+        if (configs1.length === 0) {
+            return 1;
+        }
+
+        let bestScore = 0;
+        for (let i = 0; i < configs1.length; i++) {
+            const config = configs1[i];
+            let score = this.determineConfigInclusion(configs2, config);
+            if (score === 0) {
+                return 0;
+            } else {
+                bestScore = Math.max(bestScore, score);
+            }
+        }
+        return bestScore;
+    }
+
+    determineConfigInclusion(configs, configToFind) {
+        // 0 = config not included
+        // 1 = exact config included
+        // 2 = better version of config included
+
         // identify comparable perks for each column
         let columns = configToFind.map(perk => {
             let upgradeNames = this.getPerkUpgrades(perk).map(perk => perk.name);
-            return [perk.name, ...upgradeNames];
+            return {
+                basePerk: perk.name,
+                upgradedPerks: upgradeNames
+            }
         });
+
+        let bestInclusionScore = 0;
+
         for (let i = 0; i < configs.length; i++) {
             const currentConfigNames = configs[i].map(perk => perk.name);
-            if (columns.every(comparablePerks => comparablePerks.some(x => currentConfigNames.some(y => y === x)))) {
-                return true;
+
+            let inclusionScore = 0;
+            for (let c = 0; c < columns.length; c++) {
+                const comparablePerks = columns[c];
+                if (currentConfigNames.some(x => comparablePerks.upgradedPerks.some(y => y === x))) {
+                    // this config includes an upgraded version of the perk
+                    inclusionScore = Math.max(inclusionScore, 2);
+                } else if (currentConfigNames.some(perk => perk === comparablePerks.basePerk)) {
+                    // this config includes the perk
+                    inclusionScore = Math.max(inclusionScore, 1);
+                } else {
+                    // this config does not include a comparable perk
+                    inclusionScore = 0;
+                    break;
+                }
             }
+            if (inclusionScore === 1 && currentConfigNames.length > columns.length) {
+                // this config includes all of the perks in the desired config (but no upgraded perks)
+                // it also includes additional perks
+                inclusionScore = 2;
+            }
+            bestInclusionScore = Math.max(bestInclusionScore, inclusionScore);
         }
+        return bestInclusionScore;
     }
 
     getPerkUpgrades(perk) {
