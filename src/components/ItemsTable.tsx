@@ -5,17 +5,13 @@ import Item from './Item';
 import ItemDefinitionActions from '../actions/ItemDefinitionActions';
 import PerkActions from '../actions/PerkActions';
 import ItemComparisonResult from '../services/ItemComparisonResult';
+import { ItemStoreState } from '../stores/ItemStore';
 
 export interface ItemsTableProps {
     itemFilter?: string;
 }
 
-export interface ItemsTableState {
-    items: any[];
-    errorMessage: string;
-}
-
-class ItemsTable extends React.Component<ItemsTableProps, ItemsTableState> {
+class ItemsTable extends React.Component<ItemsTableProps, ItemStoreState> {
     constructor(props) {
         super(props);
         this.state = ItemStore.getState();
@@ -48,7 +44,7 @@ class ItemsTable extends React.Component<ItemsTableProps, ItemsTableState> {
             );
         }
 
-        if (!this.state.items.length) {
+        if (!this.state.items || !this.state.items.length) {
             return (
                 <div>Loading...</div>
             );

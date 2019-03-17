@@ -32,7 +32,7 @@ class Item extends React.Component<ItemProps, {}> {
                                 break;
                         }
                         return (
-                            <li key={comparison.item2}>
+                            <li key={comparison.id}>
                                 <div className={className}>{comparison.id}</div>
                             </li>);
                     })}

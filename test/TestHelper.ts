@@ -1,13 +1,17 @@
-import DestinyPerk from "../src/model/DestinyPerk";
+import PerkRating from "../src/model/PerkRating";
 import MockStore from './MockStore';
 
 class TestHelper {
-  createMockPerkStore(perks) {
-    let perkMap = new Map();
+  createMockPerkStore(perks: PerkRating[]): MockStore {
+    let perkMap = new Map<string, PerkRating>();
     perks.forEach(perk => {
       perkMap.set(
         perk.name.toLowerCase(),
-        new DestinyPerk(perk.name, perk.isGood, perk.upgrades)
+        {
+          name: perk.name,
+          isGood: perk.isGood,
+          upgrades: perk.upgrades
+        }
       );
     });
     return new MockStore({

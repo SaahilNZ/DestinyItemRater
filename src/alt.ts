@@ -1,4 +1,4 @@
 import Alt from 'alt';
-var alt = new Alt();
+const alt: AltJS.Alt = new Alt();
 
 export default alt;

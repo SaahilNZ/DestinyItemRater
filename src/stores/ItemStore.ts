@@ -3,6 +3,12 @@ import alt from "../alt";
 import ItemDefinitionActions from '../actions/ItemDefinitionActions';
 import PerkActions from '../actions/PerkActions';
 import ComparisonService from '../services/ComparisonService';
+import DestinyItem from '../model/DestinyItem';
+import ItemDefinition from '../model/ItemDefinition';
+import PerkRating from '../model/PerkRating';
+import AbstractStoreModel from './AbstractStoreModel';
+import DestinyItemComparison from '../model/DestinyItemComparison';
+import { string } from 'prop-types';
 
 const armorTypeHashes = [
     138197802,      // General
@@ -13,8 +19,21 @@ const armorTypeHashes = [
     1585787867      // Class Armor
 ];
 
-class ItemStore {
+export interface ItemStoreState {
+    items: DestinyItem[];
+    itemDefs: Map<string, ItemDefinition>;
+    perkRatings: Map<string, PerkRating>;
+    errorMessage: string;
+}
+
+class ItemStore extends AbstractStoreModel<ItemStoreState> implements ItemStoreState {
+    items: DestinyItem[];
+    itemDefs: Map<string, ItemDefinition>;
+    perkRatings: Map<string, PerkRating>;
+    errorMessage: string;
+
     constructor() {
+        super();
         this.items = [];
         this.itemDefs = new Map();
         this.perkRatings = new Map();
@@ -36,11 +55,11 @@ class ItemStore {
     }
 
     onItemDefinitionsFetching() {
-        this.itemDefs = new Map();
+        this.itemDefs = new Map<string, ItemDefinition>();
     }
 
     onPerkRatingsFetching() {
-        this.perkRatings = new Map();
+        this.perkRatings = new Map<string, PerkRating>();
     }
 
     onItemsLoadedForAccount(bungieResponse) {
@@ -179,7 +198,7 @@ class ItemStore {
 
     compareItems() {
         this.items.forEach(item => {
-            let comparisons = [];
+            let comparisons: DestinyItemComparison[] = [];
             for (let i = 0; i < this.items.length; i++) {
                 const item2 = this.items[i];
                 if (item.id !== item2.id) {
@@ -198,4 +217,5 @@ class ItemStore {
     }
 }
 
-export default alt.createStore(ItemStore, 'ItemStore');
+// @ts-ignore: Alt.js has no TS typings defined for this usage
+export default alt.createStore<ItemStoreState>(ItemStore, 'ItemStore');

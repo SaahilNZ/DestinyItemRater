@@ -1,8 +1,12 @@
 import assert from 'assert';
 import uuid from 'uuid';
+import PerkRating from '../src/model/PerkRating';
+import DestinyItem from '../src/model/DestinyItem';
 
 class PerkBuilder {
-  constructor(name) {
+  perk: PerkRating;
+
+  constructor(name: string) {
     this.perk = {
       name: name,
       hash: name,
@@ -34,6 +38,9 @@ class PerkBuilder {
 }
 
 class ArmorItemBuilder {
+  item: DestinyItem;
+  classItemType: string;
+
   constructor(item, classItemType) {
     this.item = item;
     this.classItemType = classItemType;

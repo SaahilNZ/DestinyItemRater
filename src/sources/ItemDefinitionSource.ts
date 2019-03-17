@@ -1,3 +1,5 @@
+import ItemDefinition from "../model/ItemDefinition";
+
 class ItemDefinitionSource {
     async fetch() {
         return await fetch("/api/itemdefinitions")
@@ -7,10 +9,11 @@ class ItemDefinitionSource {
             .catch(error => console.log(error));
     }
 
-    populateItemDefinitionMap(data) {
-        let map = new Map();
+    populateItemDefinitionMap(data): Map<string, ItemDefinition> {
+        let map = new Map<string, ItemDefinition>();
         data.itemDefinitions.forEach(itemDef => {
             map.set(itemDef.hash, {
+                hash: itemDef.hash,
                 name: itemDef.name,
                 itemType: itemDef.itemType,
                 tier: itemDef.tier,

@@ -1,5 +1,7 @@
 export default class MockStore {
-    constructor(data) {
+    data: Object;
+
+    constructor(data: Object) {
         this.data = data;
     }
 

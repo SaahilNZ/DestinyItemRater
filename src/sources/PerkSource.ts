@@ -1,4 +1,4 @@
-import DestinyPerk from '../model/DestinyPerk';
+import PerkRating from "../model/PerkRating";
 
 class PerkSource {
     async fetch() {
@@ -9,11 +9,15 @@ class PerkSource {
             .catch(error => console.log(error));
     }
     
-    populatePerkMap(data) {
-        let map = new Map();
+    populatePerkMap(data): Map<string, PerkRating> {
+        let map = new Map<string, PerkRating>();
         data.perks.forEach(perk => {
             map.set(perk.name.toLowerCase(),
-                new DestinyPerk(perk.name, perk.isGood, perk.upgrades));
+                {
+                    name: perk.name,
+                    isGood: perk.isGood,
+                    upgrades: perk.upgrades
+                });
         });
         return map;
     }

@@ -1,3 +1,6 @@
+import PerkRating from "./PerkRating";
+import DestinyItemComparison from "./DestinyItemComparison";
+
 interface DestinyItem {
     id: string;
     itemHash: string;
@@ -6,8 +9,8 @@ interface DestinyItem {
     type: string;
     tier: string;
     power: number;
-    perkColumns: any[];
-    comparisons: any[];
+    perkColumns: PerkRating[][];
+    comparisons: DestinyItemComparison[];
 }
 
 export default DestinyItem;

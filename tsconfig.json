@@ -8,7 +8,7 @@
         "target": "es5",
         "jsx": "react",
         "lib": ["es2015", "dom"],
-        "types": ["node"]
+        "types": ["node", "mocha"]
     },
     "include": [
         "./src/**/*"

@@ -2,7 +2,7 @@ import React, { createRef } from 'react';
 import ItemsTable from './ItemsTable';
 import uuid from 'uuid';
 import AccountSelector from './AccountSelector';
-import ItemStore from '../stores/ItemStore.js';
+import ItemStore from '../stores/ItemStore';
 import ItemActions from '../actions/ItemActions.js';
 import ItemComparisonResult from '../services/ItemComparisonResult';
 import Papa from 'papaparse';
