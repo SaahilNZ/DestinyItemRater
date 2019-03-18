@@ -1,12 +1,17 @@
 import PerkRating from "../model/PerkRating";
 
 class PerkSource {
-    async fetch() {
+    async fetch(): Promise<Map<string, PerkRating>> {
         return await fetch("/api/perks")
             .then(response => response.text())
             .then(json => JSON.parse(json))
             .then(parsed => this.populatePerkMap(parsed))
-            .catch(error => console.log(error));
+            .catch(error => 
+                {
+                    console.log(error);
+                    throw error;
+                }
+            );
     }
     
     populatePerkMap(data): Map<string, PerkRating> {

@@ -1,9 +1,15 @@
 import alt from "../alt";
 import ItemSource from "../sources/ItemSource";
 import ComparisonActions from "./ComparisonActions";
+import AbstractActionsModel from "./AbstractActionsModel";
 
-class ItemActions {
+interface AltItemActions {
+    fetchItems(): (dispatch: any) => Promise<void>;
+    onItemsFailedToLoad(errorMessage): any;
+    onItemsLoadedForAccount(bungieResponse: any): any;
+}
 
+class ItemActions extends AbstractActionsModel implements AltItemActions {
     fetchItems() {
         return async (dispatch) => {
             dispatch();
@@ -28,14 +34,6 @@ class ItemActions {
     onItemsLoadedForAccount(bungieResponse) {
         return bungieResponse;
     }
-
-    onItemDefinitionsLoaded(itemDefs) {
-        return itemDefs;
-    }
-
-    onPerkRatingsLoaded(perkRatings) {
-        return perkRatings;
-    }
 }
 
-export default alt.createActions(ItemActions);
+export default alt.createActions<AltItemActions>(ItemActions);

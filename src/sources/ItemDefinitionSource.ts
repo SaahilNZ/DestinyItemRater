@@ -1,12 +1,15 @@
 import ItemDefinition from "../model/ItemDefinition";
 
 class ItemDefinitionSource {
-    async fetch() {
+    async fetch(): Promise<Map<string, ItemDefinition>> {
         return await fetch("/api/itemdefinitions")
             .then(response => response.text())
             .then(json => JSON.parse(json))
             .then(data => this.populateItemDefinitionMap(data))
-            .catch(error => console.log(error));
+            .catch(error => {
+                console.log(error);
+                throw error;
+            });
     }
 
     populateItemDefinitionMap(data): Map<string, ItemDefinition> {

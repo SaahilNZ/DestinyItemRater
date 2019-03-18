@@ -3,7 +3,7 @@ import ItemsTable from './ItemsTable';
 import uuid from 'uuid';
 import AccountSelector from './AccountSelector';
 import ItemStore from '../stores/ItemStore';
-import ItemActions from '../actions/ItemActions.js';
+import ItemActions from '../actions/ItemActions';
 import ItemComparisonResult from '../services/ItemComparisonResult';
 import Papa from 'papaparse';
 import saveAs from 'file-saver';

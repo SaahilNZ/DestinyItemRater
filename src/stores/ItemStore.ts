@@ -8,7 +8,6 @@ import ItemDefinition from '../model/ItemDefinition';
 import PerkRating from '../model/PerkRating';
 import AbstractStoreModel from './AbstractStoreModel';
 import DestinyItemComparison from '../model/DestinyItemComparison';
-import { string } from 'prop-types';
 
 const armorTypeHashes = [
     138197802,      // General
@@ -143,13 +142,13 @@ class ItemStore extends AbstractStoreModel<ItemStoreState> implements ItemStoreS
         this.errorMessage = null;
     }
 
-    onItemDefinitionsLoaded(itemDefs) {
+    onItemDefinitionsLoaded(itemDefs: Map<string, ItemDefinition>) {
         this.itemDefs = itemDefs;
         this.applyItemDefinitions();
         this.compareItems();
     }
 
-    onPerkRatingsLoaded(perkRatings) {
+    onPerkRatingsLoaded(perkRatings: Map<string, PerkRating>) {
         this.perkRatings = perkRatings;
         this.applyPerkRatings();
         this.compareItems();
