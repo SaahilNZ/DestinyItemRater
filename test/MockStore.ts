@@ -1,11 +1,11 @@
-export default class MockStore {
-    data: Object;
+export default class MockStore<T> {
+    data: T;
 
-    constructor(data: Object) {
+    constructor(data: T) {
         this.data = data;
     }
 
-    getState() {
+    getState(): T {
         return this.data;
     }
 }

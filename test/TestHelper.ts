@@ -1,8 +1,13 @@
 import PerkRating from "../src/model/PerkRating";
 import MockStore from './MockStore';
 
+interface MockPerkStore {
+  perkRatings: Map<string, PerkRating>;
+  errorMessage: string;
+}
+
 class TestHelper {
-  createMockPerkStore(perks: PerkRating[]): MockStore {
+  createMockPerkStore(perks: PerkRating[]): MockStore<MockPerkStore> {
     let perkMap = new Map<string, PerkRating>();
     perks.forEach(perk => {
       perkMap.set(
@@ -14,7 +19,7 @@ class TestHelper {
         }
       );
     });
-    return new MockStore({
+    return new MockStore<MockPerkStore>({
       perkRatings: perkMap,
       errorMessage: null
     });

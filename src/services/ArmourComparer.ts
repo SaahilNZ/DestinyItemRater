@@ -1,12 +1,23 @@
 import ItemComparisonResult from './ItemComparisonResult';
+import DestinyItem from '../model/DestinyItem';
+import PerkRating from '../model/PerkRating';
+import Store from '../stores/Store';
+
+interface PerkTreeNode {
+    perk: PerkRating;
+    children: PerkTreeNode[];
+}
 
 export default class ArmourComparer {
+    perkStore: Store<{perkRatings: Map<string, PerkRating>}>
+    perks: Map<string, PerkRating>
+
     constructor(perkStore) {
         this.perkStore = perkStore;
         this.perks = this.perkStore.getState().perkRatings;
     }
 
-    compare(item1, item2) {
+    compare(item1: DestinyItem, item2: DestinyItem): ItemComparisonResult {
         if (item1.class !== item2.class) {
             return ItemComparisonResult.ITEM_IS_INCOMPARABLE;
         }
@@ -31,12 +42,12 @@ export default class ArmourComparer {
         return this.comparePerks(item1GoodPerks, item2GoodPerks);
     }
 
-    getGoodPerks(item) {
+    getGoodPerks(item: DestinyItem) {
         return item.perkColumns.map(
             column => column.filter(perk => perk !== null && perk !== undefined && perk.isGood));
     }
 
-    comparePerks(item1Perks, item2Perks) {
+    comparePerks(item1Perks: PerkRating[][], item2Perks: PerkRating[][]): ItemComparisonResult {
         let item1PerkConfigs = this.getPerkConfigs(item1Perks);
         let item2PerkConfigs = this.getPerkConfigs(item2Perks);
 
@@ -64,7 +75,7 @@ export default class ArmourComparer {
         }
     }
 
-    scoreConfigInclusion(configs1, configs2) {
+    scoreConfigInclusion(configs1: PerkRating[][], configs2: PerkRating[][]): number {
         if (configs1.length === 0) {
             return 1;
         }
@@ -82,7 +93,7 @@ export default class ArmourComparer {
         return bestScore;
     }
 
-    determineConfigInclusion(configs, configToFind) {
+    determineConfigInclusion(configs, configToFind): number {
         // 0 = config not included
         // 1 = exact config included
         // 2 = better version of config included
@@ -126,7 +137,7 @@ export default class ArmourComparer {
         return bestInclusionScore;
     }
 
-    getPerkUpgrades(perk) {
+    getPerkUpgrades(perk: PerkRating): PerkRating[] {
         if (this.perks === null || this.perks === undefined) {
             return [];
         }
@@ -139,16 +150,19 @@ export default class ArmourComparer {
         return upgrades;
     }
 
-    getPerkConfigs(perkColumns) {
+    getPerkConfigs(perkColumns: PerkRating[][]): PerkRating[][] {
         let filteredColumns = perkColumns.filter(column => column.length > 0);
         let perkTree = this.convertToTree(null, filteredColumns);
         return this.getPerkConfigsFromTree(perkTree);
     }
 
-    convertToTree(perk, perkColumns) {
-        let node = {};
+    convertToTree(perk: PerkRating, perkColumns: PerkRating[][]) {
+        let node: PerkTreeNode = {
+            perk: null,
+            children: []
+        };
         node.perk = perk;
-        let children = [];
+        let children: PerkTreeNode[] = [];
         if (perkColumns[0]) {
             perkColumns[0].forEach(nextPerk => {
                 children.push(this.convertToTree(nextPerk, perkColumns.slice(1)));
@@ -158,17 +172,17 @@ export default class ArmourComparer {
         return node;
     }
 
-    getPerkConfigsFromTree(perkTree) {
-        let configs = [];
+    getPerkConfigsFromTree(perkTree: PerkTreeNode): PerkRating[][] {
+        let configs: PerkRating[][] = [];
         perkTree.children.forEach(perk => {
             configs.push(...this.getPerkConfigsFromNode(perk));
         });
         return configs;
     }
 
-    getPerkConfigsFromNode(perkNode) {
-        let configs = [];
-        let baseConfig = [perkNode.perk];
+    getPerkConfigsFromNode(perkNode: PerkTreeNode): PerkRating[][] {
+        let configs: PerkRating[][] = [];
+        let baseConfig: PerkRating[] = [perkNode.perk];
         perkNode.children.forEach(child => {
             let childConfigs = this.getPerkConfigsFromNode(child);
             childConfigs.forEach(childConfig => {

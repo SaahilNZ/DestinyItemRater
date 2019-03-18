@@ -1,8 +1,9 @@
 import ArmourComparer from './ArmourComparer'
 import ItemStore from '../stores/ItemStore'
+import DestinyItem from '../model/DestinyItem';
 
 class ComparisonService {
-    compare(item1, item2) {
+    compare(item1: DestinyItem, item2: DestinyItem) {
         let comparer = new ArmourComparer(ItemStore);
         return comparer.compare(item1, item2);
     }

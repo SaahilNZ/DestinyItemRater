@@ -1,6 +1,8 @@
+import ItemComparisonResult from "../services/ItemComparisonResult";
+
 interface DestinyItemComparison {
     id: string;
-    result: number;
+    result: ItemComparisonResult;
 }
 
 export default DestinyItemComparison;
