@@ -7,6 +7,8 @@ import ItemActions from '../actions/ItemActions';
 import ItemComparisonResult from '../services/ItemComparisonResult';
 import Papa from 'papaparse';
 import saveAs from 'file-saver';
+import PerkRater from './PerkRater';
+import PerkRating from '../model/PerkRating';
 
 export interface MainAppState {
     signedIn: boolean;
@@ -15,9 +17,11 @@ export interface MainAppState {
     showAllItems: boolean;
     showBadItems: boolean;
     showSearch: boolean;
+    showPerkRater: boolean;
     junkSearchString: string;
     infuseSearchString: string;
     copyResult: string;
+    perkRatings: Map<string, PerkRating>;
 }
 
 class MainApp extends React.Component<{}, MainAppState> {
@@ -33,9 +37,11 @@ class MainApp extends React.Component<{}, MainAppState> {
             showAllItems: true,
             showBadItems: false,
             showSearch: false,
+            showPerkRater: false,
             junkSearchString: "",
             infuseSearchString: "",
-            copyResult: ""
+            copyResult: "",
+            perkRatings: new Map<string, PerkRating>()
         }
         this.showAllItems = this.showAllItems.bind(this);
         this.showBadItems = this.showBadItems.bind(this);
@@ -44,6 +50,8 @@ class MainApp extends React.Component<{}, MainAppState> {
         this.generateIdSearchString = this.generateIdSearchString.bind(this);
         this.closeSearch = this.closeSearch.bind(this);
         this.copySearch = this.copySearch.bind(this);
+        this.applyPerkRatings = this.applyPerkRatings.bind(this);
+        this.configurePerkRatings = this.configurePerkRatings.bind(this);
     }
 
     async componentDidMount() {
@@ -164,6 +172,9 @@ class MainApp extends React.Component<{}, MainAppState> {
                                     value="Generate DIM Search Query" onClick={this.generateIdSearchString} />
                                 <input className="tab-link float-left" type="button"
                                     value="Export CSV" onClick={this.exportCsv} />
+                                <div className="header-separator float-left"></div>
+                                <input className="tab-link float-left" type="button"
+                                    value="Configure Perk Ratings" onClick={this.configurePerkRatings} />
                             </div>}
                             <div className="header-account float-right">
                                 <div className="header-separator"></div>
@@ -175,7 +186,7 @@ class MainApp extends React.Component<{}, MainAppState> {
                             </div>
                         </div>
                     </div>
-                    {this.state.selectedAccount && (
+                    {this.state.selectedAccount && !this.state.showPerkRater && (
                         <div>
                             <div className={this.state.showAllItems ? "" : "hidden"}>
                                 <ItemsTable />
@@ -211,6 +222,10 @@ class MainApp extends React.Component<{}, MainAppState> {
                             </div>
                         </div>
                     )}
+                    {this.state.showPerkRater &&
+                        <PerkRater perkRatings={this.state.perkRatings} 
+                            applyCallback={this.applyPerkRatings} />
+                    }
                 </div>
             );
         } else {
@@ -520,6 +535,19 @@ class MainApp extends React.Component<{}, MainAppState> {
         var csv = Papa.unparse(taggedItems);
         var blob = new Blob([csv], {type: "text/csv;charset=utf-8"});
         saveAs(blob, "junk-items.csv");
+    }
+
+    configurePerkRatings() {
+        this.setState({
+            perkRatings: ItemStore.getState().perkRatings,
+            showPerkRater: true
+        });
+    }
+
+    applyPerkRatings() {
+        this.setState({
+            showPerkRater: false
+        });
     }
 
     selectAccount(e, account) {

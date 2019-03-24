@@ -15,6 +15,10 @@ class PerkSource {
     }
     
     populatePerkMap(data): Map<string, PerkRating> {
+        let perkRatingsString = localStorage.getItem("perk_ratings");
+        let storedPerkRatings = perkRatingsString != null && perkRatingsString != undefined ?
+            JSON.parse(perkRatingsString) : { perks: [] };
+
         let map = new Map<string, PerkRating>();
         data.perks.forEach(perk => {
             map.set(perk.name.toLowerCase(),
@@ -24,6 +28,16 @@ class PerkSource {
                     upgrades: perk.upgrades
                 });
         });
+
+        storedPerkRatings.perks.forEach(perk => {
+            map.set(perk.name.toLowerCase(),
+                {
+                    name: perk.name,
+                    isGood: perk.isGood,
+                    upgrades: perk.upgrades
+                });
+        });
+
         return map;
     }
 }
