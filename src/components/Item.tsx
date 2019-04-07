@@ -49,38 +49,26 @@ class Item extends React.Component<ItemProps, {}> {
                 <td>{this.props.item.class}</td>
                 <td>{this.props.item.type}</td>
                 <td>{this.props.item.power}</td>
+
                 <td>
-                    <ul>
+                    <div className="perkBlock">
                         {
-                            (this.props.item.perkColumns[0] || []).filter(perk => perk != null).map(perk =>
-                                <li>
-                                    <Perk perk={perk} />
-                                </li>
-                            )
+                            this.props.item.perkColumns.map(column => {
+                                let perks = column.filter(perk => perk != null).map(perk =>
+                                    <li>
+                                        <Perk perk={perk} />
+                                    </li>
+                                );
+                                return (
+                                    <div className="perkColumn">
+                                        <ul>
+                                            {perks}
+                                        </ul>
+                                    </div>
+                                )
+                            })
                         }
-                    </ul>
-                </td>
-                <td>
-                    <ul>
-                        {
-                            (this.props.item.perkColumns[1] || []).filter(perk => perk != null).map(perk =>
-                                <li>
-                                    <Perk perk={perk} />
-                                </li>
-                            )
-                        }
-                    </ul>
-                </td>
-                <td>
-                    <ul>
-                        {
-                            (this.props.item.perkColumns[2] || []).filter(perk => perk != null).map(perk =>
-                                <li>
-                                    <Perk perk={perk} />
-                                </li>
-                            )
-                        }
-                    </ul>
+                    </div>
                 </td>
                 <td>
                     {comparisons}

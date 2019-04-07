@@ -102,9 +102,7 @@ class ItemsTable extends React.Component<ItemsTableProps, ItemStoreState> {
                         <th>Class</th>
                         <th>Type</th>
                         <th>Power</th>
-                        <th>Intrinsic</th>
-                        <th>Primary</th>
-                        <th>Secondary</th>
+                        <th>Perks</th>
                         <th>Similar items</th>
                     </tr>
                     {items}

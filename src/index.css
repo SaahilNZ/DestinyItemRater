@@ -140,8 +140,17 @@ td {
     padding: 0 1em 0 1em;
 }
 
+.perkBlock {
+    display: flex;
+}
+
+.perkBlock .perkColumn {
+    width: 160px;
+    margin-right: 6px;
+}
+
 .perk {
-    display: inline-block;
+    display: block;
 }
 
 .good {
