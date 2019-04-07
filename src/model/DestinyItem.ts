@@ -11,6 +11,7 @@ interface DestinyItem {
     power: number;
     perkColumns: PerkRating[][];
     comparisons: DestinyItemComparison[];
+    group: string;
 }
 
 export default DestinyItem;

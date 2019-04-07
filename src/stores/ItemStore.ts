@@ -7,7 +7,6 @@ import DestinyItem from '../model/DestinyItem';
 import ItemDefinition from '../model/ItemDefinition';
 import PerkRating from '../model/PerkRating';
 import AbstractStoreModel from './AbstractStoreModel';
-import DestinyItemComparison from '../model/DestinyItemComparison';
 
 const armorTypeHashes = [
     138197802,      // General
@@ -129,7 +128,8 @@ class ItemStore extends AbstractStoreModel<ItemStoreState> implements ItemStoreS
                     tier: null,
                     power: primaryStat !== null && primaryStat !== undefined ? primaryStat.value : null,
                     perkColumns: perkColumns,
-                    comparisons: []
+                    comparisons: [],
+                    group: null
                 };
             }).filter(item => item !== null);
         if (this.itemDefs.size > 0) {
@@ -155,10 +155,22 @@ class ItemStore extends AbstractStoreModel<ItemStoreState> implements ItemStoreS
     }
 
     applyItemDefinitions() {
-        const armourTypes = ["Helmet", "Gauntlets", "Chest Armor", "Leg Armor", "Warlock Bond", "Hunter Cloak", "Titan Mark"];
+        const armourTypes = [
+            'Helmet', 'Gauntlets', 'Chest Armor', 'Leg Armor',
+            'Warlock Bond', 'Hunter Cloak', 'Titan Mark'
+        ];
+        const weaponTypes = [
+            'Auto Rifle', 'Pulse Rifle', 'Scout Rifle', 'Hand Cannon', 'Submachine Gun', 'Sidearm', 'Combat Bow',
+            'Sniper Rifle', 'Shotgun', 'Fusion Rifle', 'Grenade Launcher',
+            'Rocket Launcher', 'Sword', 'Linear Fusion Rifle', 'Machine Gun'
+        ];
         this.items.forEach((item, index) => {
             let itemDef = this.itemDefs.get(item.itemHash);
-            if (armourTypes.includes(itemDef.itemType)) {
+
+            let isArmor = armourTypes.includes(itemDef.itemType);
+            let isWeapon = weaponTypes.includes(itemDef.itemType);
+
+            if (isArmor || isWeapon) {
                 item.perkColumns.forEach(column => {
                     column.forEach(perk => {
                         perk.name = "";
@@ -172,6 +184,7 @@ class ItemStore extends AbstractStoreModel<ItemStoreState> implements ItemStoreS
                 item.class = itemDef.class;
                 item.type = itemDef.itemType;
                 item.tier = itemDef.tier;
+                item.group = isArmor ? 'armor' : (isWeapon ? 'weapons' : null);
             } else {
                 this.items[index] = null;
             }

@@ -50,11 +50,11 @@ class ItemsTable extends React.Component<ItemsTableProps, ItemStoreState> {
             );
         }
 
-        let items;
-        if (this.props.itemFilter === "bad") {
+        let items: JSX.Element[];
+        if (this.props.itemFilter === 'bad') {
             items = this.state.items.filter(item => {
                 let isBetter = false;
-                if (item.comparisons) {
+                if (item.group === 'armor' && item.comparisons) {
                     for (let i = 0; i < item.comparisons.length; i++) {
                         const comparison = item.comparisons[i];
                         if (comparison && comparison.result === ItemComparisonResult.ITEM_IS_BETTER) {
@@ -69,12 +69,20 @@ class ItemsTable extends React.Component<ItemsTableProps, ItemStoreState> {
                     <Item key={item.id} item={item} />
                 );
             });
+        } else if (this.props.itemFilter === 'weapons') {
+            items = this.state.items.filter(item => item.group === 'weapons')
+                .map(item => {
+                    return (
+                        <Item key={item.id} item={item} />
+                    );
+                });
         } else {
-            items = this.state.items.map((item) => {
-                return (
-                    <Item key={item.id} item={item} />
-                );
-            });
+            items = this.state.items.filter(item => item.group === 'armor')
+                .map((item) => {
+                    return (
+                        <Item key={item.id} item={item} />
+                    );
+                });
         }
 
         return (
