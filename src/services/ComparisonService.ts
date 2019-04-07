@@ -1,6 +1,7 @@
 import ArmourComparer from './ArmourComparer'
 import ItemStore from '../stores/ItemStore'
 import DestinyItem from '../model/DestinyItem';
+import DestinyItemComparison from '../model/DestinyItemComparison';
 
 class ComparisonService {
     compare(item1: DestinyItem, item2: DestinyItem) {
@@ -8,8 +9,9 @@ class ComparisonService {
         return comparer.compare(item1, item2);
     }
 
-    compareAll(items) {
-        return items.map(item => {
+    compareAll(items: DestinyItem[]) {
+        let output: { [id: string]: DestinyItemComparison[]; } = {};
+        items.forEach(item => {
             let comparisons = new Array(items.length - 1);
             for (let i = 0; i < items.length; i++) {
                 const item2 = items[i];
@@ -21,11 +23,9 @@ class ComparisonService {
                     result: this.compare(item, item2)
                 };
             }
-            return {
-                id: item.id,
-                comparisons: comparisons
-            };
+            output[item.id] = comparisons;
         });
+        return output;
     }
 }
 

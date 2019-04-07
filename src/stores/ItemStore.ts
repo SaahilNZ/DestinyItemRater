@@ -196,18 +196,9 @@ class ItemStore extends AbstractStoreModel<ItemStoreState> implements ItemStoreS
     }
 
     compareItems() {
+        let comparisons = ComparisonService.compareAll(this.items);
         this.items.forEach(item => {
-            let comparisons: DestinyItemComparison[] = [];
-            for (let i = 0; i < this.items.length; i++) {
-                const item2 = this.items[i];
-                if (item.id !== item2.id) {
-                    comparisons.push({
-                        id: item2.id,
-                        result: ComparisonService.compare(item, item2)
-                    });
-                }
-            }
-            item.comparisons = comparisons;
+            item.comparisons = comparisons[item.id];
         });
     }
 
