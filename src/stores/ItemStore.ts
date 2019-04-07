@@ -8,15 +8,6 @@ import ItemDefinition from '../model/ItemDefinition';
 import PerkRating from '../model/PerkRating';
 import AbstractStoreModel from './AbstractStoreModel';
 
-const armorTypeHashes = [
-    138197802,      // General
-    3448274439,     // Helmet
-    3551918588,     // Gauntlets
-    14239492,       // Chest Armor
-    20886954,       // Leg Armor,
-    1585787867      // Class Armor
-];
-
 export interface ItemStoreState {
     items: DestinyItem[];
     itemDefs: Map<string, ItemDefinition>;
@@ -80,7 +71,6 @@ class ItemStore extends AbstractStoreModel<ItemStoreState> implements ItemStoreS
         let allItems = Array.from(new Set(rawItems));
 
         this.items = allItems.filter(item => item.itemInstanceId !== null && item.itemInstanceId !== undefined)
-            .filter(item => armorTypeHashes.includes(item.bucketHash))
             .map((item) => {
                 let itemInstance = bungieResponse.Response.itemComponents.instances.data[item.itemInstanceId];
                 if (itemInstance === null || itemInstance === undefined) return null;
@@ -88,19 +78,7 @@ class ItemStore extends AbstractStoreModel<ItemStoreState> implements ItemStoreS
                 let perkColumnHashes = [];
                 let itemSockets = bungieResponse.Response.itemComponents.sockets.data[item.itemInstanceId];
                 if (itemSockets) {
-                    let columnIndices = [0, 5, 6];
-
-                    // hack for Gambit Prime gear
-                    let primarySocket = itemSockets.sockets[columnIndices[1]];
-                    if (primarySocket && primarySocket.plugHash == 4248210736) { // Default Shader
-                        columnIndices = [0, 6, 7];
-                    }
-
-                    perkColumnHashes = columnIndices.map(i => {
-                        let socket = itemSockets.sockets[i];
-                        if (!socket) {
-                            return [];
-                        }
+                    perkColumnHashes = itemSockets.sockets.map(socket => {
                         if (socket.reusablePlugHashes === null || socket.reusablePlugHashes === undefined) {
                             return [socket.plugHash];
                         } else {
@@ -127,7 +105,8 @@ class ItemStore extends AbstractStoreModel<ItemStoreState> implements ItemStoreS
                     type: null,
                     tier: null,
                     power: primaryStat !== null && primaryStat !== undefined ? primaryStat.value : null,
-                    perkColumns: perkColumns,
+                    rawPerkColumns: perkColumns,
+                    perkColumns: null,
                     comparisons: [],
                     group: null
                 };
@@ -171,15 +150,31 @@ class ItemStore extends AbstractStoreModel<ItemStoreState> implements ItemStoreS
             let isWeapon = weaponTypes.includes(itemDef.itemType);
 
             if (isArmor || isWeapon) {
-                item.perkColumns.forEach(column => {
-                    column.forEach(perk => {
-                        perk.name = "";
-                        let plugDefinition = this.itemDefs.get(perk.hash);
-                        if (plugDefinition !== null && plugDefinition !== undefined) {
-                            perk.name = plugDefinition.name;
-                        }
-                    });
-                });
+
+                let perkColumnIndices =
+                    isArmor ? [0, 1, 2, 5, 6, 7] :
+                        isWeapon ? [0, 1, 2, 3, 4, 9] : [];
+
+                item.perkColumns = [];
+                for (let i = 0; i < item.rawPerkColumns.length; i++) {
+                    if (perkColumnIndices.includes(i)) {
+                        const column = item.rawPerkColumns[i];
+                        item.perkColumns.push(column.map(perk => {
+                            let output = {
+                                hash: perk.hash,
+                                name: "",
+                                isGood: perk.isGood,
+                                upgrades: perk.upgrades
+                            };
+                            let plugDefinition = this.itemDefs.get(perk.hash);
+                            if (plugDefinition !== null && plugDefinition !== undefined) {
+                                output.name = plugDefinition.name;
+                            }
+                            return output;
+                        }));
+                    }
+                }
+
                 item.name = itemDef.name;
                 item.class = itemDef.class;
                 item.type = itemDef.itemType;

@@ -9,6 +9,7 @@ interface DestinyItem {
     type: string;
     tier: string;
     power: number;
+    rawPerkColumns: PerkRating[][];
     perkColumns: PerkRating[][];
     comparisons: DestinyItemComparison[];
     group: string;
