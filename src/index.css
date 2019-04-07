@@ -159,6 +159,10 @@ td {
     color: white;
 }
 
+.comparison {
+    cursor: pointer;
+}
+
 .comparison-equivalent {
     display: inline-block;
     background-color: #DDDDDD;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import ItemStore from '../stores/ItemStore';
 import ItemActions from '../actions/ItemActions';
 import Item from './Item';
@@ -12,10 +12,13 @@ export interface ItemsTableProps {
 }
 
 class ItemsTable extends React.Component<ItemsTableProps, ItemStoreState> {
+    private itemRefs = new Map<string, React.RefObject<HTMLTableRowElement>>();
+
     constructor(props) {
         super(props);
         this.state = ItemStore.getState();
         this.onChange = this.onChange.bind(this);
+        this.scrollToItem = this.scrollToItem.bind(this);
     }
 
     componentDidMount() {
@@ -50,8 +53,13 @@ class ItemsTable extends React.Component<ItemsTableProps, ItemStoreState> {
             );
         }
 
+        this.itemRefs = new Map<string, React.RefObject<HTMLTableRowElement>>();
+        this.state.items.forEach(item => {
+            this.itemRefs.set(item.id, createRef<HTMLTableRowElement>());
+        });
+
         let items: JSX.Element[];
-        if (this.props.itemFilter === 'bad') {
+        if (this.props.itemFilter === "bad") {
             items = this.state.items.filter(item => {
                 let isBetter = false;
                 if (item.group === 'armor' && item.comparisons) {
@@ -66,21 +74,21 @@ class ItemsTable extends React.Component<ItemsTableProps, ItemStoreState> {
                 return isBetter;
             }).map((item) => {
                 return (
-                    <Item key={item.id} item={item} />
+                    <Item itemRef={this.itemRefs.get(item.id)} key={item.id} item={item} scrollToItem={this.scrollToItem} />
                 );
             });
         } else if (this.props.itemFilter === 'weapons') {
             items = this.state.items.filter(item => item.group === 'weapons')
                 .map(item => {
                     return (
-                        <Item key={item.id} item={item} />
+                        <Item itemRef={this.itemRefs.get(item.id)} key={item.id} item={item} scrollToItem={this.scrollToItem} />
                     );
                 });
         } else {
             items = this.state.items.filter(item => item.group === 'armor')
                 .map((item) => {
                     return (
-                        <Item key={item.id} item={item} />
+                        <Item itemRef={this.itemRefs.get(item.id)} key={item.id} item={item} scrollToItem={this.scrollToItem} />
                     );
                 });
         }
@@ -103,6 +111,13 @@ class ItemsTable extends React.Component<ItemsTableProps, ItemStoreState> {
                 </tbody>
             </table>
         );
+    }
+
+    scrollToItem(itemId: string) {
+        let itemRef = this.itemRefs.get(itemId).current;
+        if (itemRef !== null && itemRef !== undefined) {
+            itemRef.scrollIntoView(true);
+        }
     }
 }
 

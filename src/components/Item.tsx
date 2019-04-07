@@ -5,6 +5,8 @@ import DestinyItem from '../model/DestinyItem';
 
 export interface ItemProps {
     item: DestinyItem;
+    scrollToItem: (itemId: string) => void;
+    itemRef: React.RefObject<HTMLTableRowElement>;
 }
 
 class Item extends React.Component<ItemProps, {}> {
@@ -32,8 +34,8 @@ class Item extends React.Component<ItemProps, {}> {
                                 break;
                         }
                         return (
-                            <li key={comparison.id}>
-                                <div className={className}>{comparison.id}</div>
+                            <li key={comparison.id} onClick={() => this.props.scrollToItem(comparison.id)}>
+                                <div className={"comparison " + className}>{comparison.id}</div>
                             </li>);
                     })}
                 </ul>
@@ -41,7 +43,7 @@ class Item extends React.Component<ItemProps, {}> {
         }
 
         return (
-            <tr>
+            <tr ref={this.props.itemRef}>
                 <td>{this.props.item.id}</td>
                 <td>{this.props.item.name}</td>
                 <td>{this.props.item.class}</td>
