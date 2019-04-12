@@ -9,11 +9,12 @@ import Papa from 'papaparse';
 import saveAs from 'file-saver';
 import PerkRater from './PerkRater';
 import PerkRating from '../model/PerkRating';
+import DestinyAccount from '../model/DestinyAccount';
 
 export interface MainAppState {
     signedIn: boolean;
-    selectedAccount: any;
-    accounts: any[];
+    selectedAccount: DestinyAccount;
+    accounts: DestinyAccount[];
     showAllItems: boolean;
     showBadItems: boolean;
     showWeapons: boolean;
