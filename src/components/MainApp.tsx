@@ -98,11 +98,11 @@ class MainApp extends React.Component<{}, MainAppState> {
                 .then(response => {
                     response.Response.destinyMemberships.map(account => {
                         this.setState({
-                            accounts: this.state.accounts.concat({
-                                membershipType: account.membershipType,
-                                membershipId: account.membershipId,
-                                displayName: account.displayName
-                            })
+                            accounts: this.state.accounts.concat(new DestinyAccount(
+                                account.membershipId,
+                                account.membershipType,
+                                account.displayName
+                            ))
                         });
                     });
 

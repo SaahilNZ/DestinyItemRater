@@ -1,5 +1,6 @@
 import React from 'react';
 import DestinyAccount from '../model/DestinyAccount';
+import Account from './Account';
 
 export interface AccountSelectorProps {
     accounts: DestinyAccount[];
@@ -10,18 +11,14 @@ export interface AccountSelectorProps {
 class AccountSelector extends React.Component<AccountSelectorProps, {}> {
     render() {
         let accounts = this.props.accounts.map(account => {
-            let platform = this.getPlatformName(account.membershipType);
-            return (<div key={account.membershipId}
-                className="tab-link" onClick={(e) => this.props.onClick(e, account)}>
-                [{platform}] {account.displayName}
-            </div>);
+            return <Account account={account} onClick={this.props.onClick} />;
         });
         let selectedAccountString = "No Account Selected";
         let selectedAccount = this.props.selectedAccountId && 
             this.props.accounts.find(account => 
                 account.membershipId === this.props.selectedAccountId);
         if (selectedAccount) {
-            let platform = this.getPlatformName(selectedAccount.membershipType);
+            let platform = selectedAccount.getPlatformName(selectedAccount.membershipType);
             selectedAccountString = `[${platform}] ${selectedAccount.displayName}`;
         }
         return (
@@ -34,20 +31,6 @@ class AccountSelector extends React.Component<AccountSelectorProps, {}> {
                 </div>
             </div>
         );
-    }
-
-    getPlatformName(platformId: number) : string {
-        let platform: string;
-        if (platformId === 1) {
-            platform = "Xbox";
-        } else if (platformId === 2) {
-            platform = "PS";
-        } else if (platformId === 4) {
-            platform = "PC";
-        } else {
-            platform = "?";
-        }
-        return platform;
     }
 }
 
