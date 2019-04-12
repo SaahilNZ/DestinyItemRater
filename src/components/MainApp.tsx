@@ -195,7 +195,9 @@ class MainApp extends React.Component<{}, MainAppState> {
                                 </div>}
                             <div className="header-account float-right">
                                 <div className="header-separator"></div>
-                                <AccountSelector selectedAccount={this.state.selectedAccount}
+                                <AccountSelector 
+                                    selectedAccountId={this.state.selectedAccount 
+                                        && this.state.selectedAccount.membershipId}
                                     accounts={this.state.accounts} onClick={this.selectAccount} />
                                 <div className="header-separator"></div>
                                 <input className="tab-link"
