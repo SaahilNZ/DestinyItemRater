@@ -10,6 +10,8 @@ import saveAs from 'file-saver';
 import PerkRater from './PerkRater';
 import PerkRating from '../model/PerkRating';
 import DestinyAccount from '../model/DestinyAccount';
+import { Actions, ActionType } from '../actions/Actions';
+import { SelectAccountAction } from '../actions/AccountActions';
 
 export interface MainAppState {
     signedIn: boolean;
@@ -49,7 +51,7 @@ class MainApp extends React.Component<{}, MainAppState> {
         this.showAllItems = this.showAllItems.bind(this);
         this.showBadItems = this.showBadItems.bind(this);
         this.showWeapons = this.showWeapons.bind(this);
-        this.selectAccount = this.selectAccount.bind(this);
+        this.dispatch = this.dispatch.bind(this);
         this.exportCsv = this.exportCsv.bind(this);
         this.generateIdSearchString = this.generateIdSearchString.bind(this);
         this.closeSearch = this.closeSearch.bind(this);
@@ -195,10 +197,10 @@ class MainApp extends React.Component<{}, MainAppState> {
                                 </div>}
                             <div className="header-account float-right">
                                 <div className="header-separator"></div>
-                                <AccountSelector 
-                                    selectedAccountId={this.state.selectedAccount 
+                                <AccountSelector
+                                    selectedAccountId={this.state.selectedAccount
                                         && this.state.selectedAccount.membershipId}
-                                    accounts={this.state.accounts} onClick={this.selectAccount} />
+                                    accounts={this.state.accounts} dispatch={this.dispatch} />
                                 <div className="header-separator"></div>
                                 <input className="tab-link"
                                     type="button" value="Log Out" onClick={this.logOut} />
@@ -572,7 +574,17 @@ class MainApp extends React.Component<{}, MainAppState> {
         });
     }
 
-    selectAccount(e, account) {
+    dispatch(action: Actions) {
+        switch(action.type) {
+            case ActionType.SELECT_ACCOUNT:
+                this.onAccountSelected(action);
+                break;
+        }
+    }
+
+    onAccountSelected(action: SelectAccountAction) {
+        let account = this.state.accounts
+            .find(account => account.membershipId === action.accountId);
         this.setState({
             selectedAccount: account
         });
