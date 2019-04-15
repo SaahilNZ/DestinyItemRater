@@ -1,6 +1,6 @@
 import { AccountActions, AccountActionType } from "./AccountActions";
 
-export type Actions = AccountActions;
+export type Action = AccountActions;
 export const ActionType = {
     ...AccountActionType
 };

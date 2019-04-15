@@ -10,23 +10,10 @@ import saveAs from 'file-saver';
 import PerkRater from './PerkRater';
 import PerkRating from '../model/PerkRating';
 import DestinyAccount from '../model/DestinyAccount';
-import { Actions, ActionType } from '../actions/Actions';
+import { Action, ActionType } from '../actions/Actions';
 import { SelectAccountAction } from '../actions/AccountActions';
-
-export interface MainAppState {
-    signedIn: boolean;
-    selectedAccount: DestinyAccount;
-    accounts: DestinyAccount[];
-    showAllItems: boolean;
-    showBadItems: boolean;
-    showWeapons: boolean;
-    showSearch: boolean;
-    showPerkRater: boolean;
-    junkSearchString: string;
-    infuseSearchString: string;
-    copyResult: string;
-    perkRatings: Map<string, PerkRating>;
-}
+import { MainAppState } from '../model/State';
+import { accounts } from '../reducers/AccountReducers';
 
 class MainApp extends React.Component<{}, MainAppState> {
     private junkSearchTextArea = createRef<HTMLTextAreaElement>();
@@ -36,8 +23,10 @@ class MainApp extends React.Component<{}, MainAppState> {
         super(props);
         this.state = {
             signedIn: false,
-            selectedAccount: null,
-            accounts: [],
+            accounts: {
+                selectedAccount: null,
+                allAccounts: []
+            },
             showAllItems: true,
             showBadItems: false,
             showWeapons: false,
@@ -98,21 +87,22 @@ class MainApp extends React.Component<{}, MainAppState> {
             })
                 .then(response => response.json())
                 .then(response => {
-                    response.Response.destinyMemberships.map(account => {
-                        this.setState({
-                            accounts: this.state.accounts.concat(new DestinyAccount(
-                                account.membershipId,
-                                account.membershipType,
-                                account.displayName
-                            ))
-                        });
-                    });
-
-                    if (this.state.accounts.length > 0) {
-                        this.setState({
-                            selectedAccount: this.state.accounts[0]
-                        });
+                    let newState = {
+                        accounts: {
+                            allAccounts: response.Response.destinyMemberships.map(account => 
+                                new DestinyAccount(
+                                    account.membershipId,
+                                    account.membershipType,
+                                    account.displayName
+                                )
+                            ),
+                            selectedAccount: null
+                        }
                     }
+                    if (newState.accounts.allAccounts.length > 0) {
+                        newState.accounts.selectedAccount = newState.accounts.allAccounts[0];
+                    }
+                    this.setState(newState);
                 })
                 .catch(error => console.log(error));
         }
@@ -184,7 +174,7 @@ class MainApp extends React.Component<{}, MainAppState> {
                             <div className="header-separator float-left"></div>
                             <input className={"tab-link float-left " + (this.state.showWeapons ? "tab-link-active" : "")}
                                 type="button" value="All Weapons" onClick={this.showWeapons} />
-                            {this.state.selectedAccount &&
+                            {this.state.accounts.selectedAccount &&
                                 <div>
                                     <div className="header-separator float-left"></div>
                                     <input className="tab-link float-left" type="button"
@@ -198,16 +188,16 @@ class MainApp extends React.Component<{}, MainAppState> {
                             <div className="header-account float-right">
                                 <div className="header-separator"></div>
                                 <AccountSelector
-                                    selectedAccountId={this.state.selectedAccount
-                                        && this.state.selectedAccount.membershipId}
-                                    accounts={this.state.accounts} dispatch={this.dispatch} />
+                                    selectedAccountId={this.state.accounts.selectedAccount
+                                        && this.state.accounts.selectedAccount.membershipId}
+                                    accounts={this.state.accounts.allAccounts} dispatch={this.dispatch} />
                                 <div className="header-separator"></div>
                                 <input className="tab-link"
                                     type="button" value="Log Out" onClick={this.logOut} />
                             </div>
                         </div>
                     </div>
-                    {this.state.selectedAccount && !this.state.showPerkRater && (
+                    {this.state.accounts.selectedAccount && !this.state.showPerkRater && (
                         <div>
                             <div className={this.state.showAllItems ? "" : "hidden"}>
                                 <ItemsTable />
@@ -574,8 +564,8 @@ class MainApp extends React.Component<{}, MainAppState> {
         });
     }
 
-    dispatch(action: Actions) {
-        switch(action.type) {
+    dispatch(action: Action) {
+        switch (action.type) {
             case ActionType.SELECT_ACCOUNT:
                 this.onAccountSelected(action);
                 break;
@@ -583,10 +573,11 @@ class MainApp extends React.Component<{}, MainAppState> {
     }
 
     onAccountSelected(action: SelectAccountAction) {
-        let account = this.state.accounts
+        let account = this.state.accounts.allAccounts
             .find(account => account.membershipId === action.accountId);
+
         this.setState({
-            selectedAccount: account
+            accounts: accounts(this.state.accounts, action)
         });
 
         localStorage.setItem("selected_profile", JSON.stringify(account));
