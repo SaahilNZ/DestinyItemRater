@@ -3,7 +3,6 @@ import ItemsTable from './ItemsTable';
 import uuid from 'uuid';
 import AccountSelector from './AccountSelector';
 import ItemStore from '../stores/ItemStore';
-import ItemActions from '../actions/ItemActions';
 import ItemComparisonResult from '../services/ItemComparisonResult';
 import Papa from 'papaparse';
 import saveAs from 'file-saver';
@@ -23,10 +22,7 @@ class MainApp extends React.Component<{}, MainAppState> {
         super(props);
         this.state = {
             signedIn: false,
-            accounts: {
-                selectedAccount: null,
-                allAccounts: []
-            },
+            accounts: accounts(undefined, undefined),
             showAllItems: true,
             showBadItems: false,
             showWeapons: false,
@@ -573,15 +569,9 @@ class MainApp extends React.Component<{}, MainAppState> {
     }
 
     onAccountSelected(action: SelectAccountAction) {
-        let account = this.state.accounts.allAccounts
-            .find(account => account.membershipId === action.accountId);
-
         this.setState({
             accounts: accounts(this.state.accounts, action)
         });
-
-        localStorage.setItem("selected_profile", JSON.stringify(account));
-        ItemActions.fetchItems();
     }
 
     logIn() {

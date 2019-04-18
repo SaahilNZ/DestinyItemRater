@@ -3,6 +3,7 @@ import DestinyAccount from '../model/DestinyAccount';
 import Account from './Account';
 import { selectAccount } from '../actions/AccountActions';
 import { Action } from '../actions/Actions';
+import ItemActions from '../actions/ItemActions';
 
 export interface AccountSelectorProps {
     accounts: DestinyAccount[];
@@ -14,7 +15,7 @@ class AccountSelector extends React.Component<AccountSelectorProps, {}> {
     render() {
         let accounts = this.props.accounts.map(account => {
             return <Account account={account}
-                onClick={() => this.onAccountSelected(account.membershipId)} />;
+                onClick={() => this.onAccountSelected(account)} />;
         });
         let selectedAccountString = "No Account Selected";
         let selectedAccount = this.props.selectedAccountId &&
@@ -36,8 +37,11 @@ class AccountSelector extends React.Component<AccountSelectorProps, {}> {
         );
     }
 
-    onAccountSelected(accountId: string) {
-        this.props.dispatch(selectAccount(accountId));
+    onAccountSelected(account: DestinyAccount) {
+        this.props.dispatch(selectAccount(account.membershipId));
+
+        localStorage.setItem("selected_profile", JSON.stringify(account));
+        ItemActions.fetchItems();
     }
 }
 
