@@ -39,9 +39,7 @@ class AccountSelector extends React.Component<AccountSelectorProps, {}> {
 
     onAccountSelected(account: DestinyAccount) {
         this.props.dispatch(selectAccount(account.membershipId));
-
-        localStorage.setItem("selected_profile", JSON.stringify(account));
-        ItemActions.fetchItems();
+        ItemActions.fetchItems(account);
     }
 }
 

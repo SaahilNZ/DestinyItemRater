@@ -6,8 +6,10 @@ import ItemDefinitionActions from '../actions/ItemDefinitionActions';
 import PerkActions from '../actions/PerkActions';
 import ItemComparisonResult from '../services/ItemComparisonResult';
 import { ItemStoreState } from '../stores/ItemStore';
+import DestinyAccount from '../model/DestinyAccount';
 
 export interface ItemsTableProps {
+    selectedAccount: DestinyAccount;
     itemFilter?: string;
 }
 
@@ -26,7 +28,7 @@ class ItemsTable extends React.Component<ItemsTableProps, ItemStoreState> {
 
         ItemDefinitionActions.fetchItemDefinitions();
         PerkActions.fetchPerks();
-        ItemActions.fetchItems();
+        ItemActions.fetchItems(this.props.selectedAccount);
     }
 
     componentWillUnmount() {

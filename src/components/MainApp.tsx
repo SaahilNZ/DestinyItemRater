@@ -52,8 +52,6 @@ class MainApp extends React.Component<{}, MainAppState> {
         let refreshTokenExpiry = +localStorage.getItem("refresh_expires_in");
         let refreshToken = localStorage.getItem("refresh_token");
 
-        localStorage.removeItem("profile_id");
-
         if (accessToken) {
             let date = new Date();
             if (accessTokenExpiry && date.getTime() < accessTokenExpiry) {
@@ -108,7 +106,6 @@ class MainApp extends React.Component<{}, MainAppState> {
         localStorage.removeItem("access_token");
         localStorage.removeItem("expires_in");
         localStorage.removeItem("membership_id");
-        localStorage.removeItem("selected_profile");
         localStorage.removeItem("refresh_expires_in");
         localStorage.removeItem("refresh_token");
     }
@@ -196,13 +193,13 @@ class MainApp extends React.Component<{}, MainAppState> {
                     {this.state.accounts.selectedAccount && !this.state.showPerkRater && (
                         <div>
                             <div className={this.state.showAllItems ? "" : "hidden"}>
-                                <ItemsTable />
+                                <ItemsTable selectedAccount={this.state.accounts.selectedAccount} />
                             </div>
                             <div className={this.state.showBadItems ? "" : "hidden"}>
-                                <ItemsTable itemFilter="bad" />
+                                <ItemsTable selectedAccount={this.state.accounts.selectedAccount} itemFilter="bad" />
                             </div>
                             <div className={this.state.showWeapons ? "" : "hidden"}>
-                                <ItemsTable itemFilter="weapons" />
+                                <ItemsTable selectedAccount={this.state.accounts.selectedAccount} itemFilter="weapons" />
                             </div>
                         </div>
                     )}
