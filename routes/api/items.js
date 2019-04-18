@@ -4,9 +4,8 @@ var fetch = require('node-fetch');
 
 /* GET armour items. */
 router.get('/', function (req, res, next) {
-    var selectedProfile = JSON.parse(req.headers.selected_profile)
-    var profileId = selectedProfile.membershipId;
-    var platformId = selectedProfile.membershipType;
+    var profileId = req.query.membership_id;
+    var platformId = req.query.membership_type;
     var accessToken = JSON.parse(req.headers.access_token);
     var url = `https://www.bungie.net/Platform/Destiny2/${platformId}/Profile/${profileId}/?components=102%2C103%2C200%2C201%2C202%2C205%2C300%2C301%2C304%2C305%2C306%2C307%2C308`;
     fetch(url, {
