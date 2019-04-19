@@ -5,15 +5,15 @@ import Item from './Item';
 import ItemDefinitionActions from '../actions/ItemDefinitionActions';
 import PerkActions from '../actions/PerkActions';
 import ItemComparisonResult from '../services/ItemComparisonResult';
-import { ItemStoreState } from '../stores/ItemStore';
 import DestinyAccount from '../model/DestinyAccount';
+import { ItemsState } from '../model/State';
 
 export interface ItemsTableProps {
     selectedAccount: DestinyAccount;
     itemFilter?: string;
 }
 
-class ItemsTable extends React.Component<ItemsTableProps, ItemStoreState> {
+class ItemsTable extends React.Component<ItemsTableProps, ItemsState> {
     private itemRefs = new Map<string, React.RefObject<HTMLTableRowElement>>();
 
     constructor(props) {

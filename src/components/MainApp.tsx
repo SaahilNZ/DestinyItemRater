@@ -7,12 +7,10 @@ import ItemComparisonResult from '../services/ItemComparisonResult';
 import Papa from 'papaparse';
 import saveAs from 'file-saver';
 import PerkRater from './PerkRater';
-import PerkRating from '../model/PerkRating';
 import DestinyAccount from '../model/DestinyAccount';
 import { Action, ActionType } from '../actions/Actions';
-import { SelectAccountAction } from '../actions/AccountActions';
 import { MainAppState } from '../model/State';
-import { accounts } from '../reducers/AccountReducers';
+import AppStore from '../stores/AppStore';
 
 class MainApp extends React.Component<{}, MainAppState> {
     private junkSearchTextArea = createRef<HTMLTextAreaElement>();
@@ -20,19 +18,7 @@ class MainApp extends React.Component<{}, MainAppState> {
 
     constructor(props) {
         super(props);
-        this.state = {
-            signedIn: false,
-            accounts: accounts(undefined, undefined),
-            showAllItems: true,
-            showBadItems: false,
-            showWeapons: false,
-            showSearch: false,
-            showPerkRater: false,
-            junkSearchString: "",
-            infuseSearchString: "",
-            copyResult: "",
-            perkRatings: new Map<string, PerkRating>()
-        }
+        this.state = AppStore.getState();
         this.showAllItems = this.showAllItems.bind(this);
         this.showBadItems = this.showBadItems.bind(this);
         this.showWeapons = this.showWeapons.bind(this);
@@ -55,7 +41,7 @@ class MainApp extends React.Component<{}, MainAppState> {
         if (accessToken) {
             let date = new Date();
             if (accessTokenExpiry && date.getTime() < accessTokenExpiry) {
-                this.setState({
+                this.applyStateChange({
                     signedIn: true
                 });
             } else {
@@ -96,7 +82,7 @@ class MainApp extends React.Component<{}, MainAppState> {
                     if (newState.accounts.allAccounts.length > 0) {
                         newState.accounts.selectedAccount = newState.accounts.allAccounts[0];
                     }
-                    this.setState(newState);
+                    this.applyStateChange(newState);
                 })
                 .catch(error => console.log(error));
         }
@@ -123,7 +109,7 @@ class MainApp extends React.Component<{}, MainAppState> {
                 let accessTokenExpiry = date.getTime() + (json.expires_in * 1000);
                 localStorage.setItem("access_token", JSON.stringify(json.access_token));
                 localStorage.setItem("expires_in", JSON.stringify(accessTokenExpiry));
-                this.setState({
+                this.applyStateChange({
                     signedIn: true
                 });
             })
@@ -131,7 +117,7 @@ class MainApp extends React.Component<{}, MainAppState> {
     }
 
     showAllItems() {
-        this.setState({
+        this.applyStateChange({
             showAllItems: true,
             showBadItems: false,
             showWeapons: false
@@ -139,7 +125,7 @@ class MainApp extends React.Component<{}, MainAppState> {
     }
 
     showBadItems() {
-        this.setState({
+        this.applyStateChange({
             showAllItems: false,
             showBadItems: true,
             showWeapons: false
@@ -147,7 +133,7 @@ class MainApp extends React.Component<{}, MainAppState> {
     }
 
     showWeapons() {
-        this.setState({
+        this.applyStateChange({
             showAllItems: false,
             showBadItems: false,
             showWeapons: true
@@ -468,7 +454,7 @@ class MainApp extends React.Component<{}, MainAppState> {
             }
         }
 
-        this.setState({
+        this.applyStateChange({
             junkSearchString: junkItems.map(item => `id:${item.id}`).join(" or "),
             infuseSearchString: infusionItems.map(item => `id:${item.id}`).join(" or "),
             copyResult: "",
@@ -480,20 +466,20 @@ class MainApp extends React.Component<{}, MainAppState> {
         if (textArea === "junk") {
             this.junkSearchTextArea.current.select();
             document.execCommand('copy');
-            this.setState({
+            this.applyStateChange({
                 copyResult: "Copied junk items"
             });
         } else if (textArea === "infuse") {
             this.infuseSearchTextArea.current.select();
             document.execCommand('copy');
-            this.setState({
+            this.applyStateChange({
                 copyResult: "Copied infusion items"
             });
         }
     }
 
     closeSearch() {
-        this.setState({
+        this.applyStateChange({
             showSearch: false
         });
     }
@@ -545,30 +531,27 @@ class MainApp extends React.Component<{}, MainAppState> {
     }
 
     configurePerkRatings() {
-        this.setState({
+        this.applyStateChange({
             perkRatings: ItemStore.getState().perkRatings,
             showPerkRater: true
         });
     }
 
     applyPerkRatings() {
-        this.setState({
+        this.applyStateChange({
             showPerkRater: false
         });
     }
 
     dispatch(action: Action) {
+        let newState = AppStore.dispatch(action);
         switch (action.type) {
             case ActionType.SELECT_ACCOUNT:
-                this.onAccountSelected(action);
+                this.setState({
+                    accounts: newState.accounts
+                });
                 break;
         }
-    }
-
-    onAccountSelected(action: SelectAccountAction) {
-        this.setState({
-            accounts: accounts(this.state.accounts, action)
-        });
     }
 
     logIn() {
@@ -581,6 +564,12 @@ class MainApp extends React.Component<{}, MainAppState> {
     logOut() {
         localStorage.clear();
         window.location.href = "/";
+    }
+
+    // todo: remove this
+    applyStateChange(newState) {
+        AppStore.setState(newState);
+        this.setState(newState);
     }
 }
 

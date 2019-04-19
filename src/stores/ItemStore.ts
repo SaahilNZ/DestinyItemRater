@@ -7,15 +7,10 @@ import DestinyItem from '../model/DestinyItem';
 import ItemDefinition from '../model/ItemDefinition';
 import PerkRating from '../model/PerkRating';
 import AbstractStoreModel from './AbstractStoreModel';
+import { ItemsState } from '../model/State';
+import AppStore from './AppStore';
 
-export interface ItemStoreState {
-    items: DestinyItem[];
-    itemDefs: Map<string, ItemDefinition>;
-    perkRatings: Map<string, PerkRating>;
-    errorMessage: string;
-}
-
-class ItemStore extends AbstractStoreModel<ItemStoreState> implements ItemStoreState {
+class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
     items: DestinyItem[];
     itemDefs: Map<string, ItemDefinition>;
     perkRatings: Map<string, PerkRating>;
@@ -23,10 +18,7 @@ class ItemStore extends AbstractStoreModel<ItemStoreState> implements ItemStoreS
 
     constructor() {
         super();
-        this.items = [];
-        this.itemDefs = new Map();
-        this.perkRatings = new Map();
-        this.errorMessage = null;
+        Object.assign(this, AppStore.getState().items);
         this.bindListeners({
             onItemsFetching: ItemActions.fetchItems,
             onItemDefinitionsFetching: ItemDefinitionActions.fetchItemDefinitions,
@@ -41,14 +33,17 @@ class ItemStore extends AbstractStoreModel<ItemStoreState> implements ItemStoreS
 
     onItemsFetching() {
         this.items = [];
+        this.updateAppStore();
     }
 
     onItemDefinitionsFetching() {
         this.itemDefs = new Map<string, ItemDefinition>();
+        this.updateAppStore();
     }
 
     onPerkRatingsFetching() {
         this.perkRatings = new Map<string, PerkRating>();
+        this.updateAppStore();
     }
 
     onItemsLoadedForAccount(bungieResponse) {
@@ -119,6 +114,7 @@ class ItemStore extends AbstractStoreModel<ItemStoreState> implements ItemStoreS
         }
         this.compareItems();
         this.errorMessage = null;
+        this.updateAppStore();
     }
 
     onItemDefinitionsLoaded(itemDefs: Map<string, ItemDefinition>) {
@@ -185,6 +181,7 @@ class ItemStore extends AbstractStoreModel<ItemStoreState> implements ItemStoreS
             }
         });
         this.items = this.items.filter(item => item !== null);
+        this.updateAppStore();
     }
 
     applyPerkRatings() {
@@ -212,6 +209,18 @@ class ItemStore extends AbstractStoreModel<ItemStoreState> implements ItemStoreS
 
     onItemsFailedToLoad(errorMessage) {
         this.errorMessage = errorMessage;
+        this.updateAppStore();
+    }
+
+    updateAppStore() {
+        AppStore.setState({
+            items: {
+                items: this.items,
+                itemDefs: this.itemDefs,
+                perkRatings: this.perkRatings,
+                errorMessage: this.errorMessage
+            }
+        });
     }
 }
 
