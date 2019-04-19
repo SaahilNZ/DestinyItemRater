@@ -20,7 +20,7 @@ class AppStore {
         return {
             signedIn: false,
             accounts: accounts(currentState && currentState.accounts, action),
-            items: items(undefined, undefined),
+            items: items(currentState && currentState.items, action),
             showAllItems: true,
             showBadItems: false,
             showWeapons: false,

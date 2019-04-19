@@ -2,7 +2,7 @@ import DestinyAccount from "../model/DestinyAccount";
 import React from "react";
 import { ItemsState } from "../model/State";
 import ItemStore from "../stores/ItemStore";
-import ItemActions from "../actions/ItemActions";
+import ItemActions_Alt from "../actions/ItemActions_Alt";
 import PerkActions from "../actions/PerkActions";
 import ItemDefinitionActions from "../actions/ItemDefinitionActions";
 import DestinyItem from "../model/DestinyItem";
@@ -27,7 +27,7 @@ export default class FilteredItemsTable extends React.Component<FilteredItemsTab
 
         ItemDefinitionActions.fetchItemDefinitions();
         PerkActions.fetchPerks();
-        ItemActions.fetchItems(this.props.selectedAccount);
+        ItemActions_Alt.fetchItems(this.props.selectedAccount);
     }
 
     componentWillUnmount() {

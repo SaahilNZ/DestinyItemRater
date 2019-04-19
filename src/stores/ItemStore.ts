@@ -1,4 +1,4 @@
-import ItemActions from '../actions/ItemActions';
+import ItemActions_Alt from '../actions/ItemActions_Alt';
 import alt from "../alt";
 import ItemDefinitionActions from '../actions/ItemDefinitionActions';
 import PerkActions from '../actions/PerkActions';
@@ -9,6 +9,8 @@ import PerkRating from '../model/PerkRating';
 import AbstractStoreModel from './AbstractStoreModel';
 import { ItemsState } from '../model/State';
 import AppStore from './AppStore';
+import { requestItems, requestItemDefinitions } from '../actions/ItemActions';
+import { Action } from '../actions/Actions';
 
 class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
     items: DestinyItem[];
@@ -20,25 +22,23 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
         super();
         Object.assign(this, AppStore.getState().items);
         this.bindListeners({
-            onItemsFetching: ItemActions.fetchItems,
+            onItemsFetching: ItemActions_Alt.fetchItems,
             onItemDefinitionsFetching: ItemDefinitionActions.fetchItemDefinitions,
             onPerkRatingsFetching: PerkActions.fetchPerks,
-
-            onItemsFailedToLoad: ItemActions.onItemsFailedToLoad,
-            onItemsLoadedForAccount: ItemActions.onItemsLoadedForAccount,
+            
+            onItemsFailedToLoad: ItemActions_Alt.onItemsFailedToLoad,
+            onItemsLoadedForAccount: ItemActions_Alt.onItemsLoadedForAccount,
             onItemDefinitionsLoaded: ItemDefinitionActions.updateItemDefinitions,
             onPerkRatingsLoaded: PerkActions.updatePerks
         })
     }
-
+    
     onItemsFetching() {
-        this.items = [];
-        this.updateAppStore();
+        this.dispatch(requestItems());
     }
 
     onItemDefinitionsFetching() {
-        this.itemDefs = new Map<string, ItemDefinition>();
-        this.updateAppStore();
+        this.dispatch(requestItemDefinitions());
     }
 
     onPerkRatingsFetching() {
@@ -212,7 +212,12 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
         this.updateAppStore();
     }
 
-    updateAppStore() {
+    private dispatch(action: Action) {
+        let newState = AppStore.dispatch(action);
+        Object.assign(this, newState.items);
+    }
+
+    private updateAppStore() {
         AppStore.setState({
             items: {
                 items: this.items,

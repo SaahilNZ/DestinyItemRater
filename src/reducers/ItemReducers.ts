@@ -1,5 +1,6 @@
 import { ItemsState } from "../model/State";
 import { Action } from "../actions/Actions";
+import { ItemActionType } from "../actions/ItemActions";
 
 const initialState : ItemsState = {
     items: [],
@@ -11,6 +12,16 @@ const initialState : ItemsState = {
 export function items(state = initialState, action?: Action) : ItemsState {
     if (action) {
         switch (action.type) {
+            case ItemActionType.REQUEST_ITEMS:
+                return {
+                    ...state,
+                    items: []
+                };
+            case ItemActionType.REQUEST_ITEM_DEFINITIONS:
+                return {
+                    ...state,
+                    itemDefs: new Map()
+                };
             default:
                 return state;
         }

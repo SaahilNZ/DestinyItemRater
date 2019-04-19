@@ -3,7 +3,7 @@ import DestinyAccount from '../model/DestinyAccount';
 import Account from './Account';
 import { selectAccount } from '../actions/AccountActions';
 import { Action } from '../actions/Actions';
-import ItemActions from '../actions/ItemActions';
+import ItemActions_Alt from '../actions/ItemActions_Alt';
 
 export interface AccountSelectorProps {
     accounts: DestinyAccount[];
@@ -39,7 +39,7 @@ class AccountSelector extends React.Component<AccountSelectorProps, {}> {
 
     onAccountSelected(account: DestinyAccount) {
         this.props.dispatch(selectAccount(account.membershipId));
-        ItemActions.fetchItems(account);
+        ItemActions_Alt.fetchItems(account);
     }
 }
 
