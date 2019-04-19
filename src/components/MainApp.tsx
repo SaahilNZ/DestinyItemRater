@@ -1,5 +1,4 @@
 import React, { createRef } from 'react';
-import ItemsTable from './ItemsTable';
 import uuid from 'uuid';
 import AccountSelector from './AccountSelector';
 import ItemStore from '../stores/ItemStore';
@@ -11,6 +10,7 @@ import DestinyAccount from '../model/DestinyAccount';
 import { Action, ActionType } from '../actions/Actions';
 import { MainAppState } from '../model/State';
 import AppStore from '../stores/AppStore';
+import FilteredItemsTable from './FilteredItemsTable';
 
 class MainApp extends React.Component<{}, MainAppState> {
     private junkSearchTextArea = createRef<HTMLTextAreaElement>();
@@ -179,13 +179,13 @@ class MainApp extends React.Component<{}, MainAppState> {
                     {this.state.accounts.selectedAccount && !this.state.showPerkRater && (
                         <div>
                             <div className={this.state.showAllItems ? "" : "hidden"}>
-                                <ItemsTable selectedAccount={this.state.accounts.selectedAccount} />
+                                <FilteredItemsTable selectedAccount={this.state.accounts.selectedAccount} />
                             </div>
                             <div className={this.state.showBadItems ? "" : "hidden"}>
-                                <ItemsTable selectedAccount={this.state.accounts.selectedAccount} itemFilter="bad" />
+                                <FilteredItemsTable selectedAccount={this.state.accounts.selectedAccount} itemFilter="bad" />
                             </div>
                             <div className={this.state.showWeapons ? "" : "hidden"}>
-                                <ItemsTable selectedAccount={this.state.accounts.selectedAccount} itemFilter="weapons" />
+                                <FilteredItemsTable selectedAccount={this.state.accounts.selectedAccount} itemFilter="weapons" />
                             </div>
                         </div>
                     )}
