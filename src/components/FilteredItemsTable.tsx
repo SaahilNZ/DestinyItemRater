@@ -76,7 +76,7 @@ export default class FilteredItemsTable extends React.Component<FilteredItemsTab
         }
 
         return (
-            <ItemsTable items={items} />
+            <ItemsTable items={items} itemDefinitions={this.state.itemDefinitions} />
         );
     }
 }

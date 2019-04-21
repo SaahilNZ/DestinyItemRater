@@ -1,10 +1,10 @@
 import React from 'react';
 import Perk from './Perk';
 import ItemComparisonResult from '../services/ItemComparisonResult';
-import DestinyItem from '../model/DestinyItem';
+import DestinyItemContainer from '../model/DestinyItemContainer';
 
 export interface ItemProps {
-    item: DestinyItem;
+    itemContainer: DestinyItemContainer;
     scrollToItem: (itemId: string) => void;
     itemRef: React.RefObject<HTMLTableRowElement>;
 }
@@ -12,8 +12,8 @@ export interface ItemProps {
 class Item extends React.Component<ItemProps, {}> {
     render() {
         let comparisons = <div>Loading...</div>;
-        if (this.props.item.comparisons) {
-            let similar = this.props.item.comparisons.filter(comparison =>
+        if (this.props.itemContainer.item.comparisons) {
+            let similar = this.props.itemContainer.item.comparisons.filter(comparison =>
                 comparison.result !== ItemComparisonResult.ITEM_IS_INCOMPARABLE);
             comparisons = (
                 <ul>
@@ -44,16 +44,16 @@ class Item extends React.Component<ItemProps, {}> {
 
         return (
             <tr ref={this.props.itemRef}>
-                <td>{this.props.item.id}</td>
-                <td>{this.props.item.name}</td>
-                <td>{this.props.item.class}</td>
-                <td>{this.props.item.type}</td>
-                <td>{this.props.item.power}</td>
+                <td>{this.props.itemContainer.item.id}</td>
+                <td>{this.props.itemContainer.definition.name}</td>
+                <td>{this.props.itemContainer.definition.class}</td>
+                <td>{this.props.itemContainer.definition.itemType}</td>
+                <td>{this.props.itemContainer.item.power}</td>
 
                 <td>
                     <div className="perkBlock">
                         {
-                            this.props.item.perkColumns.map(column => {
+                            this.props.itemContainer.item.perkColumns.map(column => {
                                 let perks = column.filter(perk => perk != null).map(perk =>
                                     <li>
                                         <Perk perk={perk} />

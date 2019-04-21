@@ -1,7 +1,7 @@
 import DestinyAccount from "./DestinyAccount";
 import PerkRating from "./PerkRating";
 import DestinyItem from "./DestinyItem";
-import ItemDefinition from "./ItemDefinition";
+import DestinyItemDefinition from "./DestinyItemDefinition";
 
 export interface AccountState {
     selectedAccount: DestinyAccount;
@@ -10,7 +10,7 @@ export interface AccountState {
 
 export interface ItemsState {
     items: DestinyItem[];
-    itemDefs: Map<string, ItemDefinition>;
+    itemDefinitions: Map<string, DestinyItemDefinition>;
     perkRatings: Map<string, PerkRating>;
     errorMessage: string;
 }

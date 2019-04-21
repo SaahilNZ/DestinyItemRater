@@ -1,24 +1,24 @@
 import ArmourComparer from './ArmourComparer'
 import ItemStore from '../stores/ItemStore'
-import DestinyItem from '../model/DestinyItem';
 import DestinyItemComparison from '../model/DestinyItemComparison';
 import ItemComparisonResult from './ItemComparisonResult';
 import WeaponComparer from './WeaponComparer';
+import DestinyItemContainer from '../model/DestinyItemContainer';
 
 interface ItemComparer {
-    compare(item1: DestinyItem, item2: DestinyItem): ItemComparisonResult;
+    compare(item1: DestinyItemContainer, item2: DestinyItemContainer): ItemComparisonResult;
 }
 
 class ComparisonService {
-    compare(item1: DestinyItem, item2: DestinyItem): ItemComparisonResult {
-        if (item1.group !== item2.group) {
+    compare(item1: DestinyItemContainer, item2: DestinyItemContainer): ItemComparisonResult {
+        if (item1.item.group !== item2.item.group) {
             return ItemComparisonResult.ITEM_IS_INCOMPARABLE;
         }
 
         let comparer: ItemComparer = null;
-        if (item1.group === 'armor') {
+        if (item1.item.group === 'armor') {
             comparer = new ArmourComparer(ItemStore);
-        } else if (item1.group === 'weapons') {
+        } else if (item1.item.group === 'weapons') {
             comparer = new WeaponComparer(ItemStore);
         }
 
@@ -29,21 +29,21 @@ class ComparisonService {
         return comparer.compare(item1, item2);
     }
 
-    compareAll(items: DestinyItem[]) {
+    compareAll(items: DestinyItemContainer[]) {
         let output: { [id: string]: DestinyItemComparison[]; } = {};
         items.forEach(item => {
             let comparisons = new Array(items.length - 1);
             for (let i = 0; i < items.length; i++) {
                 const item2 = items[i];
-                if (item.id === item2.id) {
+                if (item.item.id === item2.item.id) {
                     continue;
                 }
                 comparisons[i] = {
-                    id: item2.id,
+                    id: item2.item.id,
                     result: this.compare(item, item2)
                 };
             }
-            output[item.id] = comparisons;
+            output[item.item.id] = comparisons;
         });
         return output;
     }

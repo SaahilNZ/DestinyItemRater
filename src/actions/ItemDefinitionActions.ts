@@ -1,16 +1,16 @@
 import alt from "../alt";
 import ItemDefinitionSource from "../sources/ItemDefinitionSource";
 import AbstractActionsModel from "./AbstractActionsModel";
-import ItemDefinition from "../model/ItemDefinition";
+import DestinyItemDefinition from "../model/DestinyItemDefinition";
 
 interface AltItemDefinitionActions {
-    updateItemDefinitions(itemDefinitions: Map<string, ItemDefinition>): Map<string, ItemDefinition>;
+    updateItemDefinitions(itemDefinitions: Map<string, DestinyItemDefinition>): Map<string, DestinyItemDefinition>;
     fetchItemDefinitions(): (dispatch: any) => void;
     itemDefinitionsFailed(errorMessage: string): string;
 }
 
 class ItemDefinitionActions extends AbstractActionsModel implements AltItemDefinitionActions {
-    updateItemDefinitions(itemDefinitions: Map<string, ItemDefinition>): Map<string, ItemDefinition> {
+    updateItemDefinitions(itemDefinitions: Map<string, DestinyItemDefinition>): Map<string, DestinyItemDefinition> {
         return itemDefinitions;
     }
     

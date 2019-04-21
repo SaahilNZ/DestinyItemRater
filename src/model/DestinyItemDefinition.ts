@@ -1,4 +1,4 @@
-interface ItemDefinition {
+interface DestinyItemDefinition {
     hash: number;
     name: string;
     itemType: string;
@@ -6,4 +6,4 @@ interface ItemDefinition {
     tier: string;
 }
 
-export default ItemDefinition;
+export default DestinyItemDefinition;

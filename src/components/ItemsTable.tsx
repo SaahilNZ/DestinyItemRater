@@ -1,9 +1,11 @@
 import React, { createRef } from 'react';
 import Item from './Item';
 import DestinyItem from '../model/DestinyItem';
+import DestinyItemDefinition from '../model/DestinyItemDefinition';
 
 interface ItemsTableProps {
     items: DestinyItem[]
+    itemDefinitions: Map<string, DestinyItemDefinition>
 }
 
 export default class ItemsTable extends React.Component<ItemsTableProps, {}> {
@@ -19,8 +21,14 @@ export default class ItemsTable extends React.Component<ItemsTableProps, {}> {
         this.props.items.forEach(item => {
             this.itemRefs.set(item.id, createRef<HTMLTableRowElement>());
         });
-        let items = this.props.items.map(item =>
-            <Item itemRef={this.itemRefs.get(item.id)} key={item.id} item={item} scrollToItem={this.scrollToItem} />);
+        
+        let items = this.props.items.map(item => {
+            let container = {
+                item: item,
+                definition: this.props.itemDefinitions.get(item.itemHash)
+            };
+            return <Item itemRef={this.itemRefs.get(item.id)} key={item.id} itemContainer={container} scrollToItem={this.scrollToItem} />;
+        });
 
         return (
             <table className="item-table">

@@ -4,7 +4,7 @@ import { ItemActionType } from "../actions/ItemActions";
 
 const initialState : ItemsState = {
     items: [],
-    itemDefs: new Map(),
+    itemDefinitions: new Map(),
     perkRatings: new Map(),
     errorMessage: null
 }
@@ -20,7 +20,7 @@ export function items(state = initialState, action?: Action) : ItemsState {
             case ItemActionType.REQUEST_ITEM_DEFINITIONS:
                 return {
                     ...state,
-                    itemDefs: new Map()
+                    itemDefinitions: new Map()
                 };
             default:
                 return state;

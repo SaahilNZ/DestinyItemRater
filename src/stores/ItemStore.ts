@@ -4,7 +4,7 @@ import ItemDefinitionActions from '../actions/ItemDefinitionActions';
 import PerkActions from '../actions/PerkActions';
 import ComparisonService from '../services/ComparisonService';
 import DestinyItem from '../model/DestinyItem';
-import ItemDefinition from '../model/ItemDefinition';
+import DestinyItemDefinition from '../model/DestinyItemDefinition';
 import PerkRating from '../model/PerkRating';
 import AbstractStoreModel from './AbstractStoreModel';
 import { ItemsState } from '../model/State';
@@ -14,7 +14,7 @@ import { Action } from '../actions/Actions';
 
 class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
     items: DestinyItem[];
-    itemDefs: Map<string, ItemDefinition>;
+    itemDefinitions: Map<string, DestinyItemDefinition>;
     perkRatings: Map<string, PerkRating>;
     errorMessage: string;
 
@@ -106,7 +106,7 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
                     group: null
                 };
             }).filter(item => item !== null);
-        if (this.itemDefs.size > 0) {
+        if (this.itemDefinitions.size > 0) {
             this.applyItemDefinitions();
         }
         if (this.perkRatings.size > 0) {
@@ -117,8 +117,8 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
         this.updateAppStore();
     }
 
-    onItemDefinitionsLoaded(itemDefs: Map<string, ItemDefinition>) {
-        this.itemDefs = itemDefs;
+    onItemDefinitionsLoaded(itemDefs: Map<string, DestinyItemDefinition>) {
+        this.itemDefinitions = itemDefs;
         this.applyItemDefinitions();
         this.compareItems();
     }
@@ -140,7 +140,7 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
             'Rocket Launcher', 'Sword', 'Linear Fusion Rifle', 'Machine Gun'
         ];
         this.items.forEach((item, index) => {
-            let itemDef = this.itemDefs.get(item.itemHash);
+            let itemDef = this.itemDefinitions.get(item.itemHash);
 
             let isArmor = armourTypes.includes(itemDef.itemType);
             let isWeapon = weaponTypes.includes(itemDef.itemType);
@@ -162,7 +162,7 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
                                 isGood: perk.isGood,
                                 upgrades: perk.upgrades
                             };
-                            let plugDefinition = this.itemDefs.get(perk.hash);
+                            let plugDefinition = this.itemDefinitions.get(perk.hash);
                             if (plugDefinition !== null && plugDefinition !== undefined) {
                                 output.name = plugDefinition.name;
                             }
@@ -171,10 +171,6 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
                     }
                 }
 
-                item.name = itemDef.name;
-                item.class = itemDef.class;
-                item.type = itemDef.itemType;
-                item.tier = itemDef.tier;
                 item.group = isArmor ? 'armor' : (isWeapon ? 'weapons' : null);
             } else {
                 this.items[index] = null;
@@ -201,7 +197,15 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
     }
 
     compareItems() {
-        let comparisons = ComparisonService.compareAll(this.items);
+        let containers = this.items.map(item => {
+            let itemDef = this.itemDefinitions.get(item.itemHash);
+            return itemDef && {
+                item: item,
+                definition: itemDef
+            };
+        }).filter(item => item !== null);
+        
+        let comparisons = ComparisonService.compareAll(containers);
         this.items.forEach(item => {
             item.comparisons = comparisons[item.id];
         });
@@ -221,7 +225,7 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
         AppStore.setState({
             items: {
                 items: this.items,
-                itemDefs: this.itemDefs,
+                itemDefs: this.itemDefinitions,
                 perkRatings: this.perkRatings,
                 errorMessage: this.errorMessage
             }
@@ -230,4 +234,4 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
 }
 
 // @ts-ignore: Alt.js has no TS typings defined for this usage
-export default alt.createStore<ItemStoreState>(ItemStore, 'ItemStore');
+export default alt.createStore<ItemsState>(ItemStore, 'ItemStore');

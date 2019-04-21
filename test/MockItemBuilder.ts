@@ -1,7 +1,7 @@
 import assert from 'assert';
 import uuid from 'uuid';
 import PerkRating from '../src/model/PerkRating';
-import DestinyItem from '../src/model/DestinyItem';
+import DestinyItemContainer from '../src/model/DestinyItemContainer';
 
 class PerkBuilder {
   perk: PerkRating;
@@ -38,61 +38,76 @@ class PerkBuilder {
 }
 
 class ArmorItemBuilder {
-  item: DestinyItem;
+  item: DestinyItemContainer;
   classItemType: string;
 
-  constructor(item, classItemType) {
-    this.item = item;
+  constructor(definition, classItemType) {
+    this.item = {
+      item: {
+        id: uuid.v4(),
+        itemHash: uuid.v4(),
+        power: 700,
+        group: null,
+        comparisons: null,
+        rawPerkColumns: null,
+        perkColumns: [
+          [],
+          [],
+          []
+        ]
+      },
+      definition: definition
+    };
     this.classItemType = classItemType;
   }
 
   helmet() {
-    this.item.type = "Helmet";
+    this.item.definition.itemType = "Helmet";
     return this;
   }
 
   gauntlets() {
-    this.item.type = "Gauntlets";
+    this.item.definition.itemType = "Gauntlets";
     return this;
   }
 
   chest() {
-    this.item.type = "Chest Armor";
+    this.item.definition.itemType = "Chest Armor";
     return this;
   }
 
   boots() {
-    this.item.type = "Leg Armor";
+    this.item.definition.itemType = "Leg Armor";
     return this;
   }
 
   classItem() {
-    this.item.type = this.classItemType;
+    this.item.definition.itemType = this.classItemType;
     return this;
   }
 
   exotic() {
-    this.item.tier = "Exotic";
+    this.item.definition.tier = "Exotic";
     return this;
   }
 
   itemHash(hash) {
-    this.item.itemHash = hash;
+    this.item.item.itemHash = hash;
     return this;
   }
 
   addIntrinsicPerk(perk) {
-    this.item.perkColumns[0].push(perk);
+    this.item.item.perkColumns[0].push(perk);
     return this;
   }
 
   addPrimaryPerk(perk) {
-    this.item.perkColumns[1].push(perk);
+    this.item.item.perkColumns[1].push(perk);
     return this;
   }
 
   addSecondaryPerk(perk) {
-    this.item.perkColumns[2].push(perk);
+    this.item.item.perkColumns[2].push(perk);
     return this;
   }
 
@@ -107,30 +122,15 @@ export function newItem() {
       return {
         hunter: () => new ArmorItemBuilder({
           class: "Hunter",
-          type: "Helmet",
-          perkColumns: [
-            [],
-            [],
-            []
-          ]
+          itemType: "Helmet"
         }, "Hunter Cloak"),
         warlock: () => new ArmorItemBuilder({
           class: "Warlock",
-          type: "Helmet",
-          perkColumns: [
-            [],
-            [],
-            []
-          ]
+          itemType: "Helmet"
         }, "Warlock Bond"),
         titan: () => new ArmorItemBuilder({
           class: "Titan",
-          type: "Helmet",
-          perkColumns: [
-            [],
-            [],
-            []
-          ]
+          itemType: "Helmet"
         }, "Titan Mark")
       };
     }

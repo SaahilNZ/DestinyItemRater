@@ -11,6 +11,7 @@ import { Action, ActionType } from '../actions/Actions';
 import { MainAppState } from '../model/State';
 import AppStore from '../stores/AppStore';
 import FilteredItemsTable from './FilteredItemsTable';
+import DestinyItemContainer from '../model/DestinyItemContainer';
 
 class MainApp extends React.Component<{}, MainAppState> {
     private junkSearchTextArea = createRef<HTMLTextAreaElement>();
@@ -230,80 +231,80 @@ class MainApp extends React.Component<{}, MainAppState> {
         }
     }
 
-    sortItemsByPower(items) {
+    sortItemsByPower(items: DestinyItemContainer[]) {
         let sortedItems = {
             hunter: {
-                helmets: [],
-                gauntlets: [],
-                chest_armour: [],
-                leg_armour: [],
-                class_items: []
+                helmets: [] as DestinyItemContainer[],
+                gauntlets: [] as DestinyItemContainer[],
+                chest_armour: [] as DestinyItemContainer[],
+                leg_armour: [] as DestinyItemContainer[],
+                class_items: [] as DestinyItemContainer[]
             },
             warlock: {
-                helmets: [],
-                gauntlets: [],
-                chest_armour: [],
-                leg_armour: [],
-                class_items: []
+                helmets: [] as DestinyItemContainer[],
+                gauntlets: [] as DestinyItemContainer[],
+                chest_armour: [] as DestinyItemContainer[],
+                leg_armour: [] as DestinyItemContainer[],
+                class_items: [] as DestinyItemContainer[]
             },
             titan: {
-                helmets: [],
-                gauntlets: [],
-                chest_armour: [],
-                leg_armour: [],
-                class_items: []
+                helmets: [] as DestinyItemContainer[],
+                gauntlets: [] as DestinyItemContainer[],
+                chest_armour: [] as DestinyItemContainer[],
+                leg_armour: [] as DestinyItemContainer[],
+                class_items: [] as DestinyItemContainer[]
             }
         }
 
         items.forEach(item => {
-            if (item.class === "Hunter") {
-                if (item.type === "Helmet") {
+            if (item.definition.class === "Hunter") {
+                if (item.definition.itemType === "Helmet") {
                     sortedItems.hunter.helmets =
                         sortedItems.hunter.helmets.concat(item)
-                } else if (item.type === "Gauntlets") {
+                } else if (item.definition.itemType === "Gauntlets") {
                     sortedItems.hunter.gauntlets =
                         sortedItems.hunter.gauntlets.concat(item)
-                } else if (item.type === "Chest Armor") {
+                } else if (item.definition.itemType === "Chest Armor") {
                     sortedItems.hunter.chest_armour =
                         sortedItems.hunter.chest_armour.concat(item)
-                } else if (item.type === "Leg Armor") {
+                } else if (item.definition.itemType === "Leg Armor") {
                     sortedItems.hunter.leg_armour =
                         sortedItems.hunter.leg_armour.concat(item)
-                } else if (item.type === "Hunter Cloak") {
+                } else if (item.definition.itemType === "Hunter Cloak") {
                     sortedItems.hunter.class_items =
                         sortedItems.hunter.class_items.concat(item)
                 }
-            } else if (item.class === "Warlock") {
-                if (item.type === "Helmet") {
+            } else if (item.definition.class === "Warlock") {
+                if (item.definition.itemType === "Helmet") {
                     sortedItems.warlock.helmets =
                         sortedItems.warlock.helmets.concat(item)
-                } else if (item.type === "Gauntlets") {
+                } else if (item.definition.itemType === "Gauntlets") {
                     sortedItems.warlock.gauntlets =
                         sortedItems.warlock.gauntlets.concat(item)
-                } else if (item.type === "Chest Armor") {
+                } else if (item.definition.itemType === "Chest Armor") {
                     sortedItems.warlock.chest_armour =
                         sortedItems.warlock.chest_armour.concat(item)
-                } else if (item.type === "Leg Armor") {
+                } else if (item.definition.itemType === "Leg Armor") {
                     sortedItems.warlock.leg_armour =
                         sortedItems.warlock.leg_armour.concat(item)
-                } else if (item.type === "Warlock Bond") {
+                } else if (item.definition.itemType === "Warlock Bond") {
                     sortedItems.warlock.class_items =
                         sortedItems.warlock.class_items.concat(item)
                 }
-            } else if (item.class === "Titan") {
-                if (item.type === "Helmet") {
+            } else if (item.definition.class === "Titan") {
+                if (item.definition.itemType === "Helmet") {
                     sortedItems.titan.helmets =
                         sortedItems.titan.helmets.concat(item)
-                } else if (item.type === "Gauntlets") {
+                } else if (item.definition.itemType === "Gauntlets") {
                     sortedItems.titan.gauntlets =
                         sortedItems.titan.gauntlets.concat(item)
-                } else if (item.type === "Chest Armor") {
+                } else if (item.definition.itemType === "Chest Armor") {
                     sortedItems.titan.chest_armour =
                         sortedItems.titan.chest_armour.concat(item)
-                } else if (item.type === "Leg Armor") {
+                } else if (item.definition.itemType === "Leg Armor") {
                     sortedItems.titan.leg_armour =
                         sortedItems.titan.leg_armour.concat(item)
-                } else if (item.type === "Titan Mark") {
+                } else if (item.definition.itemType === "Titan Mark") {
                     sortedItems.titan.class_items =
                         sortedItems.titan.class_items.concat(item)
                 }
@@ -321,7 +322,7 @@ class MainApp extends React.Component<{}, MainAppState> {
         return sortedItems;
     }
 
-    getMaxPowerByItemType(items) {
+    getMaxPowerByItemType(items: DestinyItemContainer[]) {
         let maxPowers = {
             hunter: {
                 helmets: 0,
@@ -347,70 +348,70 @@ class MainApp extends React.Component<{}, MainAppState> {
         }
 
         items.forEach(item => {
-            if (item.class === "Hunter") {
-                if (item.type === "Helmet") {
-                    if (item.power > maxPowers.hunter.helmets) {
-                        maxPowers.hunter.helmets = item.power;
+            if (item.definition.class === "Hunter") {
+                if (item.definition.itemType === "Helmet") {
+                    if (item.item.power > maxPowers.hunter.helmets) {
+                        maxPowers.hunter.helmets = item.item.power;
                     }
-                } else if (item.type === "Gauntlets") {
-                    if (item.power > maxPowers.hunter.gauntlets) {
-                        maxPowers.hunter.gauntlets = item.power;
+                } else if (item.definition.itemType === "Gauntlets") {
+                    if (item.item.power > maxPowers.hunter.gauntlets) {
+                        maxPowers.hunter.gauntlets = item.item.power;
                     }
-                } else if (item.type === "Chest Armor") {
-                    if (item.power > maxPowers.hunter.chest_armour) {
-                        maxPowers.hunter.chest_armour = item.power;
+                } else if (item.definition.itemType === "Chest Armor") {
+                    if (item.item.power > maxPowers.hunter.chest_armour) {
+                        maxPowers.hunter.chest_armour = item.item.power;
                     }
-                } else if (item.type === "Leg Armor") {
-                    if (item.power > maxPowers.hunter.leg_armour) {
-                        maxPowers.hunter.leg_armour = item.power;
+                } else if (item.definition.itemType === "Leg Armor") {
+                    if (item.item.power > maxPowers.hunter.leg_armour) {
+                        maxPowers.hunter.leg_armour = item.item.power;
                     }
-                } else if (item.type === "Hunter Cloak") {
-                    if (item.power > maxPowers.hunter.class_items) {
-                        maxPowers.hunter.class_items = item.power;
-                    }
-                }
-            } else if (item.class === "Warlock") {
-                if (item.type === "Helmet") {
-                    if (item.power > maxPowers.warlock.helmets) {
-                        maxPowers.warlock.helmets = item.power;
-                    }
-                } else if (item.type === "Gauntlets") {
-                    if (item.power > maxPowers.warlock.gauntlets) {
-                        maxPowers.warlock.gauntlets = item.power;
-                    }
-                } else if (item.type === "Chest Armor") {
-                    if (item.power > maxPowers.warlock.chest_armour) {
-                        maxPowers.warlock.chest_armour = item.power;
-                    }
-                } else if (item.type === "Leg Armor") {
-                    if (item.power > maxPowers.warlock.leg_armour) {
-                        maxPowers.warlock.leg_armour = item.power;
-                    }
-                } else if (item.type === "Warlock Bond") {
-                    if (item.power > maxPowers.warlock.class_items) {
-                        maxPowers.warlock.class_items = item.power;
+                } else if (item.definition.itemType === "Hunter Cloak") {
+                    if (item.item.power > maxPowers.hunter.class_items) {
+                        maxPowers.hunter.class_items = item.item.power;
                     }
                 }
-            } else if (item.class === "Titan") {
-                if (item.type === "Helmet") {
-                    if (item.power > maxPowers.titan.helmets) {
-                        maxPowers.titan.helmets = item.power;
+            } else if (item.definition.class === "Warlock") {
+                if (item.definition.itemType === "Helmet") {
+                    if (item.item.power > maxPowers.warlock.helmets) {
+                        maxPowers.warlock.helmets = item.item.power;
                     }
-                } else if (item.type === "Gauntlets") {
-                    if (item.power > maxPowers.titan.gauntlets) {
-                        maxPowers.titan.gauntlets = item.power;
+                } else if (item.definition.itemType === "Gauntlets") {
+                    if (item.item.power > maxPowers.warlock.gauntlets) {
+                        maxPowers.warlock.gauntlets = item.item.power;
                     }
-                } else if (item.type === "Chest Armor") {
-                    if (item.power > maxPowers.titan.chest_armour) {
-                        maxPowers.titan.chest_armour = item.power;
+                } else if (item.definition.itemType === "Chest Armor") {
+                    if (item.item.power > maxPowers.warlock.chest_armour) {
+                        maxPowers.warlock.chest_armour = item.item.power;
                     }
-                } else if (item.type === "Leg Armor") {
-                    if (item.power > maxPowers.titan.leg_armour) {
-                        maxPowers.titan.leg_armour = item.power;
+                } else if (item.definition.itemType === "Leg Armor") {
+                    if (item.item.power > maxPowers.warlock.leg_armour) {
+                        maxPowers.warlock.leg_armour = item.item.power;
                     }
-                } else if (item.type === "Titan Mark") {
-                    if (item.power > maxPowers.titan.class_items) {
-                        maxPowers.titan.class_items = item.power;
+                } else if (item.definition.itemType === "Warlock Bond") {
+                    if (item.item.power > maxPowers.warlock.class_items) {
+                        maxPowers.warlock.class_items = item.item.power;
+                    }
+                }
+            } else if (item.definition.class === "Titan") {
+                if (item.definition.itemType === "Helmet") {
+                    if (item.item.power > maxPowers.titan.helmets) {
+                        maxPowers.titan.helmets = item.item.power;
+                    }
+                } else if (item.definition.itemType === "Gauntlets") {
+                    if (item.item.power > maxPowers.titan.gauntlets) {
+                        maxPowers.titan.gauntlets = item.item.power;
+                    }
+                } else if (item.definition.itemType === "Chest Armor") {
+                    if (item.item.power > maxPowers.titan.chest_armour) {
+                        maxPowers.titan.chest_armour = item.item.power;
+                    }
+                } else if (item.definition.itemType === "Leg Armor") {
+                    if (item.item.power > maxPowers.titan.leg_armour) {
+                        maxPowers.titan.leg_armour = item.item.power;
+                    }
+                } else if (item.definition.itemType === "Titan Mark") {
+                    if (item.item.power > maxPowers.titan.class_items) {
+                        maxPowers.titan.class_items = item.item.power;
                     }
                 }
             }
@@ -420,13 +421,21 @@ class MainApp extends React.Component<{}, MainAppState> {
     }
 
     generateIdSearchString() {
-        let items = ItemStore.getState().items;
+        let { items, itemDefinitions } = ItemStore.getState();
+        let containers = items.map(item => {
+            let itemDef = itemDefinitions.get(item.itemHash);
+            return itemDef && {
+                item: item,
+                definition: itemDef
+            };
+        }).filter(item => item);
+
         let maxInfuseCount = 4;
-        let maxPowers = this.getMaxPowerByItemType(items);
-        let badItems = items.filter(item => {
+        let maxPowers = this.getMaxPowerByItemType(containers);
+        let badItems = containers.filter(item => {
             let isBetter = false;
-            for (let i = 0; i < item.comparisons.length; i++) {
-                const comparison = item.comparisons[i];
+            for (let i = 0; i < item.item.comparisons.length; i++) {
+                const comparison = item.item.comparisons[i];
                 if (comparison && comparison.result === ItemComparisonResult.ITEM_IS_BETTER) {
                     isBetter = true;
                     break;
@@ -435,16 +444,17 @@ class MainApp extends React.Component<{}, MainAppState> {
             return isBetter;
         });
 
-        let junkItems = [];
-        let infusionItems = [];
+        let junkItems: DestinyItemContainer[] = [];
+        let infusionItems: DestinyItemContainer[] = [];
         let sortedItems = this.sortItemsByPower(badItems);
         for (var classType in sortedItems) {
             for (var itemType in sortedItems[classType]) {
                 let maxPower = maxPowers[classType][itemType];
                 let infuseCount = 0;
-                for (var i = 0; i < sortedItems[classType][itemType].length; i++) {
-                    var item = sortedItems[classType][itemType][i];
-                    if (item.power === maxPower || infuseCount < maxInfuseCount) {
+                let slotItems: DestinyItemContainer[] = sortedItems[classType][itemType];
+                for (var i = 0; i < slotItems.length; i++) {
+                    var item = slotItems[i];
+                    if (item.item.power === maxPower || infuseCount < maxInfuseCount) {
                         infusionItems.push(item);
                         infuseCount += 1;
                     } else {
@@ -455,8 +465,8 @@ class MainApp extends React.Component<{}, MainAppState> {
         }
 
         this.applyStateChange({
-            junkSearchString: junkItems.map(item => `id:${item.id}`).join(" or "),
-            infuseSearchString: infusionItems.map(item => `id:${item.id}`).join(" or "),
+            junkSearchString: junkItems.map(item => `id:${item.item.id}`).join(" or "),
+            infuseSearchString: infusionItems.map(item => `id:${item.item.id}`).join(" or "),
             copyResult: "",
             showSearch: true
         });
@@ -485,14 +495,22 @@ class MainApp extends React.Component<{}, MainAppState> {
     }
 
     exportCsv() {
-        let items = ItemStore.getState().items;
+        let { items, itemDefinitions } = ItemStore.getState();
+        let containers = items.map(item => {
+            let itemDef = itemDefinitions.get(item.itemHash);
+            return itemDef && {
+                item: item,
+                definition: itemDef
+            };
+        }).filter(item => item);
+
         let maxInfuseCount = 4;
-        let maxPowers = this.getMaxPowerByItemType(items);
-        let badItems = items.filter(item => {
+        let maxPowers = this.getMaxPowerByItemType(containers);
+        let badItems = containers.filter(item => {
             let isBetter = false;
-            if (item.comparisons) {
-                for (let i = 0; i < item.comparisons.length; i++) {
-                    const comparison = item.comparisons[i];
+            if (item.item.comparisons) {
+                for (let i = 0; i < item.item.comparisons.length; i++) {
+                    const comparison = item.item.comparisons[i];
                     if (comparison && comparison.result === ItemComparisonResult.ITEM_IS_BETTER) {
                         isBetter = true;
                         break;
@@ -506,20 +524,21 @@ class MainApp extends React.Component<{}, MainAppState> {
         let sortedItems = this.sortItemsByPower(badItems);
         for (var classType in sortedItems) {
             for (var itemType in sortedItems[classType]) {
-                let maxPower = maxPowers[classType][itemType];
+                let maxPower: number = maxPowers[classType][itemType];
                 let infuseCount = 0;
-                for (var i = 0; i < sortedItems[classType][itemType].length; i++) {
-                    var item = sortedItems[classType][itemType][i];
+                let slotItems: DestinyItemContainer[] = sortedItems[classType][itemType];
+                for (var i = 0; i < slotItems.length; i++) {
+                    var item = slotItems[i];
                     let tag = "junk";
-                    if (item.power === maxPower || infuseCount < maxInfuseCount) {
+                    if (item.item.power === maxPower || infuseCount < maxInfuseCount) {
                         tag = "infuse";
                         infuseCount += 1;
                     }
                     taggedItems.push({
-                        "Id": `${JSON.stringify(item.id)}`,
+                        "Id": `${JSON.stringify(item.item.id)}`,
                         "Notes": "",
                         "Tag": tag,
-                        "Hash": item.itemHash
+                        "Hash": item.item.itemHash
                     });
                 }
             }

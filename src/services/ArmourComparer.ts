@@ -1,7 +1,7 @@
 import ItemComparisonResult from './ItemComparisonResult';
-import DestinyItem from '../model/DestinyItem';
 import PerkRating from '../model/PerkRating';
 import Store from '../stores/Store';
+import DestinyItemContainer from '../model/DestinyItemContainer';
 
 interface PerkTreeNode {
     perk: PerkRating;
@@ -17,19 +17,19 @@ export default class ArmourComparer {
         this.perks = this.perkStore.getState().perkRatings;
     }
 
-    compare(item1: DestinyItem, item2: DestinyItem): ItemComparisonResult {
-        if (item1.class !== item2.class) {
+    compare(item1: DestinyItemContainer, item2: DestinyItemContainer): ItemComparisonResult {
+        if (item1.definition.class !== item2.definition.class) {
             return ItemComparisonResult.ITEM_IS_INCOMPARABLE;
         }
-        if (item1.type !== item2.type) {
+        if (item1.definition.itemType !== item2.definition.itemType) {
             return ItemComparisonResult.ITEM_IS_INCOMPARABLE;
         }
-        if (item1.tier === "Exotic") {
-            if (item1.itemHash !== item2.itemHash) {
+        if (item1.definition.tier === "Exotic") {
+            if (item1.item.itemHash !== item2.item.itemHash) {
                 return ItemComparisonResult.ITEM_IS_INCOMPARABLE;
             }
         } else {
-            if (item2.tier === "Exotic") {
+            if (item2.definition.tier === "Exotic") {
                 return ItemComparisonResult.ITEM_IS_INCOMPARABLE;
             }
         }
@@ -42,8 +42,8 @@ export default class ArmourComparer {
         return this.comparePerks(item1GoodPerks, item2GoodPerks);
     }
 
-    getGoodPerks(item: DestinyItem) {
-        return item.perkColumns.map(
+    getGoodPerks(item: DestinyItemContainer) {
+        return item.item.perkColumns.map(
             column => column.filter(perk => perk !== null && perk !== undefined && perk.isGood));
     }
 
