@@ -1,8 +1,10 @@
 import assert = require("assert");
 import { accounts } from '../src/reducers/AccountReducers';
+import { items } from '../src/reducers/ItemReducers';
 import { ActionType } from "../src/actions/Actions";
-import { AccountState } from "../src/model/State";
+import { AccountState, ItemsState } from "../src/model/State";
 import DestinyAccount from "../src/model/DestinyAccount";
+import { ItemActionType } from "../src/actions/ItemActions";
 
 describe("Reducers", () => {
     describe("accounts()", () => {
@@ -74,6 +76,96 @@ describe("Reducers", () => {
                 assert.strictEqual(newState.selectedAccount.displayName, "Test 2");
                 assert.strictEqual(newState.selectedAccount.membershipId, "22222");
                 assert.strictEqual(newState.selectedAccount.membershipType, 2);
+            });
+        });
+    });
+
+    describe("items()", () => {
+        it("should return the initial state", () => {
+            let newState = items(undefined, undefined);
+            assert.strictEqual(newState.items.length, 0);
+            assert.strictEqual(newState.itemDefinitions.size, 0);
+            assert.strictEqual(newState.perkRatings.size, 0);
+            assert.strictEqual(newState.errorMessage, null);
+        });
+
+        describe("REQUEST_ITEMS", () => {
+            it("should clear the list of items and retain other state", () => {
+                let state : ItemsState = {
+                    items: [{
+                        id: '1',
+                        itemHash: '1',
+                        power: 700,
+                        perkColumnHashes: [],
+                        perkColumns: [],
+                        comparisons: [],
+                        group: 'armor'
+                    }],
+                    itemDefinitions: new Map(),
+                    perkRatings: new Map(),
+                    errorMessage: 'error',
+                };
+                state.itemDefinitions.set('1', {
+                    hash: 1,
+                    name: 'Graviton Forfeit',
+                    itemType: 'Helmet',
+                    class: 'Hunter',
+                    tier: 'Exotic'
+                });
+                state.perkRatings.set('1', {
+                    name: 'Ashes to Assets',
+                    isGood: true,
+                    upgrades: []
+                });
+
+                let newState = items(state, {
+                    type: ItemActionType.REQUEST_ITEMS
+                });
+                
+                assert.strictEqual(newState.items.length, 0);
+                assert.strictEqual(newState.itemDefinitions.size, 1);
+                assert.strictEqual(newState.perkRatings.size, 1);
+                assert.strictEqual(newState.errorMessage, 'error');
+            });
+        });
+
+        describe("REQUEST_ITEM_DEFINITIONS", () => {
+            it("should clear the item definitions and retain other state", () => {
+                let state : ItemsState = {
+                    items: [{
+                        id: '1',
+                        itemHash: '1',
+                        power: 700,
+                        perkColumnHashes: [],
+                        perkColumns: [],
+                        comparisons: [],
+                        group: 'armor'
+                    }],
+                    itemDefinitions: new Map(),
+                    perkRatings: new Map(),
+                    errorMessage: 'error',
+                };
+                state.itemDefinitions.set('1', {
+                    hash: 1,
+                    name: 'Graviton Forfeit',
+                    itemType: 'Helmet',
+                    class: 'Hunter',
+                    tier: 'Exotic'
+                });
+                state.perkRatings.set('1', {
+                    name: 'Ashes to Assets',
+                    isGood: true,
+                    upgrades: []
+                });
+
+                let newState = items(state, {
+                    type: ItemActionType.REQUEST_ITEM_DEFINITIONS
+                });
+                
+                assert.strictEqual(newState.items.length, 1);
+                assert.strictEqual(newState.itemDefinitions.size, 0);
+                assert.strictEqual(newState.perkRatings.size, 1);
+                assert.strictEqual(newState.errorMessage, 'error');
             });
         });
     });

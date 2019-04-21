@@ -163,7 +163,7 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
             item.perkColumns.forEach(column => {
                 column.forEach(perk => {
                     let perkRating = this.perkRatings.get(perk.name.toLowerCase());
-                    if (perkRating !== null && perkRating !== undefined) {
+                    if (perkRating) {
                         perk.isGood = perkRating.isGood;
                         perk.upgrades = perkRating.upgrades;
                     } else {
