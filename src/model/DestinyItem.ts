@@ -5,7 +5,7 @@ interface DestinyItem {
     id: string;
     itemHash: string;
     power: number;
-    rawPerkColumns: PerkRating[][];
+    perkColumnHashes: string[][];
     perkColumns: PerkRating[][];
     comparisons: DestinyItemComparison[];
     group: string;

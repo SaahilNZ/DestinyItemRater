@@ -49,7 +49,7 @@ class ArmorItemBuilder {
         power: 700,
         group: null,
         comparisons: null,
-        rawPerkColumns: null,
+        perkColumnHashes: [],
         perkColumns: [
           [],
           [],

@@ -1,7 +1,7 @@
 import DestinyAccount from "../model/DestinyAccount";
 
 class ItemSource {
-    async fetch(account: DestinyAccount) {
+    async fetch(account: DestinyAccount): Promise<BungieResponse<BungieDestinyProfile>> {
         let accessToken = localStorage.getItem("access_token");
         return fetch(`/api/items?membership_type=${account.membershipType}&membership_id=${account.membershipId}`, {
             headers: {

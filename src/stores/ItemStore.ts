@@ -46,8 +46,8 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
         this.updateAppStore();
     }
 
-    onItemsLoadedForAccount(bungieResponse) {
-        let rawItems = [];
+    onItemsLoadedForAccount(bungieResponse: BungieResponse<BungieDestinyProfile>) {
+        let rawItems: BungieDestinyItem[] = [];
         bungieResponse.Response.profileInventory.data.items.forEach(item => {
             rawItems.push(item);
         });
@@ -65,47 +65,29 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
         }
         let allItems = Array.from(new Set(rawItems));
 
-        this.items = allItems.filter(item => item.itemInstanceId !== null && item.itemInstanceId !== undefined)
-            .map((item) => {
+        this.items = allItems.filter(item => item.itemInstanceId)
+            .map(item => {
                 let itemInstance = bungieResponse.Response.itemComponents.instances.data[item.itemInstanceId];
-                if (itemInstance === null || itemInstance === undefined) return null;
+                if (!itemInstance) return null;
 
-                let perkColumnHashes = [];
+                let perkColumnHashes: string[][] = [];
                 let itemSockets = bungieResponse.Response.itemComponents.sockets.data[item.itemInstanceId];
                 if (itemSockets) {
-                    perkColumnHashes = itemSockets.sockets.map(socket => {
-                        if (socket.reusablePlugHashes === null || socket.reusablePlugHashes === undefined) {
-                            return [socket.plugHash];
-                        } else {
-                            return socket.reusablePlugHashes;
-                        }
-                    });
+                    perkColumnHashes = itemSockets.sockets.map(
+                        socket => socket.reusablePlugHashes || [socket.plugHash]);
                 }
-                let perkColumns = perkColumnHashes.map(column =>
-                    column.map(perkHash => {
-                        return {
-                            name: null,
-                            isGood: false,
-                            hash: perkHash,
-                            upgrades: []
-                        }
-                    }));
-
+                
                 let primaryStat = itemInstance.primaryStat;
                 return {
                     id: item.itemInstanceId,
                     itemHash: item.itemHash,
-                    name: null,
-                    class: null,
-                    type: null,
-                    tier: null,
-                    power: primaryStat !== null && primaryStat !== undefined ? primaryStat.value : null,
-                    rawPerkColumns: perkColumns,
+                    power: primaryStat && primaryStat.value,
+                    perkColumnHashes: perkColumnHashes,
                     perkColumns: null,
                     comparisons: [],
                     group: null
                 };
-            }).filter(item => item !== null);
+            }).filter(item => item);
         if (this.itemDefinitions.size > 0) {
             this.applyItemDefinitions();
         }
@@ -152,21 +134,17 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
                         isWeapon ? [0, 1, 2, 3, 4, 9] : [];
 
                 item.perkColumns = [];
-                for (let i = 0; i < item.rawPerkColumns.length; i++) {
+                for (let i = 0; i < item.perkColumnHashes.length; i++) {
                     if (perkColumnIndices.includes(i)) {
-                        const column = item.rawPerkColumns[i];
-                        item.perkColumns.push(column.map(perk => {
-                            let output = {
-                                hash: perk.hash,
-                                name: "",
-                                isGood: perk.isGood,
-                                upgrades: perk.upgrades
+                        const column = item.perkColumnHashes[i];
+                        item.perkColumns.push(column.map(hash => {
+                            let plugDefinition = this.itemDefinitions.get(hash);
+                            return {
+                                hash: hash,
+                                name: (plugDefinition && plugDefinition.name) || "",
+                                isGood: false,
+                                upgrades: []
                             };
-                            let plugDefinition = this.itemDefinitions.get(perk.hash);
-                            if (plugDefinition !== null && plugDefinition !== undefined) {
-                                output.name = plugDefinition.name;
-                            }
-                            return output;
                         }));
                     }
                 }
@@ -221,6 +199,7 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
         Object.assign(this, newState.items);
     }
 
+    // todo: remove this
     private updateAppStore() {
         AppStore.setState({
             items: {

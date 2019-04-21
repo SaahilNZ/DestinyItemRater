@@ -6,8 +6,8 @@ import DestinyAccount from "../model/DestinyAccount";
 
 interface AltItemActions {
     fetchItems(account: DestinyAccount): (dispatch: any) => Promise<void>;
-    onItemsFailedToLoad(errorMessage): any;
-    onItemsLoadedForAccount(bungieResponse: any): any;
+    onItemsFailedToLoad(errorMessage): string;
+    onItemsLoadedForAccount(bungieResponse: BungieResponse<BungieDestinyProfile>): BungieResponse<BungieDestinyProfile>;
 }
 
 class ItemActions_Alt extends AbstractActionsModel implements AltItemActions {
@@ -28,11 +28,11 @@ class ItemActions_Alt extends AbstractActionsModel implements AltItemActions {
 
     // Events
 
-    onItemsFailedToLoad(errorMessage) {
+    onItemsFailedToLoad(errorMessage: string) {
         return errorMessage;
     }
 
-    onItemsLoadedForAccount(bungieResponse) {
+    onItemsLoadedForAccount(bungieResponse: BungieResponse<BungieDestinyProfile>) {
         return bungieResponse;
     }
 }
