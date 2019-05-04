@@ -2,13 +2,13 @@ import React from 'react';
 import DestinyAccount from '../model/DestinyAccount';
 import Account from './Account';
 import { selectAccount } from '../actions/AccountActions';
-import { Action } from '../actions/Actions';
+import { Dispatcher } from '../actions/Actions';
 import ItemActions_Alt from '../actions/ItemActions_Alt';
 
 export interface AccountSelectorProps {
     accounts: DestinyAccount[];
     selectedAccountId: string;
-    dispatch(action: Action): void;
+    dispatch(action: Dispatcher): void;
 }
 
 class AccountSelector extends React.Component<AccountSelectorProps, {}> {

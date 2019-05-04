@@ -15,7 +15,7 @@ class AppStore {
         this.state = this.reduce(this.state, action);
         return this.state;
     }
-    
+
     reduce(currentState: MainAppState, action: Action) {
         return {
             signedIn: false,

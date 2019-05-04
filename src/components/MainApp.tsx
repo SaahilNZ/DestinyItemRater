@@ -7,7 +7,7 @@ import Papa from 'papaparse';
 import saveAs from 'file-saver';
 import PerkRater from './PerkRater';
 import DestinyAccount from '../model/DestinyAccount';
-import { Action, ActionType } from '../actions/Actions';
+import { ActionType, Dispatcher } from '../actions/Actions';
 import { MainAppState } from '../model/State';
 import AppStore from '../stores/AppStore';
 import FilteredItemsTable from './FilteredItemsTable';
@@ -70,7 +70,7 @@ class MainApp extends React.Component<{}, MainAppState> {
                 .then(response => {
                     let newState = {
                         accounts: {
-                            allAccounts: response.Response.destinyMemberships.map(account => 
+                            allAccounts: response.Response.destinyMemberships.map(account =>
                                 new DestinyAccount(
                                     account.membershipId,
                                     account.membershipType,
@@ -562,14 +562,19 @@ class MainApp extends React.Component<{}, MainAppState> {
         });
     }
 
-    dispatch(action: Action) {
-        let newState = AppStore.dispatch(action);
-        switch (action.type) {
-            case ActionType.SELECT_ACCOUNT:
-                this.setState({
-                    accounts: newState.accounts
-                });
-                break;
+    dispatch(action: Dispatcher) {
+        if (typeof action === "function") {
+            action(this.dispatch);
+        } else {
+            let newState = AppStore.dispatch(action);
+
+            switch (action.type) {
+                case ActionType.SELECT_ACCOUNT:
+                    this.setState({
+                        accounts: newState.accounts
+                    });
+                    break;
+            }
         }
     }
 

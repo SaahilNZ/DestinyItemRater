@@ -6,3 +6,5 @@ export const ActionType = {
     ...AccountActionType,
     ...ItemActionType
 };
+
+export type Dispatcher = Action | ((dispatch: Dispatcher) => void);
