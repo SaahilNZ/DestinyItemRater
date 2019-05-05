@@ -11,7 +11,7 @@ import { ItemsState } from '../model/State';
 import AppStore from './AppStore';
 import { requestItems, requestItemDefinitions, requestItemsFailure } from '../actions/ItemActions';
 import { Action } from '../actions/Actions';
-import { buildItemContainer, getItemGroup } from '../model/DestinyItemContainer';
+import { buildItemContainer } from '../model/DestinyItemContainer';
 import DestinyItemComparison from '../model/DestinyItemComparison';
 
 class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
@@ -51,12 +51,6 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
 
     onItemsLoadedForAccount(bungieResponse: BungieResponse<BungieDestinyProfile>) {
         this.items = this.buildItems(bungieResponse);
-        if (this.itemDefinitions.size > 0) {
-            this.applyItemDefinitions();
-        }
-        if (this.perkRatings) {
-            this.applyPerkRatings();
-        }
         this.compareItems();
         this.errorMessage = null;
         this.updateAppStore();
@@ -64,14 +58,14 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
 
     onItemDefinitionsLoaded(itemDefs: Map<string, DestinyItemDefinition>) {
         this.itemDefinitions = itemDefs;
-        this.applyItemDefinitions();
         this.compareItems();
+        this.updateAppStore();
     }
 
     onPerkRatingsLoaded(perkRatings: Map<string, PerkRating>) {
         this.perkRatings = perkRatings;
-        this.applyPerkRatings();
         this.compareItems();
+        this.updateAppStore();
     }
 
     private buildItems(bungieResponse: BungieResponse<BungieDestinyProfile>): DestinyItem[] {
@@ -118,73 +112,9 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
             }).filter(item => item);
     }
 
-    applyItemDefinitions() {
-        const armourTypes = [
-            'Helmet', 'Gauntlets', 'Chest Armor', 'Leg Armor',
-            'Warlock Bond', 'Hunter Cloak', 'Titan Mark'
-        ];
-        const weaponTypes = [
-            'Auto Rifle', 'Pulse Rifle', 'Scout Rifle', 'Hand Cannon', 'Submachine Gun', 'Sidearm', 'Combat Bow',
-            'Sniper Rifle', 'Shotgun', 'Fusion Rifle', 'Grenade Launcher',
-            'Rocket Launcher', 'Sword', 'Linear Fusion Rifle', 'Machine Gun'
-        ];
-        this.items.forEach((item, index) => {
-            let itemDef = this.itemDefinitions.get(item.itemHash);
-
-            let group = getItemGroup(itemDef);
-            let isArmor = group === 'armor';
-            let isWeapon = group === 'weapons';
-
-            if (isArmor || isWeapon) {
-
-                let perkColumnIndices =
-                    isArmor ? [0, 1, 2, 5, 6, 7] :
-                        isWeapon ? [0, 1, 2, 3, 4, 9] : [];
-
-                item.perkColumns = [];
-                for (let i = 0; i < item.perkColumnHashes.length; i++) {
-                    if (perkColumnIndices.includes(i)) {
-                        const column = item.perkColumnHashes[i];
-                        item.perkColumns.push(column.map(hash => {
-                            let plugDefinition = this.itemDefinitions.get(hash);
-                            return {
-                                hash: hash,
-                                name: (plugDefinition && plugDefinition.name) || "",
-                                isGood: false,
-                                upgrades: []
-                            };
-                        }));
-                    }
-                }
-            } else {
-                this.items[index] = null;
-            }
-        });
-        this.items = this.items.filter(item => item !== null);
-        this.updateAppStore();
-    }
-
-    applyPerkRatings() {
-        if (!this.perkRatings) return;
-
-        this.items.forEach(item => {
-            item.perkColumns.forEach(column => {
-                column.forEach(perk => {
-                    let perkRating = this.perkRatings.get(perk.name.toLowerCase());
-                    if (perkRating) {
-                        perk.isGood = perkRating.isGood;
-                        perk.upgrades = perkRating.upgrades;
-                    } else {
-                        perk = null;
-                    }
-                });
-            });
-        });
-    }
-
     compareItems() {
         if (this.perkRatings) {
-            let containers = this.items.map(item => buildItemContainer(item, this.itemDefinitions, new Map()))
+            let containers = this.items.map(item => buildItemContainer(item, this.itemDefinitions, new Map(), this.perkRatings))
                 .filter(container => container);
             this.comparisons = ComparisonService.compareAll(containers, this.perkRatings);
         } else {

@@ -421,8 +421,8 @@ class MainApp extends React.Component<{}, MainAppState> {
     }
 
     generateIdSearchString() {
-        let { items, itemDefinitions, comparisons } = ItemStore.getState();
-        let containers = items.map(item => buildItemContainer(item, itemDefinitions, comparisons))
+        let { items, itemDefinitions, comparisons, perkRatings } = ItemStore.getState();
+        let containers = items.map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings))
             .filter(container => container);
 
         let maxInfuseCount = 4;
@@ -490,8 +490,8 @@ class MainApp extends React.Component<{}, MainAppState> {
     }
 
     exportCsv() {
-        let { items, itemDefinitions, comparisons } = ItemStore.getState();
-        let containers = items.map(item => buildItemContainer(item, itemDefinitions, comparisons))
+        let { items, itemDefinitions, comparisons, perkRatings } = ItemStore.getState();
+        let containers = items.map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings))
             .filter(container => container);
 
         let maxInfuseCount = 4;

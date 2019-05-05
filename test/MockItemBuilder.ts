@@ -37,81 +37,81 @@ class PerkBuilder {
 }
 
 class ArmorItemBuilder {
-    item: DestinyItemContainer;
+    container: DestinyItemContainer;
     classItemType: string;
 
     constructor(definition, classItemType) {
-        this.item = {
+        this.container = {
             item: {
                 id: uuid.v4(),
                 itemHash: uuid.v4(),
                 power: 700,
-                perkColumnHashes: [],
-                perkColumns: [
-                    [],
-                    [],
-                    []
-                ]
+                perkColumnHashes: []
             },
             definition: definition,
             comparisons: null,
-            group: null
+            group: null,
+            perkColumns: [
+                [],
+                [],
+                []
+            ]
         };
         this.classItemType = classItemType;
     }
 
     helmet() {
-        this.item.definition.itemType = "Helmet";
+        this.container.definition.itemType = "Helmet";
         return this;
     }
 
     gauntlets() {
-        this.item.definition.itemType = "Gauntlets";
+        this.container.definition.itemType = "Gauntlets";
         return this;
     }
 
     chest() {
-        this.item.definition.itemType = "Chest Armor";
+        this.container.definition.itemType = "Chest Armor";
         return this;
     }
 
     boots() {
-        this.item.definition.itemType = "Leg Armor";
+        this.container.definition.itemType = "Leg Armor";
         return this;
     }
 
     classItem() {
-        this.item.definition.itemType = this.classItemType;
+        this.container.definition.itemType = this.classItemType;
         return this;
     }
 
     exotic() {
-        this.item.definition.tier = "Exotic";
+        this.container.definition.tier = "Exotic";
         return this;
     }
 
     itemHash(hash) {
-        this.item.item.itemHash = hash;
+        this.container.item.itemHash = hash;
         return this;
     }
 
     addIntrinsicPerk(perk) {
-        this.item.item.perkColumns[0].push(perk);
+        this.container.perkColumns[0].push(perk);
         return this;
     }
 
     addPrimaryPerk(perk) {
-        this.item.item.perkColumns[1].push(perk);
+        this.container.perkColumns[1].push(perk);
         return this;
     }
 
     addSecondaryPerk(perk) {
-        this.item.item.perkColumns[2].push(perk);
+        this.container.perkColumns[2].push(perk);
         return this;
     }
 
     build() {
-        return this.item;
+        return this.container;
     }
 }
 

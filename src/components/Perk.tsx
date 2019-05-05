@@ -1,7 +1,8 @@
 import React from 'react';
+import DestinyPerkContainer from '../model/DestinyPerkContainer';
 
-export interface PerkProps { 
-    perk: any;
+export interface PerkProps {
+    perk: DestinyPerkContainer;
 }
 
 class Perk extends React.Component<PerkProps, {}> {

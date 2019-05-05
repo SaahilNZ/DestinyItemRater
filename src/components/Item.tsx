@@ -53,7 +53,7 @@ class Item extends React.Component<ItemProps, {}> {
                 <td>
                     <div className="perkBlock">
                         {
-                            this.props.itemContainer.item.perkColumns.map(column => {
+                            this.props.itemContainer.perkColumns.map(column => {
                                 let perks = column.filter(perk => perk != null).map(perk =>
                                     <li>
                                         <Perk perk={perk} />
