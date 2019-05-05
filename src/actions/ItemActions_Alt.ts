@@ -19,7 +19,7 @@ class ItemActions_Alt extends AbstractActionsModel implements AltItemActions {
                 let bungieResponse = await source.fetch(account);
                 this.onItemsLoadedForAccount(bungieResponse);
                 ComparisonActions.compareItems();
-                
+
             } catch (e) {
                 this.onItemsFailedToLoad(e.message);
             }

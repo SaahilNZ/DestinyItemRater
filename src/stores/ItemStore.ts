@@ -9,7 +9,7 @@ import PerkRating from '../model/PerkRating';
 import AbstractStoreModel from './AbstractStoreModel';
 import { ItemsState } from '../model/State';
 import AppStore from './AppStore';
-import { requestItems, requestItemDefinitions } from '../actions/ItemActions';
+import { requestItems, requestItemDefinitions, requestItemsFailure } from '../actions/ItemActions';
 import { Action } from '../actions/Actions';
 
 class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
@@ -25,14 +25,14 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
             onItemsFetching: ItemActions_Alt.fetchItems,
             onItemDefinitionsFetching: ItemDefinitionActions.fetchItemDefinitions,
             onPerkRatingsFetching: PerkActions.fetchPerks,
-            
+
             onItemsFailedToLoad: ItemActions_Alt.onItemsFailedToLoad,
             onItemsLoadedForAccount: ItemActions_Alt.onItemsLoadedForAccount,
             onItemDefinitionsLoaded: ItemDefinitionActions.updateItemDefinitions,
             onPerkRatingsLoaded: PerkActions.updatePerks
         })
     }
-    
+
     onItemsFetching() {
         this.dispatch(requestItems());
     }
@@ -47,47 +47,7 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
     }
 
     onItemsLoadedForAccount(bungieResponse: BungieResponse<BungieDestinyProfile>) {
-        let rawItems: BungieDestinyItem[] = [];
-        bungieResponse.Response.profileInventory.data.items.forEach(item => {
-            rawItems.push(item);
-        });
-        for (var i in bungieResponse.Response.characterInventories.data) {
-            let characterInventory = bungieResponse.Response.characterInventories.data[i];
-            characterInventory.items.forEach(item => {
-                rawItems.push(item);
-            });
-        }
-        for (var e in bungieResponse.Response.characterEquipment.data) {
-            let characterEquipment = bungieResponse.Response.characterEquipment.data[e];
-            characterEquipment.items.forEach(item => {
-                rawItems.push(item);
-            });
-        }
-        let allItems = Array.from(new Set(rawItems));
-
-        this.items = allItems.filter(item => item.itemInstanceId)
-            .map(item => {
-                let itemInstance = bungieResponse.Response.itemComponents.instances.data[item.itemInstanceId];
-                if (!itemInstance) return null;
-
-                let perkColumnHashes: string[][] = [];
-                let itemSockets = bungieResponse.Response.itemComponents.sockets.data[item.itemInstanceId];
-                if (itemSockets) {
-                    perkColumnHashes = itemSockets.sockets.map(
-                        socket => socket.reusablePlugHashes || [socket.plugHash]);
-                }
-                
-                let primaryStat = itemInstance.primaryStat;
-                return {
-                    id: item.itemInstanceId,
-                    itemHash: item.itemHash,
-                    power: primaryStat && primaryStat.value,
-                    perkColumnHashes: perkColumnHashes,
-                    perkColumns: null,
-                    comparisons: [],
-                    group: null
-                };
-            }).filter(item => item);
+        this.items = this.buildItems(bungieResponse);
         if (this.itemDefinitions.size > 0) {
             this.applyItemDefinitions();
         }
@@ -109,6 +69,50 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
         this.perkRatings = perkRatings;
         this.applyPerkRatings();
         this.compareItems();
+    }
+
+    private buildItems(bungieResponse: BungieResponse<BungieDestinyProfile>): DestinyItem[] {
+        let rawItems: BungieDestinyItem[] = [];
+        bungieResponse.Response.profileInventory.data.items.forEach(item => {
+            rawItems.push(item);
+        });
+        for (var i in bungieResponse.Response.characterInventories.data) {
+            let characterInventory = bungieResponse.Response.characterInventories.data[i];
+            characterInventory.items.forEach(item => {
+                rawItems.push(item);
+            });
+        }
+        for (var e in bungieResponse.Response.characterEquipment.data) {
+            let characterEquipment = bungieResponse.Response.characterEquipment.data[e];
+            characterEquipment.items.forEach(item => {
+                rawItems.push(item);
+            });
+        }
+        let allItems = Array.from(new Set(rawItems));
+
+        return allItems.filter(item => item.itemInstanceId)
+            .map(item => {
+                let itemInstance = bungieResponse.Response.itemComponents.instances.data[item.itemInstanceId];
+                if (!itemInstance) return null;
+
+                let perkColumnHashes: string[][] = [];
+                let itemSockets = bungieResponse.Response.itemComponents.sockets.data[item.itemInstanceId];
+                if (itemSockets) {
+                    perkColumnHashes = itemSockets.sockets.map(
+                        socket => socket.reusablePlugHashes || [socket.plugHash]);
+                }
+
+                let primaryStat = itemInstance.primaryStat;
+                return {
+                    id: item.itemInstanceId,
+                    itemHash: item.itemHash,
+                    power: primaryStat && primaryStat.value,
+                    perkColumnHashes: perkColumnHashes,
+                    perkColumns: null,
+                    comparisons: [],
+                    group: null
+                };
+            }).filter(item => item);
     }
 
     applyItemDefinitions() {
@@ -182,7 +186,7 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
                 definition: itemDef
             };
         }).filter(item => item !== null);
-        
+
         let comparisons = ComparisonService.compareAll(containers);
         this.items.forEach(item => {
             item.comparisons = comparisons[item.id];
@@ -190,8 +194,7 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
     }
 
     onItemsFailedToLoad(errorMessage) {
-        this.errorMessage = errorMessage;
-        this.updateAppStore();
+        this.dispatch(requestItemsFailure(errorMessage));
     }
 
     private dispatch(action: Action) {

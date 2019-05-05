@@ -22,20 +22,20 @@ describe("Reducers", () => {
                         accountId: "12345"
                     });
                 }, {
-                    name: "MissingAccountError",
-                    message: "No account found with membership id '12345'.",
-                    info: {
-                        accountId: "12345",
-                        accountState: {
-                            allAccounts: [],
-                            selectedAccount: null
+                        name: "MissingAccountError",
+                        message: "No account found with membership id '12345'.",
+                        info: {
+                            accountId: "12345",
+                            accountState: {
+                                allAccounts: [],
+                                selectedAccount: null
+                            }
                         }
-                    }
-                })
+                    })
             });
 
             it("should throw an error if a non-existent account is selected", () => {
-                let state : AccountState = {
+                let state: AccountState = {
                     allAccounts: [
                         new DestinyAccount("11111", 1, "Test 1"),
                         new DestinyAccount("22222", 2, "Test 2"),
@@ -49,17 +49,17 @@ describe("Reducers", () => {
                         accountId: "44444"
                     });
                 }, {
-                    name: "MissingAccountError",
-                    message: "No account found with membership id '44444'.",
-                    info: {
-                        accountId: "44444",
-                        accountState: state
-                    }
-                });
+                        name: "MissingAccountError",
+                        message: "No account found with membership id '44444'.",
+                        info: {
+                            accountId: "44444",
+                            accountState: state
+                        }
+                    });
             });
 
             it("should select the account with the specified id", () => {
-                let state : AccountState = {
+                let state: AccountState = {
                     allAccounts: [
                         new DestinyAccount("11111", 1, "Test 1"),
                         new DestinyAccount("22222", 2, "Test 2"),
@@ -71,7 +71,7 @@ describe("Reducers", () => {
                     type: ActionType.SELECT_ACCOUNT,
                     accountId: "22222"
                 });
-                
+
                 assert.strictEqual(newState.allAccounts.length, 3);
                 assert.strictEqual(newState.selectedAccount.displayName, "Test 2");
                 assert.strictEqual(newState.selectedAccount.membershipId, "22222");
@@ -91,7 +91,7 @@ describe("Reducers", () => {
 
         describe("REQUEST_ITEMS", () => {
             it("should clear the list of items and retain other state", () => {
-                let state : ItemsState = {
+                let state: ItemsState = {
                     items: [{
                         id: '1',
                         itemHash: '1',
@@ -121,8 +121,49 @@ describe("Reducers", () => {
                 let newState = items(state, {
                     type: ItemActionType.REQUEST_ITEMS
                 });
-                
+
                 assert.strictEqual(newState.items.length, 0);
+                assert.strictEqual(newState.itemDefinitions.size, 1);
+                assert.strictEqual(newState.perkRatings.size, 1);
+                assert.strictEqual(newState.errorMessage, 'error');
+            });
+        });
+
+        describe("REQUEST_ITEMS_FAILED", () => {
+            it("should set the error message and retain other state", () => {
+                let state: ItemsState = {
+                    items: [{
+                        id: '1',
+                        itemHash: '1',
+                        power: 700,
+                        perkColumnHashes: [],
+                        perkColumns: [],
+                        comparisons: [],
+                        group: 'armor'
+                    }],
+                    itemDefinitions: new Map(),
+                    perkRatings: new Map(),
+                    errorMessage: null,
+                };
+                state.itemDefinitions.set('1', {
+                    hash: 1,
+                    name: 'Graviton Forfeit',
+                    itemType: 'Helmet',
+                    class: 'Hunter',
+                    tier: 'Exotic'
+                });
+                state.perkRatings.set('1', {
+                    name: 'Ashes to Assets',
+                    isGood: true,
+                    upgrades: []
+                });
+
+                let newState = items(state, {
+                    type: ItemActionType.REQUEST_ITEMS_FAILURE,
+                    errorMessage: 'error'
+                });
+
+                assert.strictEqual(newState.items.length, 1);
                 assert.strictEqual(newState.itemDefinitions.size, 1);
                 assert.strictEqual(newState.perkRatings.size, 1);
                 assert.strictEqual(newState.errorMessage, 'error');
@@ -131,7 +172,7 @@ describe("Reducers", () => {
 
         describe("REQUEST_ITEM_DEFINITIONS", () => {
             it("should clear the item definitions and retain other state", () => {
-                let state : ItemsState = {
+                let state: ItemsState = {
                     items: [{
                         id: '1',
                         itemHash: '1',
@@ -161,7 +202,7 @@ describe("Reducers", () => {
                 let newState = items(state, {
                     type: ItemActionType.REQUEST_ITEM_DEFINITIONS
                 });
-                
+
                 assert.strictEqual(newState.items.length, 1);
                 assert.strictEqual(newState.itemDefinitions.size, 0);
                 assert.strictEqual(newState.perkRatings.size, 1);
