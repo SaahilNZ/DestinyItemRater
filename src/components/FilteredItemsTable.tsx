@@ -5,9 +5,9 @@ import ItemStore from "../stores/ItemStore";
 import ItemActions_Alt from "../actions/ItemActions_Alt";
 import PerkActions from "../actions/PerkActions";
 import ItemDefinitionActions from "../actions/ItemDefinitionActions";
-import DestinyItem from "../model/DestinyItem";
 import ItemComparisonResult from "../services/ItemComparisonResult";
 import ItemsTable from "./ItemsTable";
+import { buildItemContainer } from "../model/DestinyItemContainer";
 
 interface FilteredItemsTableProps {
     selectedAccount: DestinyAccount;
@@ -54,29 +54,23 @@ export default class FilteredItemsTable extends React.Component<FilteredItemsTab
             );
         }
 
-        let items: DestinyItem[];
+        let itemGroup = this.props.itemFilter === 'weapons' ? 'weapons' : 'armor';
+        let containers = this.state.items
+            .filter(item => item.group === itemGroup)
+            .map(item => buildItemContainer(item, this.state.itemDefinitions, this.state.comparisons))
+            .filter(container => container);
+
         if (this.props.itemFilter === "bad") {
-            items = this.state.items.filter(item => {
-                let isBetter = false;
-                if (item.group === 'armor' && item.comparisons) {
-                    for (let i = 0; i < item.comparisons.length; i++) {
-                        const comparison = item.comparisons[i];
-                        if (comparison && comparison.result === ItemComparisonResult.ITEM_IS_BETTER) {
-                            isBetter = true;
-                            break;
-                        }
-                    }
-                }
-                return isBetter;
+            containers = containers.filter(container => {
+                // don't show items that haven't been compared yet
+                return container.comparisons && container.comparisons.length > 0
+                    ? container.comparisons.some(comparison => comparison.result === ItemComparisonResult.ITEM_IS_BETTER)
+                    : false;
             });
-        } else if (this.props.itemFilter === 'weapons') {
-            items = this.state.items.filter(item => item.group === 'weapons');
-        } else {
-            items = this.state.items.filter(item => item.group === 'armor');
         }
 
         return (
-            <ItemsTable items={items} itemDefinitions={this.state.itemDefinitions} />
+            <ItemsTable containers={containers} />
         );
     }
 }

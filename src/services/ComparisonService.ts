@@ -29,21 +29,23 @@ class ComparisonService {
         return comparer.compare(item1, item2);
     }
 
-    compareAll(items: DestinyItemContainer[]) {
-        let output: { [id: string]: DestinyItemComparison[]; } = {};
-        items.forEach(item => {
+    compareAll(items: DestinyItemContainer[]): Map<string, DestinyItemComparison[]> {
+        let output = new Map<string, DestinyItemComparison[]>();
+        items.forEach(container => {
             let comparisons = new Array(items.length - 1);
             for (let i = 0; i < items.length; i++) {
                 const item2 = items[i];
-                if (item.item.id === item2.item.id) {
+                if (container.item.id === item2.item.id) {
+                    // skip because we don't want to compare against self
                     continue;
                 }
                 comparisons[i] = {
                     id: item2.item.id,
-                    result: this.compare(item, item2)
+                    result: this.compare(container, item2)
                 };
             }
-            output[item.item.id] = comparisons;
+            // filter out the one undefined comparison - this is the one we skipped earlier
+            output.set(container.item.id, comparisons.filter(c => c));
         });
         return output;
     }

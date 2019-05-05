@@ -1,11 +1,9 @@
 import React, { createRef } from 'react';
 import Item from './Item';
-import DestinyItem from '../model/DestinyItem';
-import DestinyItemDefinition from '../model/DestinyItemDefinition';
+import DestinyItemContainer from '../model/DestinyItemContainer';
 
 interface ItemsTableProps {
-    items: DestinyItem[]
-    itemDefinitions: Map<string, DestinyItemDefinition>
+    containers: DestinyItemContainer[];
 }
 
 export default class ItemsTable extends React.Component<ItemsTableProps, {}> {
@@ -18,16 +16,13 @@ export default class ItemsTable extends React.Component<ItemsTableProps, {}> {
 
     render() {
         this.itemRefs = new Map<string, React.RefObject<HTMLTableRowElement>>();
-        this.props.items.forEach(item => {
-            this.itemRefs.set(item.id, createRef<HTMLTableRowElement>());
+        this.props.containers.forEach(container => {
+            this.itemRefs.set(container.item.id, createRef<HTMLTableRowElement>());
         });
-        
-        let items = this.props.items.map(item => {
-            let container = {
-                item: item,
-                definition: this.props.itemDefinitions.get(item.itemHash)
-            };
-            return <Item itemRef={this.itemRefs.get(item.id)} key={item.id} itemContainer={container} scrollToItem={this.scrollToItem} />;
+
+        let rows = this.props.containers.map(container => {
+            return <Item itemRef={this.itemRefs.get(container.item.id)} key={container.item.id}
+                itemContainer={container} scrollToItem={this.scrollToItem} />;
         });
 
         return (
@@ -42,7 +37,7 @@ export default class ItemsTable extends React.Component<ItemsTableProps, {}> {
                         <th>Perks</th>
                         <th>Similar items</th>
                     </tr>
-                    {items}
+                    {rows}
                 </tbody>
             </table>
         );

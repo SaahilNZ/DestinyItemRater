@@ -6,6 +6,7 @@ const initialState: ItemsState = {
     items: [],
     itemDefinitions: new Map(),
     perkRatings: new Map(),
+    comparisons: new Map(),
     errorMessage: null
 }
 

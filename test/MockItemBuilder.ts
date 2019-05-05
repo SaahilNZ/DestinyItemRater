@@ -48,7 +48,6 @@ class ArmorItemBuilder {
         itemHash: uuid.v4(),
         power: 700,
         group: null,
-        comparisons: null,
         perkColumnHashes: [],
         perkColumns: [
           [],
@@ -56,7 +55,8 @@ class ArmorItemBuilder {
           []
         ]
       },
-      definition: definition
+      definition: definition,
+      comparisons: null
     };
     this.classItemType = classItemType;
   }

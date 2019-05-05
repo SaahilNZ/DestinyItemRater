@@ -12,8 +12,8 @@ export interface ItemProps {
 class Item extends React.Component<ItemProps, {}> {
     render() {
         let comparisons = <div>Loading...</div>;
-        if (this.props.itemContainer.item.comparisons) {
-            let similar = this.props.itemContainer.item.comparisons.filter(comparison =>
+        if (this.props.itemContainer.comparisons) {
+            let similar = this.props.itemContainer.comparisons.filter(comparison =>
                 comparison.result !== ItemComparisonResult.ITEM_IS_INCOMPARABLE);
             comparisons = (
                 <ul>

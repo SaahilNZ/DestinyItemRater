@@ -11,7 +11,7 @@ import { ActionType, Dispatcher } from '../actions/Actions';
 import { MainAppState } from '../model/State';
 import AppStore from '../stores/AppStore';
 import FilteredItemsTable from './FilteredItemsTable';
-import DestinyItemContainer from '../model/DestinyItemContainer';
+import DestinyItemContainer, { buildItemContainer } from '../model/DestinyItemContainer';
 
 class MainApp extends React.Component<{}, MainAppState> {
     private junkSearchTextArea = createRef<HTMLTextAreaElement>();
@@ -421,21 +421,16 @@ class MainApp extends React.Component<{}, MainAppState> {
     }
 
     generateIdSearchString() {
-        let { items, itemDefinitions } = ItemStore.getState();
-        let containers = items.map(item => {
-            let itemDef = itemDefinitions.get(item.itemHash);
-            return itemDef && {
-                item: item,
-                definition: itemDef
-            };
-        }).filter(item => item);
+        let { items, itemDefinitions, comparisons } = ItemStore.getState();
+        let containers = items.map(item => buildItemContainer(item, itemDefinitions, comparisons))
+            .filter(container => container);
 
         let maxInfuseCount = 4;
         let maxPowers = this.getMaxPowerByItemType(containers);
-        let badItems = containers.filter(item => {
+        let badItems = containers.filter(container => {
             let isBetter = false;
-            for (let i = 0; i < item.item.comparisons.length; i++) {
-                const comparison = item.item.comparisons[i];
+            for (let i = 0; i < container.comparisons.length; i++) {
+                const comparison = container.comparisons[i];
                 if (comparison && comparison.result === ItemComparisonResult.ITEM_IS_BETTER) {
                     isBetter = true;
                     break;
@@ -495,22 +490,17 @@ class MainApp extends React.Component<{}, MainAppState> {
     }
 
     exportCsv() {
-        let { items, itemDefinitions } = ItemStore.getState();
-        let containers = items.map(item => {
-            let itemDef = itemDefinitions.get(item.itemHash);
-            return itemDef && {
-                item: item,
-                definition: itemDef
-            };
-        }).filter(item => item);
+        let { items, itemDefinitions, comparisons } = ItemStore.getState();
+        let containers = items.map(item => buildItemContainer(item, itemDefinitions, comparisons))
+            .filter(container => container);
 
         let maxInfuseCount = 4;
         let maxPowers = this.getMaxPowerByItemType(containers);
-        let badItems = containers.filter(item => {
+        let badItems = containers.filter(container => {
             let isBetter = false;
-            if (item.item.comparisons) {
-                for (let i = 0; i < item.item.comparisons.length; i++) {
-                    const comparison = item.item.comparisons[i];
+            if (container.comparisons) {
+                for (let i = 0; i < container.comparisons.length; i++) {
+                    const comparison = container.comparisons[i];
                     if (comparison && comparison.result === ItemComparisonResult.ITEM_IS_BETTER) {
                         isBetter = true;
                         break;

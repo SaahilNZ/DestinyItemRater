@@ -98,11 +98,11 @@ describe("Reducers", () => {
                         power: 700,
                         perkColumnHashes: [],
                         perkColumns: [],
-                        comparisons: [],
                         group: 'armor'
                     }],
                     itemDefinitions: new Map(),
                     perkRatings: new Map(),
+                    comparisons: new Map(),
                     errorMessage: 'error',
                 };
                 state.itemDefinitions.set('1', {
@@ -138,11 +138,11 @@ describe("Reducers", () => {
                         power: 700,
                         perkColumnHashes: [],
                         perkColumns: [],
-                        comparisons: [],
                         group: 'armor'
                     }],
                     itemDefinitions: new Map(),
                     perkRatings: new Map(),
+                    comparisons: new Map(),
                     errorMessage: null,
                 };
                 state.itemDefinitions.set('1', {
@@ -179,11 +179,11 @@ describe("Reducers", () => {
                         power: 700,
                         perkColumnHashes: [],
                         perkColumns: [],
-                        comparisons: [],
                         group: 'armor'
                     }],
                     itemDefinitions: new Map(),
                     perkRatings: new Map(),
+                    comparisons: new Map(),
                     errorMessage: 'error',
                 };
                 state.itemDefinitions.set('1', {

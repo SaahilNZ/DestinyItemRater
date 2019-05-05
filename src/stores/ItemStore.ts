@@ -11,11 +11,14 @@ import { ItemsState } from '../model/State';
 import AppStore from './AppStore';
 import { requestItems, requestItemDefinitions, requestItemsFailure } from '../actions/ItemActions';
 import { Action } from '../actions/Actions';
+import { buildItemContainer } from '../model/DestinyItemContainer';
+import DestinyItemComparison from '../model/DestinyItemComparison';
 
 class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
     items: DestinyItem[];
     itemDefinitions: Map<string, DestinyItemDefinition>;
     perkRatings: Map<string, PerkRating>;
+    comparisons: Map<string, DestinyItemComparison[]>;
     errorMessage: string;
 
     constructor() {
@@ -179,18 +182,9 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
     }
 
     compareItems() {
-        let containers = this.items.map(item => {
-            let itemDef = this.itemDefinitions.get(item.itemHash);
-            return itemDef && {
-                item: item,
-                definition: itemDef
-            };
-        }).filter(item => item !== null);
-
-        let comparisons = ComparisonService.compareAll(containers);
-        this.items.forEach(item => {
-            item.comparisons = comparisons[item.id];
-        });
+        let containers = this.items.map(item => buildItemContainer(item, this.itemDefinitions, new Map()))
+            .filter(container => container);
+        this.comparisons = ComparisonService.compareAll(containers);
     }
 
     onItemsFailedToLoad(errorMessage) {
