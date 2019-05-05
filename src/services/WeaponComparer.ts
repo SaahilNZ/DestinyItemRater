@@ -1,15 +1,12 @@
 import ItemComparisonResult from './ItemComparisonResult';
 import PerkRating from '../model/PerkRating';
-import Store from '../stores/Store';
 import DestinyItemContainer from '../model/DestinyItemContainer';
 
 export default class WeaponComparer {
-    perkStore: Store<{ perkRatings: Map<string, PerkRating> }>
-    perks: Map<string, PerkRating>
+    perkRatings: Map<string, PerkRating>
 
-    constructor(perkStore) {
-        this.perkStore = perkStore;
-        this.perks = this.perkStore.getState().perkRatings;
+    constructor(perkRatings: Map<string, PerkRating>) {
+        this.perkRatings = perkRatings;
     }
 
     compare(item1: DestinyItemContainer, item2: DestinyItemContainer): ItemComparisonResult {

@@ -41,11 +41,12 @@ class ComparisonService {
     }
 
     private getComparer(group: string): ItemComparer {
+        let perkRatings = ItemStore.getState().perkRatings;
         switch (group) {
             case 'armor':
-                return new ArmourComparer(ItemStore);
+                return new ArmourComparer(perkRatings);
             case 'weapons':
-                return new WeaponComparer(ItemStore);
+                return new WeaponComparer(perkRatings);
         }
         return null;
     }
