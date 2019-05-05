@@ -9,7 +9,6 @@ class PerkBuilder {
     constructor(name: string) {
         this.perk = {
             name: name,
-            hash: name,
             isGood: false,
             upgrades: []
         };
@@ -47,7 +46,6 @@ class ArmorItemBuilder {
                 id: uuid.v4(),
                 itemHash: uuid.v4(),
                 power: 700,
-                group: null,
                 perkColumnHashes: [],
                 perkColumns: [
                     [],
@@ -56,7 +54,8 @@ class ArmorItemBuilder {
                 ]
             },
             definition: definition,
-            comparisons: null
+            comparisons: null,
+            group: null
         };
         this.classItemType = classItemType;
     }

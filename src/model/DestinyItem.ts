@@ -6,7 +6,6 @@ interface DestinyItem {
     power: number;
     perkColumnHashes: string[][];
     perkColumns: PerkRating[][];
-    group: string;
 }
 
 export default DestinyItem;

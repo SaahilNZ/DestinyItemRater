@@ -11,7 +11,7 @@ import { ItemsState } from '../model/State';
 import AppStore from './AppStore';
 import { requestItems, requestItemDefinitions, requestItemsFailure } from '../actions/ItemActions';
 import { Action } from '../actions/Actions';
-import { buildItemContainer } from '../model/DestinyItemContainer';
+import { buildItemContainer, getItemGroup } from '../model/DestinyItemContainer';
 import DestinyItemComparison from '../model/DestinyItemComparison';
 
 class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
@@ -131,8 +131,9 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
         this.items.forEach((item, index) => {
             let itemDef = this.itemDefinitions.get(item.itemHash);
 
-            let isArmor = armourTypes.includes(itemDef.itemType);
-            let isWeapon = weaponTypes.includes(itemDef.itemType);
+            let group = getItemGroup(itemDef);
+            let isArmor = group === 'armor';
+            let isWeapon = group === 'weapons';
 
             if (isArmor || isWeapon) {
 
@@ -155,8 +156,6 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
                         }));
                     }
                 }
-
-                item.group = isArmor ? 'armor' : (isWeapon ? 'weapons' : null);
             } else {
                 this.items[index] = null;
             }

@@ -97,8 +97,7 @@ describe("Reducers", () => {
                         itemHash: '1',
                         power: 700,
                         perkColumnHashes: [],
-                        perkColumns: [],
-                        group: 'armor'
+                        perkColumns: []
                     }],
                     itemDefinitions: new Map(),
                     perkRatings: new Map(),
@@ -137,8 +136,7 @@ describe("Reducers", () => {
                         itemHash: '1',
                         power: 700,
                         perkColumnHashes: [],
-                        perkColumns: [],
-                        group: 'armor'
+                        perkColumns: []
                     }],
                     itemDefinitions: new Map(),
                     perkRatings: new Map(),
@@ -178,8 +176,7 @@ describe("Reducers", () => {
                         itemHash: '1',
                         power: 700,
                         perkColumnHashes: [],
-                        perkColumns: [],
-                        group: 'armor'
+                        perkColumns: []
                     }],
                     itemDefinitions: new Map(),
                     perkRatings: new Map(),

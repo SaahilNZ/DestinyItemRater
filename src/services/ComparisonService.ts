@@ -16,11 +16,11 @@ class ComparisonService {
         // group items by item group
         let itemsByGroup: Dictionary<DestinyItemContainer[]> = {};
         items.forEach(container => {
-            const group = itemsByGroup[container.item.group];
+            const group = itemsByGroup[container.group];
             if (group) {
                 group.push(container);
             } else {
-                itemsByGroup[container.item.group] = [container];
+                itemsByGroup[container.group] = [container];
             }
         });
 
