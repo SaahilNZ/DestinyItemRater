@@ -202,6 +202,7 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
             items: {
                 items: this.items,
                 itemDefs: this.itemDefinitions,
+                comparisons: this.comparisons,
                 perkRatings: this.perkRatings,
                 errorMessage: this.errorMessage
             }

@@ -22,53 +22,53 @@ export function bundle() {
   return tsProject.src()
     .pipe(tsProject())
     .js.pipe(
-    webpackStream({
-      plugins: [
-        new webpack.DefinePlugin({ "process.env.BUNGIE_CLIENT_ID": process.env.BUNGIE_CLIENT_ID })
-      ],
-      optimization: {
-        minimize: false
-      },
-      entry: {
-        main: ["babel-polyfill", paths.app + "/index.tsx"]
-      },
-      output: {
-        filename: "bundle.js"
-      },
-      devtool: "source-map",
-      resolve: {
-        extensions: [".ts", ".tsx", ".js", ".jsx", ".json"]
-      },
-      module: {
-        rules: [
-          {
-            test: /(\.css|.scss)$/,
-            use: [
-              {
-                loader: "style-loader" // creates style nodes from JS strings
-              },
-              {
-                loader: "css-loader" // translates CSS into CommonJS
-              }
-            ]
-          },
-          {
-            test: /\.(jsx|js)?$/,
-            use: [
-              {
-                loader: "babel-loader"
-              }
-            ]
-          },
-          {
-            test: /\.tsx?$/,
-            use: "awesome-typescript-loader"
-          },
-          { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
-        ]
-      }
-    })
-  ).pipe(gulp.dest(paths.javascript));
+      webpackStream({
+        plugins: [
+          new webpack.DefinePlugin({ "process.env.BUNGIE_CLIENT_ID": process.env.BUNGIE_CLIENT_ID })
+        ],
+        optimization: {
+          minimize: false
+        },
+        entry: {
+          main: ["babel-polyfill", paths.app + "/index.tsx"]
+        },
+        output: {
+          filename: "bundle.js"
+        },
+        devtool: "source-map",
+        resolve: {
+          extensions: [".ts", ".tsx", ".js", ".jsx", ".json"]
+        },
+        module: {
+          rules: [
+            {
+              test: /(\.css|.scss)$/,
+              use: [
+                {
+                  loader: "style-loader" // creates style nodes from JS strings
+                },
+                {
+                  loader: "css-loader" // translates CSS into CommonJS
+                }
+              ]
+            },
+            {
+              test: /\.(jsx|js)?$/,
+              use: [
+                {
+                  loader: "babel-loader"
+                }
+              ]
+            },
+            {
+              test: /\.tsx?$/,
+              use: "awesome-typescript-loader"
+            },
+            { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
+          ]
+        }
+      })
+    ).pipe(gulp.dest(paths.javascript));
 }
 
 export const build = gulp.series(bundle);
@@ -94,6 +94,6 @@ export function server() {
 
 export const serve = gulp.series(build, server);
 
-gulp.watch(['*.js', 'src/**/*.js', 'src/**/*.jsx', 'src/**/*.ts', 'src/**/*.tsx', 'routes/**/*.js'], build);
+gulp.watch(['src/**/*.js', 'src/**/*.jsx', 'src/**/*.ts', 'src/**/*.tsx', 'routes/**/*.js'], build);
 
 export default serve;

@@ -5,48 +5,78 @@ import ItemComparisonResult from './ItemComparisonResult';
 import WeaponComparer from './WeaponComparer';
 import DestinyItemContainer from '../model/DestinyItemContainer';
 
+type Dictionary<T> = { [key: string]: T };
+
 interface ItemComparer {
     compare(item1: DestinyItemContainer, item2: DestinyItemContainer): ItemComparisonResult;
 }
 
 class ComparisonService {
-    compare(item1: DestinyItemContainer, item2: DestinyItemContainer): ItemComparisonResult {
-        if (item1.item.group !== item2.item.group) {
-            return ItemComparisonResult.ITEM_IS_INCOMPARABLE;
+    compareAll(items: DestinyItemContainer[]): Map<string, DestinyItemComparison[]> {
+        // group items by item group
+        let itemsByGroup: Dictionary<DestinyItemContainer[]> = {};
+        items.forEach(container => {
+            const group = itemsByGroup[container.item.group];
+            if (group) {
+                group.push(container);
+            } else {
+                itemsByGroup[container.item.group] = [container];
+            }
+        });
+
+        let output = new Map<string, DestinyItemComparison[]>();
+
+        for (const groupId in itemsByGroup) {
+            const items = itemsByGroup[groupId];
+
+            let comparer = this.getComparer(groupId);
+            let groupComparisons = this.compareGroup(items, comparer);
+
+            for (const itemId in groupComparisons) {
+                output.set(itemId, groupComparisons[itemId]);
+            }
         }
 
-        let comparer: ItemComparer = null;
-        if (item1.item.group === 'armor') {
-            comparer = new ArmourComparer(ItemStore);
-        } else if (item1.item.group === 'weapons') {
-            comparer = new WeaponComparer(ItemStore);
-        }
-
-        if (!comparer) {
-            return ItemComparisonResult.ITEM_IS_INCOMPARABLE;
-        }
-
-        return comparer.compare(item1, item2);
+        return output;
     }
 
-    compareAll(items: DestinyItemContainer[]): Map<string, DestinyItemComparison[]> {
-        let output = new Map<string, DestinyItemComparison[]>();
+    private getComparer(group: string): ItemComparer {
+        switch (group) {
+            case 'armor':
+                return new ArmourComparer(ItemStore);
+            case 'weapons':
+                return new WeaponComparer(ItemStore);
+        }
+        return null;
+    }
+
+    private compareGroup(items: DestinyItemContainer[], comparer: ItemComparer): Dictionary<DestinyItemComparison[]> {
+        const output: Dictionary<DestinyItemComparison[]> = {};
+
+        if (!comparer) {
+            items.forEach(container => {
+                output[container.item.id] = [];
+            });
+            return output;
+        }
+
         items.forEach(container => {
             let comparisons = new Array(items.length - 1);
             for (let i = 0; i < items.length; i++) {
-                const item2 = items[i];
-                if (container.item.id === item2.item.id) {
+                const otherContainer = items[i];
+                if (container.item.id === otherContainer.item.id) {
                     // skip because we don't want to compare against self
                     continue;
                 }
                 comparisons[i] = {
-                    id: item2.item.id,
-                    result: this.compare(container, item2)
+                    id: otherContainer.item.id,
+                    result: comparer.compare(container, otherContainer)
                 };
             }
             // filter out the one undefined comparison - this is the one we skipped earlier
-            output.set(container.item.id, comparisons.filter(c => c));
+            output[container.item.id] = comparisons.filter(c => c);
         });
+
         return output;
     }
 }
