@@ -1,9 +1,9 @@
 import ArmourComparer from './ArmourComparer'
-import ItemStore from '../stores/ItemStore'
 import DestinyItemComparison from '../model/DestinyItemComparison';
 import ItemComparisonResult from './ItemComparisonResult';
 import WeaponComparer from './WeaponComparer';
 import DestinyItemContainer from '../model/DestinyItemContainer';
+import PerkRating from '../model/PerkRating';
 
 type Dictionary<T> = { [key: string]: T };
 
@@ -12,7 +12,7 @@ interface ItemComparer {
 }
 
 class ComparisonService {
-    compareAll(items: DestinyItemContainer[]): Map<string, DestinyItemComparison[]> {
+    compareAll(items: DestinyItemContainer[], perkRatings: Map<string, PerkRating>): Map<string, DestinyItemComparison[]> {
         // group items by item group
         let itemsByGroup: Dictionary<DestinyItemContainer[]> = {};
         items.forEach(container => {
@@ -29,7 +29,7 @@ class ComparisonService {
         for (const groupId in itemsByGroup) {
             const items = itemsByGroup[groupId];
 
-            let comparer = this.getComparer(groupId);
+            let comparer = this.getComparer(groupId, perkRatings);
             let groupComparisons = this.compareGroup(items, comparer);
 
             for (const itemId in groupComparisons) {
@@ -40,8 +40,7 @@ class ComparisonService {
         return output;
     }
 
-    private getComparer(group: string): ItemComparer {
-        let perkRatings = ItemStore.getState().perkRatings;
+    private getComparer(group: string, perkRatings: Map<string, PerkRating>): ItemComparer {
         switch (group) {
             case 'armor':
                 return new ArmourComparer(perkRatings);

@@ -85,7 +85,7 @@ describe("Reducers", () => {
             let newState = items(undefined, undefined);
             assert.strictEqual(newState.items.length, 0);
             assert.strictEqual(newState.itemDefinitions.size, 0);
-            assert.strictEqual(newState.perkRatings.size, 0);
+            assert.strictEqual(newState.perkRatings, null);
             assert.strictEqual(newState.errorMessage, null);
         });
 

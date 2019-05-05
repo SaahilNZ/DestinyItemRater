@@ -45,7 +45,7 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
     }
 
     onPerkRatingsFetching() {
-        this.perkRatings = new Map<string, PerkRating>();
+        this.perkRatings = null;
         this.updateAppStore();
     }
 
@@ -54,7 +54,7 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
         if (this.itemDefinitions.size > 0) {
             this.applyItemDefinitions();
         }
-        if (this.perkRatings.size > 0) {
+        if (this.perkRatings) {
             this.applyPerkRatings();
         }
         this.compareItems();
@@ -166,6 +166,8 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
     }
 
     applyPerkRatings() {
+        if (!this.perkRatings) return;
+
         this.items.forEach(item => {
             item.perkColumns.forEach(column => {
                 column.forEach(perk => {
@@ -182,9 +184,13 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
     }
 
     compareItems() {
-        let containers = this.items.map(item => buildItemContainer(item, this.itemDefinitions, new Map()))
-            .filter(container => container);
-        this.comparisons = ComparisonService.compareAll(containers);
+        if (this.perkRatings) {
+            let containers = this.items.map(item => buildItemContainer(item, this.itemDefinitions, new Map()))
+                .filter(container => container);
+            this.comparisons = ComparisonService.compareAll(containers, this.perkRatings);
+        } else {
+            this.comparisons = new Map();
+        }
     }
 
     onItemsFailedToLoad(errorMessage) {

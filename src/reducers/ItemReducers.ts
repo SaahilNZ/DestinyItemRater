@@ -5,7 +5,7 @@ import { ItemActionType } from "../actions/ItemActions";
 const initialState: ItemsState = {
     items: [],
     itemDefinitions: new Map(),
-    perkRatings: new Map(),
+    perkRatings: null,
     comparisons: new Map(),
     errorMessage: null
 }
