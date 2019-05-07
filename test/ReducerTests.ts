@@ -203,5 +203,43 @@ describe("Reducers", () => {
                 assert.strictEqual(newState.errorMessage, 'error');
             });
         });
+
+        describe("REQUEST_PERK_RATINGS", () => {
+            it("should clear the perk ratings and retain other state", () => {
+                let state: ItemsState = {
+                    items: [{
+                        id: '1',
+                        itemHash: '1',
+                        power: 700,
+                        perkColumnHashes: []
+                    }],
+                    itemDefinitions: new Map(),
+                    perkRatings: new Map(),
+                    comparisons: new Map(),
+                    errorMessage: 'error',
+                };
+                state.itemDefinitions.set('1', {
+                    hash: 1,
+                    name: 'Graviton Forfeit',
+                    itemType: 'Helmet',
+                    class: 'Hunter',
+                    tier: 'Exotic'
+                });
+                state.perkRatings.set('1', {
+                    name: 'Ashes to Assets',
+                    isGood: true,
+                    upgrades: []
+                });
+
+                let newState = items(state, {
+                    type: ItemActionType.REQUEST_PERK_RATINGS
+                });
+
+                assert.strictEqual(newState.items.length, 1);
+                assert.strictEqual(newState.itemDefinitions.size, 1);
+                assert.strictEqual(newState.perkRatings, null);
+                assert.strictEqual(newState.errorMessage, 'error');
+            });
+        });
     });
 });

@@ -9,7 +9,7 @@ import PerkRating from '../model/PerkRating';
 import AbstractStoreModel from './AbstractStoreModel';
 import { ItemsState } from '../model/State';
 import AppStore from './AppStore';
-import { requestItems, requestItemDefinitions, requestItemsFailure } from '../actions/ItemActions';
+import { requestItems, requestItemDefinitions, requestItemsFailure, requestPerkRatings } from '../actions/ItemActions';
 import { Action } from '../actions/Actions';
 import { buildItemContainer } from '../model/DestinyItemContainer';
 import DestinyItemComparison from '../model/DestinyItemComparison';
@@ -45,8 +45,7 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
     }
 
     onPerkRatingsFetching() {
-        this.perkRatings = null;
-        this.updateAppStore();
+        this.dispatch(requestPerkRatings());
     }
 
     onItemsLoadedForAccount(bungieResponse: BungieResponse<BungieDestinyProfile>) {

@@ -29,6 +29,13 @@ export function items(state = initialState, action?: Action): ItemsState {
                     ...state,
                     itemDefinitions: new Map()
                 };
+
+            case ItemActionType.REQUEST_PERK_RATINGS:
+                return {
+                    ...state,
+                    perkRatings: null
+                };
+
             default:
                 return state;
         }
