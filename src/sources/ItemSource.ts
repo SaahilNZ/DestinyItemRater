@@ -1,4 +1,5 @@
 import DestinyAccount from "../model/DestinyAccount";
+import BungieDestinyProfile from "../model/bungie/BungieDestinyProfile";
 
 class ItemSource {
     async fetch(account: DestinyAccount): Promise<BungieResponse<BungieDestinyProfile>> {

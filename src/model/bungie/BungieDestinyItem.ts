@@ -1,4 +1,4 @@
-interface BungieDestinyItem {
+export default interface BungieDestinyItem {
     itemInstanceId: string;
     itemHash: string;
 }

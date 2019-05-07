@@ -3,6 +3,7 @@ import ItemSource from "../sources/ItemSource";
 import ComparisonActions from "./ComparisonActions";
 import AbstractActionsModel from "./AbstractActionsModel";
 import DestinyAccount from "../model/DestinyAccount";
+import BungieDestinyProfile from "../model/bungie/BungieDestinyProfile";
 
 interface AltItemActions {
     fetchItems(account: DestinyAccount): (dispatch: any) => Promise<void>;

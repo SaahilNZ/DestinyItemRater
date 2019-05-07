@@ -9,10 +9,11 @@ import PerkRating from '../model/PerkRating';
 import AbstractStoreModel from './AbstractStoreModel';
 import { ItemsState } from '../model/State';
 import AppStore from './AppStore';
-import { requestItems, requestItemDefinitions, requestItemsFailure, requestPerkRatings } from '../actions/ItemActions';
+import { requestItems, requestItemDefinitions, requestItemsFailure, requestPerkRatings, requestItemsSuccess } from '../actions/ItemActions';
 import { Action } from '../actions/Actions';
 import { buildItemContainer } from '../model/DestinyItemContainer';
 import DestinyItemComparison from '../model/DestinyItemComparison';
+import BungieDestinyProfile from '../model/bungie/BungieDestinyProfile';
 
 class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
     items: DestinyItem[];
@@ -49,7 +50,7 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
     }
 
     onItemsLoadedForAccount(bungieResponse: BungieResponse<BungieDestinyProfile>) {
-        this.items = this.buildItems(bungieResponse);
+        this.dispatch(requestItemsSuccess(bungieResponse.Response));
         this.compareItems();
         this.errorMessage = null;
         this.updateAppStore();
@@ -65,50 +66,6 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
         this.perkRatings = perkRatings;
         this.compareItems();
         this.updateAppStore();
-    }
-
-    private buildItems(bungieResponse: BungieResponse<BungieDestinyProfile>): DestinyItem[] {
-        let rawItems: BungieDestinyItem[] = [];
-        bungieResponse.Response.profileInventory.data.items.forEach(item => {
-            rawItems.push(item);
-        });
-        for (var i in bungieResponse.Response.characterInventories.data) {
-            let characterInventory = bungieResponse.Response.characterInventories.data[i];
-            characterInventory.items.forEach(item => {
-                rawItems.push(item);
-            });
-        }
-        for (var e in bungieResponse.Response.characterEquipment.data) {
-            let characterEquipment = bungieResponse.Response.characterEquipment.data[e];
-            characterEquipment.items.forEach(item => {
-                rawItems.push(item);
-            });
-        }
-        let allItems = Array.from(new Set(rawItems));
-
-        return allItems.filter(item => item.itemInstanceId)
-            .map(item => {
-                let itemInstance = bungieResponse.Response.itemComponents.instances.data[item.itemInstanceId];
-                if (!itemInstance) return null;
-
-                let perkColumnHashes: string[][] = [];
-                let itemSockets = bungieResponse.Response.itemComponents.sockets.data[item.itemInstanceId];
-                if (itemSockets) {
-                    perkColumnHashes = itemSockets.sockets.map(
-                        socket => socket.reusablePlugHashes || [socket.plugHash]);
-                }
-
-                let primaryStat = itemInstance.primaryStat;
-                return {
-                    id: item.itemInstanceId,
-                    itemHash: item.itemHash,
-                    power: primaryStat && primaryStat.value,
-                    perkColumnHashes: perkColumnHashes,
-                    perkColumns: null,
-                    comparisons: [],
-                    group: null
-                };
-            }).filter(item => item);
     }
 
     compareItems() {

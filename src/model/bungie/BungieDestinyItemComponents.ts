@@ -1,4 +1,7 @@
-interface BungieDestinyItemComponents {
+import DataWrapper from "./DataWrapper";
+import BungieDestinyStat from "./BungieDestinyStat";
+
+export default interface BungieDestinyItemComponents {
     instances: DataWrapper<{ [key: string]: BungieDestinyItemInstance }>;
     sockets: DataWrapper<{ [key: string]: BungieDestinyItemSocketSet }>;
 }
@@ -12,6 +15,6 @@ interface BungieDestinyItemSocketSet {
 }
 
 interface BungieDestinyItemSocket {
-    reusablePlugHashes: string[];
-    plugHash: string;
+    reusablePlugHashes?: string[];
+    plugHash?: string;
 }

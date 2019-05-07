@@ -1,3 +1,3 @@
-interface DataWrapper<T> {
+export default interface DataWrapper<T> {
     data: T;
 }

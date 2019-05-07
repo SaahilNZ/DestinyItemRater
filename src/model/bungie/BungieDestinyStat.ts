@@ -1,3 +1,3 @@
-interface BungieDestinyStat<T> {
+export default interface BungieDestinyStat<T> {
     value: T;
 }

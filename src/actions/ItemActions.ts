@@ -1,5 +1,8 @@
+import BungieDestinyProfile from '../model/bungie/BungieDestinyProfile';
+
 export enum ItemActionType {
     REQUEST_ITEMS = 'REQUEST_ITEMS',
+    REQUEST_ITEMS_SUCCESS = 'REQUEST_ITEMS_SUCCESS',
     REQUEST_ITEMS_FAILURE = 'REQUEST_ITEMS_FAILURE',
 
     REQUEST_ITEM_DEFINITIONS = 'REQUEST_ITEM_DEFINITIONS',
@@ -9,6 +12,10 @@ export enum ItemActionType {
 
 export interface RequestItemsAction {
     type: typeof ItemActionType.REQUEST_ITEMS;
+}
+export interface RequestItemsSuccessAction {
+    type: typeof ItemActionType.REQUEST_ITEMS_SUCCESS;
+    profile: BungieDestinyProfile;
 }
 export interface RequestItemsFailureAction {
     type: typeof ItemActionType.REQUEST_ITEMS_FAILURE;
@@ -26,6 +33,12 @@ export interface RequestPerkRatingsAction {
 export function requestItems(): RequestItemsAction {
     return {
         type: ItemActionType.REQUEST_ITEMS
+    };
+}
+export function requestItemsSuccess(profile: BungieDestinyProfile): RequestItemsSuccessAction {
+    return {
+        type: ItemActionType.REQUEST_ITEMS_SUCCESS,
+        profile: profile
     };
 }
 export function requestItemsFailure(errorMessage: string): RequestItemsFailureAction {
@@ -48,6 +61,6 @@ export function requestPerkRatings(): RequestPerkRatingsAction {
 }
 
 export type ItemActions =
-    RequestItemsAction | RequestItemsFailureAction
+    RequestItemsAction | RequestItemsSuccessAction | RequestItemsFailureAction
     | RequestItemDefinitionsAction
     | RequestPerkRatingsAction;
