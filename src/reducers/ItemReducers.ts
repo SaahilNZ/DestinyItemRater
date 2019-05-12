@@ -95,8 +95,12 @@ function buildItems(profile: BungieDestinyProfile): DestinyItem[] {
             let perkColumnHashes: string[][] = [];
             if (profile.itemComponents.sockets) {
                 let itemSockets = profile.itemComponents.sockets.data[item.itemInstanceId];
-                perkColumnHashes =
-                    (itemSockets && itemSockets.sockets.map(socket => socket.reusablePlugHashes || [socket.plugHash])) || [];
+                if (itemSockets) {
+                    perkColumnHashes = itemSockets.sockets.map(socket =>
+                        socket.reusablePlugHashes
+                        || (socket.plugHash && [socket.plugHash])
+                        || []);
+                }
             }
 
             let primaryStat = itemInstance.primaryStat;

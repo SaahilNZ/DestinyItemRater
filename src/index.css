@@ -151,21 +151,30 @@ td {
 
 .perk {
     display: block;
-}
+    padding: 2px 4px;
+    border-radius: 4px;
 
-.good {
-    background-color: lime;
+    background-color: #d0d0d0;
     color: black;
+    font-size: 12px;
 }
-
-.ok {
-    background-color: yellow;
-    color: black;
+.perk div {
+    margin: 2px 0;
 }
-
-.bad {
-    background-color: red;
+.perk span.rating {
+    font-weight: bold;
     color: white;
+    padding: 1px 4px;
+    display: inline-block;
+    border-radius: 4px;
+    font-size: 11px;
+    margin: 0px 4px 2px 0px;
+}
+.perk span.rating.good {
+    background-color: #0b0;
+}
+.perk span.rating.bad {
+    background-color: #d00;
 }
 
 .comparison {
