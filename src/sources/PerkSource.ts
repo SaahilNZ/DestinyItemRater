@@ -6,15 +6,13 @@ class PerkSource {
             .then(response => response.text())
             .then(json => JSON.parse(json))
             .then(parsed => this.populatePerkMap(parsed))
-            .catch(error => 
-                {
-                    console.log(error);
-                    throw error;
-                }
-            );
+            .catch(error => {
+                console.log(error);
+                throw error;
+            });
     }
-    
-    populatePerkMap(data): Map<string, PerkRating> {
+
+    private populatePerkMap(data): Map<string, PerkRating> {
         let perkRatingsString = localStorage.getItem("perk_ratings");
         let storedPerkRatings = perkRatingsString != null && perkRatingsString != undefined ?
             JSON.parse(perkRatingsString) : { perks: [] };
@@ -24,7 +22,7 @@ class PerkSource {
             map.set(perk.name.toLowerCase(),
                 {
                     name: perk.name,
-                    isGood: perk.isGood,
+                    isGoodByMode: perk.isGoodByMode,
                     upgrades: perk.upgrades
                 });
         });
@@ -33,7 +31,7 @@ class PerkSource {
             map.set(perk.name.toLowerCase(),
                 {
                     name: perk.name,
-                    isGood: perk.isGood,
+                    isGoodByMode: perk.isGoodByMode,
                     upgrades: perk.upgrades
                 });
         });

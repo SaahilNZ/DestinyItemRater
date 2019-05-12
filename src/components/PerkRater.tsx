@@ -11,7 +11,7 @@ interface PerkRaterState {
 }
 
 class PerkRater extends React.Component<PerkRaterProps, PerkRaterState> {
-    constructor(props) {
+    constructor(props: PerkRaterProps) {
         super(props);
         this.apply = this.apply.bind(this);
         this.state = {
@@ -31,14 +31,18 @@ class PerkRater extends React.Component<PerkRaterProps, PerkRaterState> {
     render() {
         let perkRatings = [];
         this.state.perkRatings.forEach((perkRating, perkName) => {
-            let upgrades = perkRating.upgrades.map(upgrade => 
+            let upgrades = perkRating.upgrades.map(upgrade =>
                 <li key={upgrade}>{upgrade}</li>
             );
             perkRatings.push(
                 <tr key={perkName}>
                     <td>
-                        <input type="checkbox" checked={perkRating.isGood}
-                            name={perkName} onChange={this.handleRatingChanged} />
+                        <input type="checkbox" checked={perkRating.isGoodByMode['PvE']}
+                            name={`${perkName}__PvE`} onChange={this.handleRatingChanged} />
+                    </td>
+                    <td>
+                        <input type="checkbox" checked={perkRating.isGoodByMode['PvP']}
+                            name={`${perkName}__PvP`} onChange={this.handleRatingChanged} />
                     </td>
                     <td>{perkRating.name}</td>
                     <td>
@@ -54,27 +58,29 @@ class PerkRater extends React.Component<PerkRaterProps, PerkRaterState> {
                 <table className="item-table">
                     <tbody>
                         <tr>
-                            <th>Is Good?</th>
+                            <th>Is Good in PvE?</th>
+                            <th>Is Good in PvP?</th>
                             <th>Name</th>
                             <th>Upgrades</th>
                         </tr>
                         {perkRatings}
                     </tbody>
                 </table>
-                <br/>
+                <br />
                 <input type="button" value="Apply" onClick={this.apply} />
             </div>);
     }
 
-    handleRatingChanged(event) {
+    handleRatingChanged(event: React.ChangeEvent<HTMLInputElement>) {
         const target = event.target;
+
         const isGood = target.checked;
-        const name = target.name;
+        const [perkName, mode] = target.name.split('__');
 
         let updatedRatings = this.state.perkRatings;
-        let rating = updatedRatings.get(name);
-        rating.isGood = isGood;
-        updatedRatings.set(name, rating);
+        let rating = updatedRatings.get(perkName);
+        rating.isGoodByMode[mode] = isGood;
+        updatedRatings.set(perkName, rating);
 
         this.setState({
             perkRatings: updatedRatings

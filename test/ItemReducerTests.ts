@@ -351,7 +351,10 @@ function buildSampleItemsState(): ItemsState {
     });
     state.perkRatings.set('1', {
         name: 'Ashes to Assets',
-        isGood: true,
+        isGoodByMode: {
+            'PvE': true,
+            'PvP': true
+        },
         upgrades: []
     });
     return state;

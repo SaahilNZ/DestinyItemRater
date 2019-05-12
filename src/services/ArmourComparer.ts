@@ -1,7 +1,7 @@
 import ItemComparisonResult from './ItemComparisonResult';
 import PerkRating from '../model/PerkRating';
 import DestinyItemContainer from '../model/DestinyItemContainer';
-import DestinyPerkContainer from '../model/DestinyPerkContainer';
+import DestinyPerkContainer, { buildPerkContainer } from '../model/DestinyPerkContainer';
 
 interface PerkTreeNode {
     perk: DestinyPerkContainer;
@@ -39,12 +39,12 @@ export default class ArmourComparer {
         return this.comparePerks(item1GoodPerks, item2GoodPerks);
     }
 
-    getGoodPerks(container: DestinyItemContainer): DestinyPerkContainer[][] {
+    private getGoodPerks(container: DestinyItemContainer): DestinyPerkContainer[][] {
         return container.perkColumns.map(
-            column => column.filter(perk => perk && perk.isGood));
+            column => column.filter(perk => perk && (perk.isGoodByMode['PvE'] || perk.isGoodByMode['PvP'])));
     }
 
-    comparePerks(item1Perks: DestinyPerkContainer[][], item2Perks: DestinyPerkContainer[][]): ItemComparisonResult {
+    private comparePerks(item1Perks: DestinyPerkContainer[][], item2Perks: DestinyPerkContainer[][]): ItemComparisonResult {
         let item1PerkConfigs = this.getPerkConfigs(item1Perks);
         let item2PerkConfigs = this.getPerkConfigs(item2Perks);
 
@@ -72,7 +72,7 @@ export default class ArmourComparer {
         }
     }
 
-    scoreConfigInclusion(configs1: DestinyPerkContainer[][], configs2: DestinyPerkContainer[][]): number {
+    private scoreConfigInclusion(configs1: DestinyPerkContainer[][], configs2: DestinyPerkContainer[][]): number {
         if (configs1.length === 0) {
             return 1;
         }
@@ -90,7 +90,7 @@ export default class ArmourComparer {
         return bestScore;
     }
 
-    determineConfigInclusion(configs: DestinyPerkContainer[][], configToFind: DestinyPerkContainer[]): number {
+    private determineConfigInclusion(configs: DestinyPerkContainer[][], configToFind: DestinyPerkContainer[]): number {
         // 0 = config not included
         // 1 = exact config included
         // 2 = better version of config included
@@ -101,7 +101,7 @@ export default class ArmourComparer {
             return {
                 basePerk: perk.name,
                 upgradedPerks: upgradeNames
-            }
+            };
         });
 
         let bestInclusionScore = 0;
@@ -134,26 +134,31 @@ export default class ArmourComparer {
         return bestInclusionScore;
     }
 
-    getPerkUpgrades(perk: DestinyPerkContainer): DestinyPerkContainer[] {
-        if (this.perkRatings === null || this.perkRatings === undefined) {
+    private getPerkUpgrades(perk: DestinyPerkContainer): DestinyPerkContainer[] {
+        if (!this.perkRatings) {
             return [];
         }
-        let upgradePerks = perk.upgrades
-            .map(perkName => this.perkRatings.get(perkName.toLowerCase()));
-        let upgrades = upgradePerks.concat();
+
+        let upgradePerks = perk.upgrades.map(perkName => {
+            let perk = this.perkRatings.get(perkName.toLowerCase());
+            return buildPerkContainer(perk, this.perkRatings);
+        });
+
+        let upgrades = upgradePerks;
         upgradePerks.forEach(upgrade => {
             upgrades = upgrades.concat(...this.getPerkUpgrades(upgrade));
         });
+
         return upgrades;
     }
 
-    getPerkConfigs(perkColumns: DestinyPerkContainer[][]): DestinyPerkContainer[][] {
+    private getPerkConfigs(perkColumns: DestinyPerkContainer[][]): DestinyPerkContainer[][] {
         let filteredColumns = perkColumns.filter(column => column.length > 0);
         let perkTree = this.convertToTree(null, filteredColumns);
         return this.getPerkConfigsFromTree(perkTree);
     }
 
-    convertToTree(perk: DestinyPerkContainer, perkColumns: DestinyPerkContainer[][]) {
+    private convertToTree(perk: DestinyPerkContainer, perkColumns: DestinyPerkContainer[][]) {
         let node: PerkTreeNode = {
             perk: perk,
             children: []
@@ -168,7 +173,7 @@ export default class ArmourComparer {
         return node;
     }
 
-    getPerkConfigsFromTree(perkTree: PerkTreeNode): DestinyPerkContainer[][] {
+    private getPerkConfigsFromTree(perkTree: PerkTreeNode): DestinyPerkContainer[][] {
         let configs: DestinyPerkContainer[][] = [];
         perkTree.children.forEach(perk => {
             configs.push(...this.getPerkConfigsFromNode(perk));
@@ -176,7 +181,7 @@ export default class ArmourComparer {
         return configs;
     }
 
-    getPerkConfigsFromNode(perkNode: PerkTreeNode): DestinyPerkContainer[][] {
+    private getPerkConfigsFromNode(perkNode: PerkTreeNode): DestinyPerkContainer[][] {
         let configs: DestinyPerkContainer[][] = [];
         let baseConfig: DestinyPerkContainer[] = [perkNode.perk];
         perkNode.children.forEach(child => {

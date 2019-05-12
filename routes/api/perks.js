@@ -5,7 +5,7 @@ var fs = require("fs");
 var papa = require("papaparse");
 
 /* GET armour perks. */
-router.get("/", function(req, res, next) {
+router.get("/", function (req, res, next) {
     res.header("Content-Type", "application/json");
     var file = fs.readFileSync(
         path.join(__dirname, "../../public/data/d2-armour-perks.csv")
@@ -15,20 +15,18 @@ router.get("/", function(req, res, next) {
 
 function convertToJson(data) {
     let perks = [];
-    data.data.slice(1).forEach(perk => {
-    if (perk[0].trim() !== "") {
-        let upgrades = [];
-        if (perk[2] !== "") {
-            upgrades.push(perk[2]);
-        }
-        if (perk[3] !== "") {
-            upgrades.push(perk[3]);
-        }
-        perks.push({
-            name: perk[0],
-            isGood: perk[1] === "good",
-            upgrades: upgrades
-        });
+    data.data.slice(1).forEach(row => {
+        const [perkName, pveRating, pvpRating, upgrade1, upgrade2] = row;
+
+        if (perkName.trim() !== "") {
+            perks.push({
+                name: perkName,
+                isGoodByMode: {
+                    'PvE': pveRating === 'good',
+                    'PvP': pvpRating === 'good',
+                },
+                upgrades: [upgrade1, upgrade2].filter(u => u)
+            });
         }
     });
     return JSON.stringify({ perks: perks });

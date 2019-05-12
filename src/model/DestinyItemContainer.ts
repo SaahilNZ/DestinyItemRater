@@ -64,7 +64,10 @@ function buildPerkColumns(perkColumnHashes: string[][], group: string,
                 let plugDefinition = itemDefs.get(hash);
                 let perk: PerkRating = {
                     name: (plugDefinition && plugDefinition.name) || "",
-                    isGood: false,
+                    isGoodByMode: {
+                        'PvE': false,
+                        'PvP': false
+                    },
                     upgrades: []
                 };
                 return buildPerkContainer(perk, ratings);

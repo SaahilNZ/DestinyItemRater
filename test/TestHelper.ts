@@ -8,7 +8,7 @@ class TestHelper {
                 perk.name.toLowerCase(),
                 {
                     name: perk.name,
-                    isGood: perk.isGood,
+                    isGoodByMode: perk.isGoodByMode,
                     upgrades: perk.upgrades
                 }
             );

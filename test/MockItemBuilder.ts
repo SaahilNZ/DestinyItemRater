@@ -2,6 +2,9 @@ import assert from 'assert';
 import uuid from 'uuid';
 import PerkRating from '../src/model/PerkRating';
 import DestinyItemContainer from '../src/model/DestinyItemContainer';
+import ArmourComparer from '../src/services/ArmourComparer';
+import ItemComparisonResult from '../src/services/ItemComparisonResult';
+import DestinyPerkContainer from '../src/model/DestinyPerkContainer';
 
 class PerkBuilder {
     perk: PerkRating;
@@ -9,18 +12,27 @@ class PerkBuilder {
     constructor(name: string) {
         this.perk = {
             name: name,
-            isGood: false,
+            isGoodByMode: {
+                'PvE': false,
+                'PvP': false
+            },
             upgrades: []
         };
     }
 
     good() {
-        this.perk.isGood = true;
+        this.perk.isGoodByMode = {
+            'PvE': true,
+            'PvP': true
+        };
         return this;
     }
 
     bad() {
-        this.perk.isGood = false;
+        this.perk.isGoodByMode = {
+            'PvE': false,
+            'PvP': false
+        };
         return this;
     }
 
@@ -90,23 +102,23 @@ class ArmorItemBuilder {
         return this;
     }
 
-    itemHash(hash) {
+    itemHash(hash: string) {
         this.container.item.itemHash = hash;
         return this;
     }
 
-    addIntrinsicPerk(perk) {
-        this.container.perkColumns[0].push(perk);
+    addIntrinsicPerk(rating: PerkRating) {
+        this.container.perkColumns[0].push({ ...rating });
         return this;
     }
 
-    addPrimaryPerk(perk) {
-        this.container.perkColumns[1].push(perk);
+    addPrimaryPerk(rating: PerkRating) {
+        this.container.perkColumns[1].push({ ...rating });
         return this;
     }
 
-    addSecondaryPerk(perk) {
-        this.container.perkColumns[2].push(perk);
+    addSecondaryPerk(rating: PerkRating) {
+        this.container.perkColumns[2].push({ ...rating });
         return this;
     }
 
@@ -141,7 +153,11 @@ export function newPerk() {
     return new PerkBuilder(name);
 }
 
-export function armourComparerTest(defineItem1, defineItem2, expected, armourComparer) {
+type ItemDefiner = (builder: ArmorItemBuilder) => ArmorItemBuilder;
+export function armourComparerTest(
+    defineItem1: ItemDefiner, defineItem2: ItemDefiner,
+    expected: ItemComparisonResult, armourComparer: ArmourComparer) {
+
     let item1 = defineItem1(newItem().armor().warlock().gauntlets()).build();
     let item2 = defineItem2(newItem().armor().warlock().gauntlets()).build();
     assert.strictEqual(armourComparer.compare(item1, item2), expected);

@@ -1,6 +1,6 @@
 interface PerkRating {
     name: string;
-    isGood: boolean;
+    isGoodByMode: { [mode: string]: boolean };
     upgrades: string[];
 }
 
