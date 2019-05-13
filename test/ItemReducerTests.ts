@@ -3,6 +3,8 @@ import { items } from '../src/reducers/ItemReducers';
 import { ItemsState } from "../src/model/State";
 import { ItemActionType } from "../src/actions/ItemActions";
 import DestinyItem from "../src/model/DestinyItem";
+import DestinyItemDefinition from "../src/model/DestinyItemDefinition";
+import PerkRating from "../src/model/PerkRating";
 
 describe("Reducers.items()", () => {
     it("should return the initial state", () => {
@@ -28,6 +30,18 @@ describe("Reducers.items()", () => {
     });
 
     describe("REQUEST_ITEMS_SUCCESS", () => {
+        it("should clear the error message", () => {
+            let state = buildSampleItemsState();
+            state.items = [];
+
+            let newState = items(state, {
+                type: ItemActionType.REQUEST_ITEMS_SUCCESS,
+                profile: null
+            });
+
+            assert.strictEqual(newState.errorMessage, null);
+        });
+
         it("should clear the list of items if a null profile was provided", () => {
             let state = buildSampleItemsState();
             state.items = [];
@@ -314,6 +328,37 @@ describe("Reducers.items()", () => {
         });
     });
 
+    describe("REQUEST_ITEM_DEFINITIONS_SUCCESS", () => {
+        it("should set the item definitions and retain other state", () => {
+            let state = buildSampleItemsState();
+
+            let definitions = new Map<string, DestinyItemDefinition>();
+            definitions.set('1', {
+                hash: 1,
+                name: 'Graviton Forfeit',
+                itemType: 'Helmet',
+                class: 'Hunter',
+                tier: 'Exotic'
+            });
+            definitions.set('2', {
+                hash: 2,
+                name: 'Celestial Nighthawk',
+                itemType: 'Helmet',
+                class: 'Hunter',
+                tier: 'Exotic'
+            });
+            let newState = items(state, {
+                type: ItemActionType.REQUEST_ITEM_DEFINITIONS_SUCCESS,
+                definitions: definitions
+            });
+
+            assert.strictEqual(newState.items.length, 1);
+            assert.strictEqual(newState.itemDefinitions.size, 2);
+            assert.strictEqual(newState.perkRatings.size, 1);
+            assert.strictEqual(newState.errorMessage, 'error');
+        });
+    });
+
     describe("REQUEST_PERK_RATINGS", () => {
         it("should clear the perk ratings and retain other state", () => {
             let state = buildSampleItemsState();
@@ -324,6 +369,39 @@ describe("Reducers.items()", () => {
             assert.strictEqual(newState.items.length, 1);
             assert.strictEqual(newState.itemDefinitions.size, 1);
             assert.strictEqual(newState.perkRatings, null);
+            assert.strictEqual(newState.errorMessage, 'error');
+        });
+    });
+
+    describe("REQUEST_PERK_RATINGS_SUCCESS", () => {
+        it("should set the perk ratings and retain other state", () => {
+            let state = buildSampleItemsState();
+
+            let perkRatings = new Map<string, PerkRating>();
+            perkRatings.set('1', {
+                name: 'Ashes to Assets',
+                isGoodByMode: {
+                    'PvE': true,
+                    'PvP': true
+                },
+                upgrades: []
+            });
+            perkRatings.set('2', {
+                name: 'Sniper Rifle Reserves',
+                isGoodByMode: {
+                    'PvE': true,
+                    'PvP': true
+                },
+                upgrades: []
+            });
+            let newState = items(state, {
+                type: ItemActionType.REQUEST_PERK_RATINGS_SUCCESS,
+                perkRatings: perkRatings
+            });
+
+            assert.strictEqual(newState.items.length, 1);
+            assert.strictEqual(newState.itemDefinitions.size, 1);
+            assert.strictEqual(newState.perkRatings.size, 2);
             assert.strictEqual(newState.errorMessage, 'error');
         });
     });

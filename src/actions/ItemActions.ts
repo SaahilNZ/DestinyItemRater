@@ -1,4 +1,6 @@
 import BungieDestinyProfile from '../model/bungie/BungieDestinyProfile';
+import DestinyItemDefinition from '../model/DestinyItemDefinition';
+import PerkRating from '../model/PerkRating';
 
 export enum ItemActionType {
     REQUEST_ITEMS = 'REQUEST_ITEMS',
@@ -6,8 +8,10 @@ export enum ItemActionType {
     REQUEST_ITEMS_FAILURE = 'REQUEST_ITEMS_FAILURE',
 
     REQUEST_ITEM_DEFINITIONS = 'REQUEST_ITEM_DEFINITIONS',
+    REQUEST_ITEM_DEFINITIONS_SUCCESS = 'REQUEST_ITEM_DEFINITIONS_SUCCESS',
 
-    REQUEST_PERK_RATINGS = 'REQUEST_PERK_RATINGS'
+    REQUEST_PERK_RATINGS = 'REQUEST_PERK_RATINGS',
+    REQUEST_PERK_RATINGS_SUCCESS = 'REQUEST_PERK_RATINGS_SUCCESS',
 }
 
 export interface RequestItemsAction {
@@ -25,9 +29,17 @@ export interface RequestItemsFailureAction {
 export interface RequestItemDefinitionsAction {
     type: typeof ItemActionType.REQUEST_ITEM_DEFINITIONS;
 }
+export interface RequestItemDefinitionsSuccessAction {
+    type: typeof ItemActionType.REQUEST_ITEM_DEFINITIONS_SUCCESS;
+    definitions: Map<string, DestinyItemDefinition>;
+}
 
 export interface RequestPerkRatingsAction {
     type: typeof ItemActionType.REQUEST_PERK_RATINGS;
+}
+export interface RequestPerkRatingsSuccessAction {
+    type: typeof ItemActionType.REQUEST_PERK_RATINGS_SUCCESS;
+    perkRatings: Map<string, PerkRating>;
 }
 
 export function requestItems(): RequestItemsAction {
@@ -53,14 +65,26 @@ export function requestItemDefinitions(): RequestItemDefinitionsAction {
         type: ItemActionType.REQUEST_ITEM_DEFINITIONS
     };
 }
+export function requestItemDefinitionsSuccess(definitions: Map<string, DestinyItemDefinition>): RequestItemDefinitionsSuccessAction {
+    return {
+        type: ItemActionType.REQUEST_ITEM_DEFINITIONS_SUCCESS,
+        definitions: definitions
+    };
+}
 
 export function requestPerkRatings(): RequestPerkRatingsAction {
     return {
         type: ItemActionType.REQUEST_PERK_RATINGS
     };
 }
+export function requestPerkRatingsSuccess(perkRatings: Map<string, PerkRating>): RequestPerkRatingsSuccessAction {
+    return {
+        type: ItemActionType.REQUEST_PERK_RATINGS_SUCCESS,
+        perkRatings: perkRatings
+    };
+}
 
 export type ItemActions =
     RequestItemsAction | RequestItemsSuccessAction | RequestItemsFailureAction
-    | RequestItemDefinitionsAction
-    | RequestPerkRatingsAction;
+    | RequestItemDefinitionsAction | RequestItemDefinitionsSuccessAction
+    | RequestPerkRatingsAction | RequestPerkRatingsSuccessAction;

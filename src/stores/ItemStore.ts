@@ -9,7 +9,7 @@ import PerkRating from '../model/PerkRating';
 import AbstractStoreModel from './AbstractStoreModel';
 import { ItemsState } from '../model/State';
 import AppStore from './AppStore';
-import { requestItems, requestItemDefinitions, requestItemsFailure, requestPerkRatings, requestItemsSuccess } from '../actions/ItemActions';
+import { requestItems, requestItemDefinitions, requestItemsFailure, requestPerkRatings, requestItemsSuccess, requestItemDefinitionsSuccess, requestPerkRatingsSuccess } from '../actions/ItemActions';
 import { Action } from '../actions/Actions';
 import { buildItemContainer } from '../model/DestinyItemContainer';
 import DestinyItemComparison from '../model/DestinyItemComparison';
@@ -52,20 +52,16 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
     onItemsLoadedForAccount(bungieResponse: BungieResponse<BungieDestinyProfile>) {
         this.dispatch(requestItemsSuccess(bungieResponse.Response));
         this.compareItems();
-        this.errorMessage = null;
-        this.updateAppStore();
     }
 
     onItemDefinitionsLoaded(itemDefs: Map<string, DestinyItemDefinition>) {
-        this.itemDefinitions = itemDefs;
+        this.dispatch(requestItemDefinitionsSuccess(itemDefs));
         this.compareItems();
-        this.updateAppStore();
     }
 
     onPerkRatingsLoaded(perkRatings: Map<string, PerkRating>) {
-        this.perkRatings = perkRatings;
+        this.dispatch(requestPerkRatingsSuccess(perkRatings));
         this.compareItems();
-        this.updateAppStore();
     }
 
     compareItems() {
@@ -76,6 +72,7 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
         } else {
             this.comparisons = new Map();
         }
+        this.updateAppStore();
     }
 
     onItemsFailedToLoad(errorMessage) {

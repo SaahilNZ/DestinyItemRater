@@ -24,7 +24,8 @@ export function items(state = initialState, action?: Action): ItemsState {
             case ItemActionType.REQUEST_ITEMS_SUCCESS:
                 return {
                     ...state,
-                    items: buildItems(action.profile)
+                    items: buildItems(action.profile),
+                    errorMessage: null
                 };
             case ItemActionType.REQUEST_ITEMS_FAILURE:
                 return {
@@ -37,11 +38,21 @@ export function items(state = initialState, action?: Action): ItemsState {
                     ...state,
                     itemDefinitions: new Map()
                 };
+            case ItemActionType.REQUEST_ITEM_DEFINITIONS_SUCCESS:
+                return {
+                    ...state,
+                    itemDefinitions: action.definitions
+                };
 
             case ItemActionType.REQUEST_PERK_RATINGS:
                 return {
                     ...state,
                     perkRatings: null
+                };
+            case ItemActionType.REQUEST_PERK_RATINGS_SUCCESS:
+                return {
+                    ...state,
+                    perkRatings: action.perkRatings
                 };
 
             default:
