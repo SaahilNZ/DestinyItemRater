@@ -1,7 +1,7 @@
 import ItemComparisonResult from './ItemComparisonResult';
 import PerkRating from '../model/PerkRating';
 import DestinyItemContainer from '../model/DestinyItemContainer';
-import DestinyPerkContainer, { buildPerkContainer } from '../model/DestinyPerkContainer';
+import { DestinyPerkContainer, buildPerkContainer } from '../model/DestinyPerkContainer';
 
 interface PerkTreeNode {
     perk: DestinyPerkContainer;
@@ -31,9 +31,6 @@ export default class ArmourComparer {
     }
 
     compare(item1: DestinyItemContainer, item2: DestinyItemContainer): ItemComparisonResult {
-        if (item1.item.id === '6917529085856201652' && item2.item.id === '6917529092262278684') {
-            debugger;
-        }
         if (item1.definition.class !== item2.definition.class) {
             return ItemComparisonResult.ITEM_IS_INCOMPARABLE;
         }

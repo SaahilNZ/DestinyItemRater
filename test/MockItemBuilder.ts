@@ -4,7 +4,7 @@ import PerkRating from '../src/model/PerkRating';
 import DestinyItemContainer from '../src/model/DestinyItemContainer';
 import ArmourComparer from '../src/services/ArmourComparer';
 import ItemComparisonResult from '../src/services/ItemComparisonResult';
-import DestinyPerkContainer from '../src/model/DestinyPerkContainer';
+import { DestinyPerkContainer, PerkTier } from '../src/model/DestinyPerkContainer';
 
 class PerkBuilder {
     perk: PerkRating;
@@ -108,17 +108,35 @@ class ArmorItemBuilder {
     }
 
     addIntrinsicPerk(rating: PerkRating) {
-        this.container.perkColumns[0].push({ ...rating });
+        this.container.perkColumns[0].push({
+            ...rating,
+            tierByMode: {
+                'PvE': PerkTier.NO_TIER,
+                'PvP': PerkTier.NO_TIER
+            }
+        });
         return this;
     }
 
     addPrimaryPerk(rating: PerkRating) {
-        this.container.perkColumns[1].push({ ...rating });
+        this.container.perkColumns[1].push({
+            ...rating,
+            tierByMode: {
+                'PvE': PerkTier.NO_TIER,
+                'PvP': PerkTier.NO_TIER
+            }
+        });
         return this;
     }
 
     addSecondaryPerk(rating: PerkRating) {
-        this.container.perkColumns[2].push({ ...rating });
+        this.container.perkColumns[2].push({
+            ...rating,
+            tierByMode: {
+                'PvE': PerkTier.NO_TIER,
+                'PvP': PerkTier.NO_TIER
+            }
+        });
         return this;
     }
 

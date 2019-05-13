@@ -171,10 +171,44 @@ td {
     margin: 0px 4px 2px 0px;
 }
 .perk span.rating.good {
-    background-color: #0b0;
+    background-color: #00bb00;
 }
 .perk span.rating.bad {
-    background-color: #d00;
+    background-color: #dd0000;
+}
+
+.perk span.rating.s-tier {
+    background-color: #00bb00;
+}
+.perk span.rating.a-tier {
+    background-color: #ecb216;
+}
+.perk span.rating.b-tier {
+    background-color: #c19112;
+}
+.perk span.rating.c-tier {
+    background-color: #dd0000;
+}
+
+.perk span.rating.s-tier:after {
+    font-weight: normal;
+    margin-left: 2px;
+    content: '\2605\2605\2605';
+}
+.perk span.rating.a-tier:after {
+    font-weight: normal;
+    margin-left: 2px;
+    content: '\2605\2605\2606';
+}
+.perk span.rating.b-tier:after {
+    font-weight: normal;
+    margin-left: 2px;
+    content: '\2605\2606\2606';
+}
+.perk span.rating.c-tier:after {
+    font-weight: normal;
+    margin-left: 2px;
+    content: '\2606\2606\2606';
 }
 
 .comparison {

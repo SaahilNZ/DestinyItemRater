@@ -2,7 +2,7 @@ import DestinyItem from "./DestinyItem";
 import DestinyItemDefinition from "./DestinyItemDefinition";
 import DestinyItemComparison from "./DestinyItemComparison";
 import PerkRating from "./PerkRating";
-import DestinyPerkContainer, { buildPerkContainer } from "./DestinyPerkContainer";
+import { DestinyPerkContainer, buildPerkContainer } from "./DestinyPerkContainer";
 
 export default interface DestinyItemContainer {
     item: DestinyItem;
