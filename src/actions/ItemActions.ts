@@ -12,6 +12,8 @@ export enum ItemActionType {
 
     REQUEST_PERK_RATINGS = 'REQUEST_PERK_RATINGS',
     REQUEST_PERK_RATINGS_SUCCESS = 'REQUEST_PERK_RATINGS_SUCCESS',
+
+    COMPARE_ITEMS = 'COMPARE_ITEMS'
 }
 
 export interface RequestItemsAction {
@@ -40,6 +42,10 @@ export interface RequestPerkRatingsAction {
 export interface RequestPerkRatingsSuccessAction {
     type: typeof ItemActionType.REQUEST_PERK_RATINGS_SUCCESS;
     perkRatings: Map<string, PerkRating>;
+}
+
+export interface CompareItemsAction {
+    type: typeof ItemActionType.COMPARE_ITEMS;
 }
 
 export function requestItems(): RequestItemsAction {
@@ -84,7 +90,14 @@ export function requestPerkRatingsSuccess(perkRatings: Map<string, PerkRating>):
     };
 }
 
+export function compareItems(): CompareItemsAction {
+    return {
+        type: ItemActionType.COMPARE_ITEMS
+    };
+}
+
 export type ItemActions =
     RequestItemsAction | RequestItemsSuccessAction | RequestItemsFailureAction
     | RequestItemDefinitionsAction | RequestItemDefinitionsSuccessAction
-    | RequestPerkRatingsAction | RequestPerkRatingsSuccessAction;
+    | RequestPerkRatingsAction | RequestPerkRatingsSuccessAction
+    | CompareItemsAction;

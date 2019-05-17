@@ -17,14 +17,14 @@ export function buildItemContainer(item: DestinyItem,
     comparisons: Map<string, DestinyItemComparison[]>,
     perkRatings: Map<string, PerkRating>): DestinyItemContainer {
 
-    let itemDef = itemDefs.get(item.itemHash);
+    let itemDef = itemDefs && itemDefs.get(item.itemHash);
     if (!itemDef) return null;
 
     let group = getItemGroup(itemDef);
     return {
         item: item,
         definition: itemDef,
-        comparisons: comparisons.get(item.id),
+        comparisons: comparisons && comparisons.get(item.id),
         group: group,
         perkColumns: buildPerkColumns(item.perkColumnHashes, group, itemDefs, perkRatings)
     };

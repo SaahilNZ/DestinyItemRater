@@ -4,12 +4,17 @@ import { ItemActionType } from "../actions/ItemActions";
 import DestinyItem from "../model/DestinyItem";
 import BungieDestinyProfile from '../model/bungie/BungieDestinyProfile';
 import BungieDestinyItem from "../model/bungie/BungieDestinyItem";
+import DestinyItemComparison from "../model/DestinyItemComparison";
+import DestinyItemDefinition from "../model/DestinyItemDefinition";
+import PerkRating from "../model/PerkRating";
+import ComparisonService from "../services/ComparisonService";
+import { buildItemContainer } from "../model/DestinyItemContainer";
 
 const initialState: ItemsState = {
     items: [],
-    itemDefinitions: new Map(),
+    itemDefinitions: null,
     perkRatings: null,
-    comparisons: new Map(),
+    comparisons: null,
     errorMessage: null
 }
 
@@ -36,7 +41,7 @@ export function items(state = initialState, action?: Action): ItemsState {
             case ItemActionType.REQUEST_ITEM_DEFINITIONS:
                 return {
                     ...state,
-                    itemDefinitions: new Map()
+                    itemDefinitions: null
                 };
             case ItemActionType.REQUEST_ITEM_DEFINITIONS_SUCCESS:
                 return {
@@ -53,6 +58,12 @@ export function items(state = initialState, action?: Action): ItemsState {
                 return {
                     ...state,
                     perkRatings: action.perkRatings
+                };
+
+            case ItemActionType.COMPARE_ITEMS:
+                return {
+                    ...state,
+                    comparisons: compareItems(state.items, state.itemDefinitions, state.perkRatings)
                 };
 
             default:
@@ -122,4 +133,16 @@ function buildItems(profile: BungieDestinyProfile): DestinyItem[] {
                 perkColumnHashes: perkColumnHashes
             };
         }).filter(item => item);
+}
+
+function compareItems(items: DestinyItem[],
+    itemDefs: Map<string, DestinyItemDefinition>,
+    perkRatings: Map<string, PerkRating>): Map<string, DestinyItemComparison[]> {
+
+    if (perkRatings && itemDefs) {
+        let containers = items.map(item => buildItemContainer(item, itemDefs, new Map(), perkRatings))
+            .filter(container => container);
+        return ComparisonService.compareAll(containers, perkRatings);
+    }
+    return null;
 }

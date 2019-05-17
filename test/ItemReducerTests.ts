@@ -10,9 +10,10 @@ describe("Reducers.items()", () => {
     it("should return the initial state", () => {
         let newState = items(undefined, undefined);
         assert.strictEqual(newState.items.length, 0);
-        assert.strictEqual(newState.itemDefinitions.size, 0);
+        assert.strictEqual(newState.itemDefinitions, null);
         assert.strictEqual(newState.perkRatings, null);
         assert.strictEqual(newState.errorMessage, null);
+        assert.strictEqual(newState.comparisons, null);
     });
 
     describe("REQUEST_ITEMS", () => {
@@ -322,7 +323,7 @@ describe("Reducers.items()", () => {
             });
 
             assert.strictEqual(newState.items.length, 1);
-            assert.strictEqual(newState.itemDefinitions.size, 0);
+            assert.strictEqual(newState.itemDefinitions, null);
             assert.strictEqual(newState.perkRatings.size, 1);
             assert.strictEqual(newState.errorMessage, 'error');
         });
@@ -403,6 +404,63 @@ describe("Reducers.items()", () => {
             assert.strictEqual(newState.itemDefinitions.size, 1);
             assert.strictEqual(newState.perkRatings.size, 2);
             assert.strictEqual(newState.errorMessage, 'error');
+        });
+    });
+
+    describe("COMPARE_ITEMS", () => {
+        it("should clear out the comparisons if item definitions are not loaded", () => {
+            let state = buildSampleItemsState();
+            state.itemDefinitions = null;
+
+            let newState = items(state, {
+                type: ItemActionType.COMPARE_ITEMS
+            });
+
+            assert.strictEqual(newState.items.length, 1);
+            assert.strictEqual(newState.itemDefinitions, null);
+            assert.strictEqual(newState.perkRatings.size, 1);
+            assert.strictEqual(newState.errorMessage, 'error');
+            assert.strictEqual(newState.comparisons, null);
+        });
+
+        it("should clear out the comparisons if perk ratings are not loaded", () => {
+            let state = buildSampleItemsState();
+            state.perkRatings = null;
+
+            let newState = items(state, {
+                type: ItemActionType.COMPARE_ITEMS
+            });
+
+            assert.strictEqual(newState.items.length, 1);
+            assert.strictEqual(newState.itemDefinitions.size, 1);
+            assert.strictEqual(newState.perkRatings, null);
+            assert.strictEqual(newState.errorMessage, 'error');
+            assert.strictEqual(newState.comparisons, null);
+        });
+
+        it("should add a comparison for each item if item definitions and perk ratings are loaded", () => {
+            let state = buildSampleItemsState();
+            state.items.push({
+                id: '2',
+                itemHash: '1',
+                power: 600,
+                perkColumnHashes: []
+            });
+
+            let newState = items(state, {
+                type: ItemActionType.COMPARE_ITEMS
+            });
+
+            assert.strictEqual(newState.items.length, 2);
+            assert.strictEqual(newState.itemDefinitions.size, 1);
+            assert.strictEqual(newState.perkRatings.size, 1);
+            assert.strictEqual(newState.errorMessage, 'error');
+
+            assert.strictEqual(newState.comparisons.size, 2);
+            assert.strictEqual(newState.comparisons.get('1').length, 1);
+            assert.strictEqual(newState.comparisons.get('1')[0].id, '2');
+            assert.strictEqual(newState.comparisons.get('2').length, 1);
+            assert.strictEqual(newState.comparisons.get('2')[0].id, '1');
         });
     });
 });
