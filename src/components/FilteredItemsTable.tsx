@@ -1,16 +1,11 @@
-import DestinyAccount from "../model/DestinyAccount";
 import React from "react";
 import { ItemsState } from "../model/State";
 import ItemStore from "../stores/ItemStore";
-import ItemActions_Alt from "../actions/ItemActions_Alt";
-import PerkActions from "../actions/PerkActions";
-import ItemDefinitionActions from "../actions/ItemDefinitionActions";
 import ItemComparisonResult from "../services/ItemComparisonResult";
 import ItemsTable from "./ItemsTable";
 import { buildItemContainer } from "../model/DestinyItemContainer";
 
 interface FilteredItemsTableProps {
-    selectedAccount: DestinyAccount;
     itemFilter?: string;
 }
 
@@ -24,10 +19,6 @@ export default class FilteredItemsTable extends React.Component<FilteredItemsTab
 
     componentDidMount() {
         ItemStore.listen(this.onChange);
-
-        ItemDefinitionActions.fetchItemDefinitions();
-        PerkActions.fetchPerks();
-        ItemActions_Alt.fetchItems(this.props.selectedAccount);
     }
 
     componentWillUnmount() {

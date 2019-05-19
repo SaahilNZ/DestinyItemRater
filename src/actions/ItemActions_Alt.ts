@@ -1,6 +1,5 @@
 import alt from "../alt";
 import ItemSource from "../sources/ItemSource";
-import ComparisonActions from "./ComparisonActions";
 import AbstractActionsModel from "./AbstractActionsModel";
 import DestinyAccount from "../model/DestinyAccount";
 import BungieDestinyProfile from "../model/bungie/BungieDestinyProfile";
@@ -19,7 +18,6 @@ class ItemActions_Alt extends AbstractActionsModel implements AltItemActions {
             try {
                 let bungieResponse = await source.fetch(account);
                 this.onItemsLoadedForAccount(bungieResponse);
-                ComparisonActions.compareItems();
 
             } catch (e) {
                 this.onItemsFailedToLoad(e.message);

@@ -13,6 +13,9 @@ import AppStore from '../stores/AppStore';
 import FilteredItemsTable from './FilteredItemsTable';
 import DestinyItemContainer, { buildItemContainer } from '../model/DestinyItemContainer';
 import IdSearchStringPopup from './IdSearchStringPopup';
+import ItemDefinitionActions from '../actions/ItemDefinitionActions';
+import PerkActions from '../actions/PerkActions';
+import ItemActions_Alt from '../actions/ItemActions_Alt';
 
 class MainApp extends React.Component<{}, MainAppState> {
     constructor(props) {
@@ -35,6 +38,9 @@ class MainApp extends React.Component<{}, MainAppState> {
         let membershipId = localStorage.getItem("membership_id");
         let refreshTokenExpiry = +localStorage.getItem("refresh_expires_in");
         let refreshToken = localStorage.getItem("refresh_token");
+
+        ItemDefinitionActions.fetchItemDefinitions();
+        PerkActions.fetchPerks();
 
         if (accessToken) {
             let date = new Date();
@@ -79,6 +85,7 @@ class MainApp extends React.Component<{}, MainAppState> {
                     }
                     if (newState.accounts.allAccounts.length > 0) {
                         newState.accounts.selectedAccount = newState.accounts.allAccounts[0];
+                        ItemActions_Alt.fetchItems(newState.accounts.selectedAccount);
                     }
                     this.applyStateChange(newState);
                 })
@@ -177,13 +184,13 @@ class MainApp extends React.Component<{}, MainAppState> {
                     {this.state.accounts.selectedAccount && !this.state.showPerkRater && (
                         <div>
                             <div className={this.state.showAllItems ? "" : "hidden"}>
-                                <FilteredItemsTable selectedAccount={this.state.accounts.selectedAccount} />
+                                <FilteredItemsTable />
                             </div>
                             <div className={this.state.showBadItems ? "" : "hidden"}>
-                                <FilteredItemsTable selectedAccount={this.state.accounts.selectedAccount} itemFilter="bad" />
+                                <FilteredItemsTable itemFilter="bad" />
                             </div>
                             <div className={this.state.showWeapons ? "" : "hidden"}>
-                                <FilteredItemsTable selectedAccount={this.state.accounts.selectedAccount} itemFilter="weapons" />
+                                <FilteredItemsTable itemFilter="weapons" />
                             </div>
                         </div>
                     )}
