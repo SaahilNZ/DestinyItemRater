@@ -1,4 +1,4 @@
-import React, { createRef } from 'react';
+import React from 'react';
 import uuid from 'uuid';
 import AccountSelector from './AccountSelector';
 import ItemStore from '../stores/ItemStore';
@@ -12,11 +12,9 @@ import { MainAppState } from '../model/State';
 import AppStore from '../stores/AppStore';
 import FilteredItemsTable from './FilteredItemsTable';
 import DestinyItemContainer, { buildItemContainer } from '../model/DestinyItemContainer';
+import IdSearchStringPopup from './IdSearchStringPopup';
 
 class MainApp extends React.Component<{}, MainAppState> {
-    private junkSearchTextArea = createRef<HTMLTextAreaElement>();
-    private infuseSearchTextArea = createRef<HTMLTextAreaElement>();
-
     constructor(props) {
         super(props);
         this.state = AppStore.getState();
@@ -25,9 +23,8 @@ class MainApp extends React.Component<{}, MainAppState> {
         this.showWeapons = this.showWeapons.bind(this);
         this.dispatch = this.dispatch.bind(this);
         this.exportCsv = this.exportCsv.bind(this);
-        this.generateIdSearchString = this.generateIdSearchString.bind(this);
+        this.showSearch = this.showSearch.bind(this);
         this.closeSearch = this.closeSearch.bind(this);
-        this.copySearch = this.copySearch.bind(this);
         this.applyPerkRatings = this.applyPerkRatings.bind(this);
         this.configurePerkRatings = this.configurePerkRatings.bind(this);
     }
@@ -158,7 +155,7 @@ class MainApp extends React.Component<{}, MainAppState> {
                                 <div>
                                     <div className="header-separator float-left"></div>
                                     <input className="tab-link float-left" type="button"
-                                        value="Generate DIM Search Query" onClick={this.generateIdSearchString} />
+                                        value="Generate DIM Search Query" onClick={this.showSearch} />
                                     <input className="tab-link float-left" type="button"
                                         value="Export CSV" onClick={this.exportCsv} />
                                     <div className="header-separator float-left"></div>
@@ -192,28 +189,9 @@ class MainApp extends React.Component<{}, MainAppState> {
                     )}
                     {this.state.showSearch && (
                         <div className="popup-tint">
-                            <div className="popup">
-                                <div className="popup-flex">
-                                    <div className="copy-panel">
-                                        <p>Junk items:</p>
-                                        <textarea ref={this.junkSearchTextArea} value={this.state.junkSearchString} />
-                                        <div className="popup-button-container">
-                                            <input className="popup-button" type="button" value="Copy" onClick={() => this.copySearch("junk")} />
-                                        </div>
-                                    </div>
-                                    <div className="copy-panel">
-                                        <p>Infusion items:</p>
-                                        <textarea ref={this.infuseSearchTextArea} value={this.state.infuseSearchString} />
-                                        <div className="popup-button-container">
-                                            <input className="popup-button" type="button" value="Copy" onClick={() => this.copySearch("infuse")} />
-                                        </div>
-                                    </div>
-                                </div>
-                                {this.state.copyResult}
-                                <div className="popup-button-container">
-                                    <input className="popup-button" type="button" value="Close" onClick={this.closeSearch} />
-                                </div>
-                            </div>
+                            <IdSearchStringPopup closeSearch={this.closeSearch}
+                                getMaxPowerByItemType={this.getMaxPowerByItemType}
+                                sortItemsByPower={this.sortItemsByPower} />
                         </div>
                     )}
                     {this.state.showPerkRater &&
@@ -231,262 +209,65 @@ class MainApp extends React.Component<{}, MainAppState> {
         }
     }
 
-    sortItemsByPower(items: DestinyItemContainer[]) {
-        let sortedItems = {
-            hunter: {
-                helmets: [] as DestinyItemContainer[],
-                gauntlets: [] as DestinyItemContainer[],
-                chest_armour: [] as DestinyItemContainer[],
-                leg_armour: [] as DestinyItemContainer[],
-                class_items: [] as DestinyItemContainer[]
-            },
-            warlock: {
-                helmets: [] as DestinyItemContainer[],
-                gauntlets: [] as DestinyItemContainer[],
-                chest_armour: [] as DestinyItemContainer[],
-                leg_armour: [] as DestinyItemContainer[],
-                class_items: [] as DestinyItemContainer[]
-            },
-            titan: {
-                helmets: [] as DestinyItemContainer[],
-                gauntlets: [] as DestinyItemContainer[],
-                chest_armour: [] as DestinyItemContainer[],
-                leg_armour: [] as DestinyItemContainer[],
-                class_items: [] as DestinyItemContainer[]
-            }
-        }
-
-        items.forEach(item => {
-            if (item.definition.class === "Hunter") {
-                if (item.definition.itemType === "Helmet") {
-                    sortedItems.hunter.helmets =
-                        sortedItems.hunter.helmets.concat(item)
-                } else if (item.definition.itemType === "Gauntlets") {
-                    sortedItems.hunter.gauntlets =
-                        sortedItems.hunter.gauntlets.concat(item)
-                } else if (item.definition.itemType === "Chest Armor") {
-                    sortedItems.hunter.chest_armour =
-                        sortedItems.hunter.chest_armour.concat(item)
-                } else if (item.definition.itemType === "Leg Armor") {
-                    sortedItems.hunter.leg_armour =
-                        sortedItems.hunter.leg_armour.concat(item)
-                } else if (item.definition.itemType === "Hunter Cloak") {
-                    sortedItems.hunter.class_items =
-                        sortedItems.hunter.class_items.concat(item)
-                }
-            } else if (item.definition.class === "Warlock") {
-                if (item.definition.itemType === "Helmet") {
-                    sortedItems.warlock.helmets =
-                        sortedItems.warlock.helmets.concat(item)
-                } else if (item.definition.itemType === "Gauntlets") {
-                    sortedItems.warlock.gauntlets =
-                        sortedItems.warlock.gauntlets.concat(item)
-                } else if (item.definition.itemType === "Chest Armor") {
-                    sortedItems.warlock.chest_armour =
-                        sortedItems.warlock.chest_armour.concat(item)
-                } else if (item.definition.itemType === "Leg Armor") {
-                    sortedItems.warlock.leg_armour =
-                        sortedItems.warlock.leg_armour.concat(item)
-                } else if (item.definition.itemType === "Warlock Bond") {
-                    sortedItems.warlock.class_items =
-                        sortedItems.warlock.class_items.concat(item)
-                }
-            } else if (item.definition.class === "Titan") {
-                if (item.definition.itemType === "Helmet") {
-                    sortedItems.titan.helmets =
-                        sortedItems.titan.helmets.concat(item)
-                } else if (item.definition.itemType === "Gauntlets") {
-                    sortedItems.titan.gauntlets =
-                        sortedItems.titan.gauntlets.concat(item)
-                } else if (item.definition.itemType === "Chest Armor") {
-                    sortedItems.titan.chest_armour =
-                        sortedItems.titan.chest_armour.concat(item)
-                } else if (item.definition.itemType === "Leg Armor") {
-                    sortedItems.titan.leg_armour =
-                        sortedItems.titan.leg_armour.concat(item)
-                } else if (item.definition.itemType === "Titan Mark") {
-                    sortedItems.titan.class_items =
-                        sortedItems.titan.class_items.concat(item)
-                }
-            }
-        });
-
-        for (var classType in sortedItems) {
-            sortedItems[classType].helmets.sort((a, b) => b.power - a.power);
-            sortedItems[classType].gauntlets.sort((a, b) => b.power - a.power);
-            sortedItems[classType].chest_armour.sort((a, b) => b.power - a.power);
-            sortedItems[classType].leg_armour.sort((a, b) => b.power - a.power);
-            sortedItems[classType].class_items.sort((a, b) => b.power - a.power);
-        }
-
-        return sortedItems;
-    }
-
-    getMaxPowerByItemType(items: DestinyItemContainer[]) {
-        let maxPowers = {
-            hunter: {
-                helmets: 0,
-                gauntlets: 0,
-                chest_armour: 0,
-                leg_armour: 0,
-                class_items: 0
-            },
-            warlock: {
-                helmets: 0,
-                gauntlets: 0,
-                chest_armour: 0,
-                leg_armour: 0,
-                class_items: 0
-            },
-            titan: {
-                helmets: 0,
-                gauntlets: 0,
-                chest_armour: 0,
-                leg_armour: 0,
-                class_items: 0
-            }
-        }
-
-        items.forEach(item => {
-            if (item.definition.class === "Hunter") {
-                if (item.definition.itemType === "Helmet") {
-                    if (item.item.power > maxPowers.hunter.helmets) {
-                        maxPowers.hunter.helmets = item.item.power;
-                    }
-                } else if (item.definition.itemType === "Gauntlets") {
-                    if (item.item.power > maxPowers.hunter.gauntlets) {
-                        maxPowers.hunter.gauntlets = item.item.power;
-                    }
-                } else if (item.definition.itemType === "Chest Armor") {
-                    if (item.item.power > maxPowers.hunter.chest_armour) {
-                        maxPowers.hunter.chest_armour = item.item.power;
-                    }
-                } else if (item.definition.itemType === "Leg Armor") {
-                    if (item.item.power > maxPowers.hunter.leg_armour) {
-                        maxPowers.hunter.leg_armour = item.item.power;
-                    }
-                } else if (item.definition.itemType === "Hunter Cloak") {
-                    if (item.item.power > maxPowers.hunter.class_items) {
-                        maxPowers.hunter.class_items = item.item.power;
-                    }
-                }
-            } else if (item.definition.class === "Warlock") {
-                if (item.definition.itemType === "Helmet") {
-                    if (item.item.power > maxPowers.warlock.helmets) {
-                        maxPowers.warlock.helmets = item.item.power;
-                    }
-                } else if (item.definition.itemType === "Gauntlets") {
-                    if (item.item.power > maxPowers.warlock.gauntlets) {
-                        maxPowers.warlock.gauntlets = item.item.power;
-                    }
-                } else if (item.definition.itemType === "Chest Armor") {
-                    if (item.item.power > maxPowers.warlock.chest_armour) {
-                        maxPowers.warlock.chest_armour = item.item.power;
-                    }
-                } else if (item.definition.itemType === "Leg Armor") {
-                    if (item.item.power > maxPowers.warlock.leg_armour) {
-                        maxPowers.warlock.leg_armour = item.item.power;
-                    }
-                } else if (item.definition.itemType === "Warlock Bond") {
-                    if (item.item.power > maxPowers.warlock.class_items) {
-                        maxPowers.warlock.class_items = item.item.power;
-                    }
-                }
-            } else if (item.definition.class === "Titan") {
-                if (item.definition.itemType === "Helmet") {
-                    if (item.item.power > maxPowers.titan.helmets) {
-                        maxPowers.titan.helmets = item.item.power;
-                    }
-                } else if (item.definition.itemType === "Gauntlets") {
-                    if (item.item.power > maxPowers.titan.gauntlets) {
-                        maxPowers.titan.gauntlets = item.item.power;
-                    }
-                } else if (item.definition.itemType === "Chest Armor") {
-                    if (item.item.power > maxPowers.titan.chest_armour) {
-                        maxPowers.titan.chest_armour = item.item.power;
-                    }
-                } else if (item.definition.itemType === "Leg Armor") {
-                    if (item.item.power > maxPowers.titan.leg_armour) {
-                        maxPowers.titan.leg_armour = item.item.power;
-                    }
-                } else if (item.definition.itemType === "Titan Mark") {
-                    if (item.item.power > maxPowers.titan.class_items) {
-                        maxPowers.titan.class_items = item.item.power;
-                    }
-                }
-            }
-        });
-
-        return maxPowers;
-    }
-
-    generateIdSearchString() {
-        let { items, itemDefinitions, comparisons, perkRatings } = ItemStore.getState();
-        let containers = items.map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings))
-            .filter(container => container);
-
-        let maxInfuseCount = 4;
-        let maxPowers = this.getMaxPowerByItemType(containers);
-        let badItems = containers.filter(container => {
-            let isBetter = false;
-            for (let i = 0; i < container.comparisons.length; i++) {
-                const comparison = container.comparisons[i];
-                if (comparison && comparison.result === ItemComparisonResult.ITEM_IS_BETTER) {
-                    isBetter = true;
-                    break;
-                }
-            }
-            return isBetter;
-        });
-
-        let junkItems: DestinyItemContainer[] = [];
-        let infusionItems: DestinyItemContainer[] = [];
-        let sortedItems = this.sortItemsByPower(badItems);
-        for (var classType in sortedItems) {
-            for (var itemType in sortedItems[classType]) {
-                let maxPower = maxPowers[classType][itemType];
-                let infuseCount = 0;
-                let slotItems: DestinyItemContainer[] = sortedItems[classType][itemType];
-                for (var i = 0; i < slotItems.length; i++) {
-                    var item = slotItems[i];
-                    if (item.item.power === maxPower || infuseCount < maxInfuseCount) {
-                        infusionItems.push(item);
-                        infuseCount += 1;
-                    } else {
-                        junkItems.push(item);
-                    }
-                }
-            }
-        }
-
+    showSearch() {
         this.applyStateChange({
-            junkSearchString: junkItems.map(item => `id:${item.item.id}`).join(" or "),
-            infuseSearchString: infusionItems.map(item => `id:${item.item.id}`).join(" or "),
-            copyResult: "",
             showSearch: true
         });
-    }
-
-    copySearch(textArea) {
-        if (textArea === "junk") {
-            this.junkSearchTextArea.current.select();
-            document.execCommand('copy');
-            this.applyStateChange({
-                copyResult: "Copied junk items"
-            });
-        } else if (textArea === "infuse") {
-            this.infuseSearchTextArea.current.select();
-            document.execCommand('copy');
-            this.applyStateChange({
-                copyResult: "Copied infusion items"
-            });
-        }
     }
 
     closeSearch() {
         this.applyStateChange({
             showSearch: false
         });
+    }
+
+    sortItemsByPower(items: DestinyItemContainer[]): Map<string, Map<string, DestinyItemContainer[]>> {
+        let sortedItems = new Map<string, Map<string, DestinyItemContainer[]>>();
+        items.forEach(item => {
+            let classMap = sortedItems.get(item.definition.class);
+            if (classMap) {
+                let itemArray = classMap.get(item.definition.itemType);
+                if (itemArray) {
+                    itemArray.push(item);
+                } else {
+                    classMap.set(item.definition.itemType, [item]);
+                }
+            } else {
+                classMap = new Map<string, DestinyItemContainer[]>();
+                classMap.set(item.definition.itemType, [item]);
+                sortedItems.set(item.definition.class, classMap);
+            }
+        });
+
+        sortedItems.forEach(classMap => {
+            classMap.forEach(slotItems => {
+                slotItems.sort((a: DestinyItemContainer,
+                    b: DestinyItemContainer) => b.item.power - a.item.power);
+            });
+        });
+        return sortedItems;
+    }
+
+    getMaxPowerByItemType(items: DestinyItemContainer[]): Map<string, Map<string, number>> {
+        let maxPowers = new Map<string, Map<string, number>>();
+        items.forEach(item => {
+            let classMap = maxPowers.get(item.definition.class);
+            if (classMap) {
+                let itemTypePower = classMap.get(item.definition.itemType);
+                if (itemTypePower) {
+                    if (item.item.power > itemTypePower) {
+                        classMap.set(item.definition.itemType, item.item.power);
+                    }
+                } else {
+                    classMap.set(item.definition.itemType, item.item.power);
+                }
+            } else {
+                classMap = new Map<string, number>();
+                classMap.set(item.definition.itemType, item.item.power);
+                maxPowers.set(item.definition.class, classMap);
+            }
+        });
+        return maxPowers;
     }
 
     exportCsv() {
@@ -512,11 +293,10 @@ class MainApp extends React.Component<{}, MainAppState> {
 
         let taggedItems = [];
         let sortedItems = this.sortItemsByPower(badItems);
-        for (var classType in sortedItems) {
-            for (var itemType in sortedItems[classType]) {
-                let maxPower: number = maxPowers[classType][itemType];
+        sortedItems.forEach((classMap, classType) => {
+            classMap.forEach((slotItems, itemType) => {
+                let maxPower: number = maxPowers.get(classType).get(itemType);
                 let infuseCount = 0;
-                let slotItems: DestinyItemContainer[] = sortedItems[classType][itemType];
                 for (var i = 0; i < slotItems.length; i++) {
                     var item = slotItems[i];
                     let tag = "junk";
@@ -531,8 +311,8 @@ class MainApp extends React.Component<{}, MainAppState> {
                         "Hash": item.item.itemHash
                     });
                 }
-            }
-        }
+            });
+        });
 
         var csv = Papa.unparse(taggedItems);
         var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
