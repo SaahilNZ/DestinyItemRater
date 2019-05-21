@@ -12,13 +12,10 @@ import AppStore from '../stores/AppStore';
 import FilteredItemsTable from './FilteredItemsTable';
 import { buildItemContainer } from '../model/DestinyItemContainer';
 import IdSearchStringPopup from './IdSearchStringPopup';
-<<<<<<< HEAD
 import ItemDefinitionActions from '../actions/ItemDefinitionActions';
 import PerkActions from '../actions/PerkActions';
 import ItemActions_Alt from '../actions/ItemActions_Alt';
-=======
 import TaggingService, { ItemTag } from '../services/TaggingService';
->>>>>>> Move item tagging into a tagging service
 
 class MainApp extends React.Component<{}, MainAppState> {
     constructor(props) {
