@@ -2,7 +2,6 @@ import React from 'react';
 import uuid from 'uuid';
 import AccountSelector from './AccountSelector';
 import ItemStore from '../stores/ItemStore';
-import ItemComparisonResult from '../services/ItemComparisonResult';
 import Papa from 'papaparse';
 import saveAs from 'file-saver';
 import PerkRater from './PerkRater';
@@ -11,11 +10,15 @@ import { ActionType, Dispatcher } from '../actions/Actions';
 import { MainAppState } from '../model/State';
 import AppStore from '../stores/AppStore';
 import FilteredItemsTable from './FilteredItemsTable';
-import DestinyItemContainer, { buildItemContainer } from '../model/DestinyItemContainer';
+import { buildItemContainer } from '../model/DestinyItemContainer';
 import IdSearchStringPopup from './IdSearchStringPopup';
+<<<<<<< HEAD
 import ItemDefinitionActions from '../actions/ItemDefinitionActions';
 import PerkActions from '../actions/PerkActions';
 import ItemActions_Alt from '../actions/ItemActions_Alt';
+=======
+import TaggingService, { ItemTag } from '../services/TaggingService';
+>>>>>>> Move item tagging into a tagging service
 
 class MainApp extends React.Component<{}, MainAppState> {
     constructor(props) {
@@ -196,9 +199,7 @@ class MainApp extends React.Component<{}, MainAppState> {
                     )}
                     {this.state.showSearch && (
                         <div className="popup-tint">
-                            <IdSearchStringPopup closeSearch={this.closeSearch}
-                                getMaxPowerByItemType={this.getMaxPowerByItemType}
-                                sortItemsByPower={this.sortItemsByPower} />
+                            <IdSearchStringPopup closeSearch={this.closeSearch} />
                         </div>
                     )}
                     {this.state.showPerkRater &&
@@ -228,100 +229,35 @@ class MainApp extends React.Component<{}, MainAppState> {
         });
     }
 
-    sortItemsByPower(items: DestinyItemContainer[]): Map<string, Map<string, DestinyItemContainer[]>> {
-        let sortedItems = new Map<string, Map<string, DestinyItemContainer[]>>();
-        items.forEach(item => {
-            let classMap = sortedItems.get(item.definition.class);
-            if (classMap) {
-                let itemArray = classMap.get(item.definition.itemType);
-                if (itemArray) {
-                    itemArray.push(item);
-                } else {
-                    classMap.set(item.definition.itemType, [item]);
-                }
-            } else {
-                classMap = new Map<string, DestinyItemContainer[]>();
-                classMap.set(item.definition.itemType, [item]);
-                sortedItems.set(item.definition.class, classMap);
-            }
-        });
-
-        sortedItems.forEach(classMap => {
-            classMap.forEach(slotItems => {
-                slotItems.sort((a: DestinyItemContainer,
-                    b: DestinyItemContainer) => b.item.power - a.item.power);
-            });
-        });
-        return sortedItems;
-    }
-
-    getMaxPowerByItemType(items: DestinyItemContainer[]): Map<string, Map<string, number>> {
-        let maxPowers = new Map<string, Map<string, number>>();
-        items.forEach(item => {
-            let classMap = maxPowers.get(item.definition.class);
-            if (classMap) {
-                let itemTypePower = classMap.get(item.definition.itemType);
-                if (itemTypePower) {
-                    if (item.item.power > itemTypePower) {
-                        classMap.set(item.definition.itemType, item.item.power);
-                    }
-                } else {
-                    classMap.set(item.definition.itemType, item.item.power);
-                }
-            } else {
-                classMap = new Map<string, number>();
-                classMap.set(item.definition.itemType, item.item.power);
-                maxPowers.set(item.definition.class, classMap);
-            }
-        });
-        return maxPowers;
-    }
-
     exportCsv() {
-        let { items, itemDefinitions, comparisons, perkRatings } = ItemStore.getState();
-        let containers = items.map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings))
-            .filter(container => container);
-
-        let maxInfuseCount = 4;
-        let maxPowers = this.getMaxPowerByItemType(containers);
-        let badItems = containers.filter(container => {
-            let isBetter = false;
-            if (container.comparisons) {
-                for (let i = 0; i < container.comparisons.length; i++) {
-                    const comparison = container.comparisons[i];
-                    if (comparison && comparison.result === ItemComparisonResult.ITEM_IS_BETTER) {
-                        isBetter = true;
-                        break;
-                    }
-                }
+        let { items, itemDefinitions, perkRatings, comparisons } = ItemStore.getState();
+        let containers = items
+            .map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings));
+        let taggedItems = TaggingService.tagItems(containers);
+        
+        let csvItems = [];
+        taggedItems.forEach(taggedItem => {
+            let tag = "";
+            switch (taggedItem.tag) {
+                case ItemTag.INFUSE:
+                    tag = "infuse";
+                    break;
+                case ItemTag.JUNK:
+                    tag = "junk";
+                    break;
+                case ItemTag.KEEP:
+                    tag = "keep";
+                    break;
             }
-            return isBetter;
-        });
-
-        let taggedItems = [];
-        let sortedItems = this.sortItemsByPower(badItems);
-        sortedItems.forEach((classMap, classType) => {
-            classMap.forEach((slotItems, itemType) => {
-                let maxPower: number = maxPowers.get(classType).get(itemType);
-                let infuseCount = 0;
-                for (var i = 0; i < slotItems.length; i++) {
-                    var item = slotItems[i];
-                    let tag = "junk";
-                    if (item.item.power === maxPower || infuseCount < maxInfuseCount) {
-                        tag = "infuse";
-                        infuseCount += 1;
-                    }
-                    taggedItems.push({
-                        "Id": `${JSON.stringify(item.item.id)}`,
-                        "Notes": "",
-                        "Tag": tag,
-                        "Hash": item.item.itemHash
-                    });
-                }
+            csvItems.push({
+                "Id": `${JSON.stringify(taggedItem.itemContainer.item.id)}`,
+                "Notes": "",
+                "Tag": tag,
+                "Hash": taggedItem.itemContainer.item.itemHash
             });
         });
 
-        var csv = Papa.unparse(taggedItems);
+        var csv = Papa.unparse(csvItems);
         var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
         saveAs(blob, "junk-items.csv");
     }

@@ -1,12 +1,10 @@
 import React, { createRef } from 'react';
 import DestinyItemContainer, { buildItemContainer } from '../model/DestinyItemContainer';
-import ItemComparisonResult from '../services/ItemComparisonResult';
 import ItemStore from '../stores/ItemStore';
+import TaggingService, { TaggedItem, ItemTag } from '../services/TaggingService';
 
 interface IdSearchStringPopupProps {
     closeSearch(): void;
-    getMaxPowerByItemType(items: DestinyItemContainer[]): Map<string, Map<string, number>>;
-    sortItemsByPower(items: DestinyItemContainer[]): Map<string, Map<string, DestinyItemContainer[]>>;
 }
 
 interface IdSearchStringPopupState {
@@ -27,7 +25,11 @@ class IdSearchStringPopup extends React.Component<IdSearchStringPopupProps, IdSe
     }
 
     render() {
-        let { junkSearchString, infuseSearchString } = this.generateIdSearchStrings();
+        let { items, itemDefinitions, perkRatings, comparisons } = ItemStore.getState();
+        let containers = items
+            .map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings));
+        let taggedItems = TaggingService.tagItems(containers);
+        let { junkSearchString, infuseSearchString } = this.generateIdSearchStrings(taggedItems);
 
         return (
             <div className="popup">
@@ -55,42 +57,18 @@ class IdSearchStringPopup extends React.Component<IdSearchStringPopupProps, IdSe
         );
     }
 
-    generateIdSearchStrings() {
-        let { items, itemDefinitions, comparisons, perkRatings } = ItemStore.getState();
-        let containers = items.map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings))
-            .filter(container => container);
-
-        let maxInfuseCount = 4;
-        let maxPowers = this.props.getMaxPowerByItemType(containers);
-        let badItems = containers.filter(container => {
-            let isBetter = false;
-            for (let i = 0; i < container.comparisons.length; i++) {
-                const comparison = container.comparisons[i];
-                if (comparison && comparison.result === ItemComparisonResult.ITEM_IS_BETTER) {
-                    isBetter = true;
-                    break;
-                }
-            }
-            return isBetter;
-        });
-
+    generateIdSearchStrings(taggedItems: TaggedItem[]) {
         let junkItems: DestinyItemContainer[] = [];
         let infusionItems: DestinyItemContainer[] = [];
-        let sortedItems = this.props.sortItemsByPower(badItems);
-        sortedItems.forEach((classMap, classType) => {
-            classMap.forEach((slotItems, itemType) => {
-                let maxPower = maxPowers.get(classType).get(itemType);
-                let infuseCount = 0;
-                for (var i = 0; i < slotItems.length; i++) {
-                    var item = slotItems[i];
-                    if (item.item.power === maxPower || infuseCount < maxInfuseCount) {
-                        infusionItems.push(item);
-                        infuseCount += 1;
-                    } else {
-                        junkItems.push(item);
-                    }
-                }
-            });
+        taggedItems.forEach(taggedItem => {
+            switch (taggedItem.tag) {
+                case ItemTag.INFUSE:
+                    infusionItems.push(taggedItem.itemContainer);
+                    break;
+                case ItemTag.JUNK:
+                    junkItems.push(taggedItem.itemContainer);                    
+                    break;
+            }
         });
 
         return {
