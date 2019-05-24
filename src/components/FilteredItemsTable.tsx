@@ -47,7 +47,7 @@ export default class FilteredItemsTable extends React.Component<FilteredItemsTab
 
         let itemGroup = this.props.itemFilter === 'weapons' ? 'weapons' : 'armor';
         let containers = this.state.items
-            .map(item => buildItemContainer(item, this.state.itemDefinitions, this.state.comparisons, this.state.perkRatings))
+            .map(item => buildItemContainer(item, this.state.itemDefinitions, this.state.comparisons, this.state.perkRatings, new Map()))
             .filter(container => container && container.group === itemGroup);
 
         if (this.props.itemFilter === "bad") {

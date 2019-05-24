@@ -3,29 +3,41 @@ import DestinyItemDefinition from "./DestinyItemDefinition";
 import DestinyItemComparison from "./DestinyItemComparison";
 import PerkRating from "./PerkRating";
 import { DestinyPerkContainer, buildPerkContainer } from "./DestinyPerkContainer";
+import { ItemTag } from "../services/TaggingService";
 
 export default interface DestinyItemContainer {
     item: DestinyItem;
     definition: DestinyItemDefinition;
     comparisons: DestinyItemComparison[];
     group: string;
+    tag: ItemTag;
     perkColumns: DestinyPerkContainer[][];
 }
 
 export function buildItemContainer(item: DestinyItem,
     itemDefs: Map<string, DestinyItemDefinition>,
     comparisons: Map<string, DestinyItemComparison[]>,
-    perkRatings: Map<string, PerkRating>): DestinyItemContainer {
+    perkRatings: Map<string, PerkRating>,
+    itemTags: Map<string, ItemTag>): DestinyItemContainer {
 
     let itemDef = itemDefs && itemDefs.get(item.itemHash);
     if (!itemDef) return null;
 
+    let tag = ItemTag.KEEP;
+    if (itemTags) {
+        let mapTag = itemTags.get(item.id);
+        if (mapTag) {
+            tag = mapTag;
+        }
+    }
+    
     let group = getItemGroup(itemDef);
     return {
         item: item,
         definition: itemDef,
         comparisons: comparisons && comparisons.get(item.id),
         group: group,
+        tag: tag,
         perkColumns: buildPerkColumns(item.perkColumnHashes, group, itemDefs, perkRatings)
     };
 }

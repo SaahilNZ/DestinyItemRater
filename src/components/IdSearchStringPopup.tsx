@@ -1,7 +1,7 @@
 import React, { createRef } from 'react';
 import DestinyItemContainer, { buildItemContainer } from '../model/DestinyItemContainer';
 import ItemStore from '../stores/ItemStore';
-import TaggingService, { TaggedItem, ItemTag } from '../services/TaggingService';
+import TaggingService, { ItemTag } from '../services/TaggingService';
 
 interface IdSearchStringPopupProps {
     closeSearch(): void;
@@ -27,8 +27,10 @@ class IdSearchStringPopup extends React.Component<IdSearchStringPopupProps, IdSe
     render() {
         let { items, itemDefinitions, perkRatings, comparisons } = ItemStore.getState();
         let containers = items
-            .map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings));
-        let taggedItems = TaggingService.tagItems(containers);
+            .map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings, new Map()));
+        let itemTags = TaggingService.tagItems(containers);
+        let taggedItems = items
+            .map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings, itemTags));
         let { junkSearchString, infuseSearchString } = this.generateIdSearchStrings(taggedItems);
 
         return (
@@ -57,16 +59,16 @@ class IdSearchStringPopup extends React.Component<IdSearchStringPopupProps, IdSe
         );
     }
 
-    generateIdSearchStrings(taggedItems: TaggedItem[]) {
+    generateIdSearchStrings(taggedItems: DestinyItemContainer[]) {
         let junkItems: DestinyItemContainer[] = [];
         let infusionItems: DestinyItemContainer[] = [];
         taggedItems.forEach(taggedItem => {
             switch (taggedItem.tag) {
                 case ItemTag.INFUSE:
-                    infusionItems.push(taggedItem.itemContainer);
+                    infusionItems.push(taggedItem);
                     break;
                 case ItemTag.JUNK:
-                    junkItems.push(taggedItem.itemContainer);                    
+                    junkItems.push(taggedItem);                    
                     break;
             }
         });

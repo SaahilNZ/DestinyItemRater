@@ -140,7 +140,7 @@ function compareItems(items: DestinyItem[],
     perkRatings: Map<string, PerkRating>): Map<string, DestinyItemComparison[]> {
 
     if (perkRatings && itemDefs) {
-        let containers = items.map(item => buildItemContainer(item, itemDefs, new Map(), perkRatings))
+        let containers = items.map(item => buildItemContainer(item, itemDefs, new Map(), perkRatings, new Map()))
             .filter(container => container);
         return ComparisonService.compareAll(containers, perkRatings);
     }

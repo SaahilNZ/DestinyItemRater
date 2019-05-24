@@ -229,8 +229,10 @@ class MainApp extends React.Component<{}, MainAppState> {
     exportCsv() {
         let { items, itemDefinitions, perkRatings, comparisons } = ItemStore.getState();
         let containers = items
-            .map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings));
-        let taggedItems = TaggingService.tagItems(containers);
+            .map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings, new Map()));
+        let itemTags = TaggingService.tagItems(containers);
+        let taggedItems = items
+            .map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings, itemTags));
         
         let csvItems = [];
         taggedItems.forEach(taggedItem => {
@@ -247,10 +249,10 @@ class MainApp extends React.Component<{}, MainAppState> {
                     break;
             }
             csvItems.push({
-                "Id": `${JSON.stringify(taggedItem.itemContainer.item.id)}`,
+                "Id": `${JSON.stringify(taggedItem.item.id)}`,
                 "Notes": "",
                 "Tag": tag,
-                "Hash": taggedItem.itemContainer.item.itemHash
+                "Hash": taggedItem.item.itemHash
             });
         });
 

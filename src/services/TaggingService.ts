@@ -7,17 +7,12 @@ export enum ItemTag {
     INFUSE
 }
 
-export interface TaggedItem {
-    itemContainer: DestinyItemContainer
-    tag: ItemTag;
-}
-
 class TaggingService {
-    tagItems(items: DestinyItemContainer[]): TaggedItem[] {
+    tagItems(items: DestinyItemContainer[]): Map<string, ItemTag> {
         let maxInfuseCount = 4;
         let maxPowers = this.getMaxPowerByItemType(items);
 
-        let taggedItems: TaggedItem[] = [];
+        let taggedItems: Map<string, ItemTag> = new Map();
         let sortedItems = this.sortItemsByPower(items);
         sortedItems.forEach((classMap, classType) => {
             classMap.forEach((slotItems, itemType) => {
@@ -37,13 +32,13 @@ class TaggingService {
 
                     if (isJunk) {
                         if (item.item.power === maxPower || infuseCount < maxInfuseCount) {
-                            taggedItems.push({ itemContainer: item, tag: ItemTag.INFUSE });
+                            taggedItems.set(item.item.id, ItemTag.INFUSE);
                             infuseCount += 1;
                         } else {
-                            taggedItems.push({ itemContainer: item, tag: ItemTag.JUNK });
+                            taggedItems.set(item.item.id, ItemTag.JUNK);
                         }
                     } else {
-                        taggedItems.push({ itemContainer: item, tag: ItemTag.KEEP });
+                        taggedItems.set(item.item.id, ItemTag.KEEP);
                     }
                 }
             });
