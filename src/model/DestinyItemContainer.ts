@@ -22,14 +22,6 @@ export function buildItemContainer(item: DestinyItem,
 
     let itemDef = itemDefs && itemDefs.get(item.itemHash);
     if (!itemDef) return null;
-
-    let tag = ItemTag.KEEP;
-    if (itemTags) {
-        let mapTag = itemTags.get(item.id);
-        if (mapTag) {
-            tag = mapTag;
-        }
-    }
     
     let group = getItemGroup(itemDef);
     return {
@@ -37,7 +29,7 @@ export function buildItemContainer(item: DestinyItem,
         definition: itemDef,
         comparisons: comparisons && comparisons.get(item.id),
         group: group,
-        tag: tag,
+        tag: (itemTags && itemTags.get(item.id)) || ItemTag.KEEP,
         perkColumns: buildPerkColumns(item.perkColumnHashes, group, itemDefs, perkRatings)
     };
 }

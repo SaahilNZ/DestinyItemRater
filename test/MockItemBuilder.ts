@@ -5,6 +5,7 @@ import DestinyItemContainer from '../src/model/DestinyItemContainer';
 import ArmourComparer from '../src/services/ArmourComparer';
 import ItemComparisonResult from '../src/services/ItemComparisonResult';
 import { DestinyPerkContainer, PerkTier } from '../src/model/DestinyPerkContainer';
+import { ItemTag } from '../src/services/TaggingService';
 
 class PerkBuilder {
     perk: PerkRating;
@@ -63,6 +64,7 @@ class ArmorItemBuilder {
             definition: definition,
             comparisons: null,
             group: null,
+            tag: ItemTag.KEEP,
             perkColumns: [
                 [],
                 [],
