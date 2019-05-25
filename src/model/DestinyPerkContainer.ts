@@ -1,5 +1,5 @@
 import PerkRating from "./PerkRating";
-import WeaponPerkRating from "./WeaponPerkRating";
+import { WeaponPerkRating } from "./WeaponPerkRating";
 
 export enum PerkTier {
     NO_TIER = 0,

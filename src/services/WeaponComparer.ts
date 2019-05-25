@@ -1,11 +1,11 @@
 import ItemComparisonResult from './ItemComparisonResult';
-import PerkRating from '../model/PerkRating';
 import DestinyItemContainer from '../model/DestinyItemContainer';
+import { WeaponPerkRatings } from '../model/WeaponPerkRating';
 
 export default class WeaponComparer {
-    perkRatings: Map<string, PerkRating>
+    perkRatings: WeaponPerkRatings
 
-    constructor(perkRatings: Map<string, PerkRating>) {
+    constructor(perkRatings: WeaponPerkRatings) {
         this.perkRatings = perkRatings;
     }
 

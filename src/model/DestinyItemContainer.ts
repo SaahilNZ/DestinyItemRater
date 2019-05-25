@@ -4,7 +4,7 @@ import DestinyItemComparison from "./DestinyItemComparison";
 import PerkRating from "./PerkRating";
 import { DestinyPerkContainer, buildPerkContainer, buildWeaponPerkContainer } from "./DestinyPerkContainer";
 import { ItemTag } from "../services/TaggingService";
-import WeaponPerkRating from "./WeaponPerkRating";
+import { WeaponPerkRatings, WeaponPerkRating } from "./WeaponPerkRating";
 
 export default interface DestinyItemContainer {
     item: DestinyItem;
@@ -19,6 +19,7 @@ export function buildItemContainer(item: DestinyItem,
     itemDefs: Map<string, DestinyItemDefinition>,
     comparisons: Map<string, DestinyItemComparison[]>,
     perkRatings: Map<string, PerkRating>,
+    weaponPerkRatings: WeaponPerkRatings,
     itemTags: Map<string, ItemTag>): DestinyItemContainer {
 
     let itemDef = itemDefs && itemDefs.get(item.itemHash);
@@ -30,7 +31,8 @@ export function buildItemContainer(item: DestinyItem,
     if (group === 'armor') {
         perkColumns = buildArmorPerkColumns(item.perkColumnHashes, itemDefs, perkRatings);
     } else if (group === 'weapons') {
-        perkColumns = buildWeaponPerkColumns(item.perkColumnHashes, itemDefs, getWeaponPerkRatings(item.itemHash));
+        perkColumns = buildWeaponPerkColumns(item.perkColumnHashes, itemDefs,
+            getWeaponPerkRatingsForItem(weaponPerkRatings, item.itemHash));
     }
 
     return {
@@ -102,8 +104,17 @@ function buildPerkColumns(perkColumnHashes: string[][], perkColumnIndices: numbe
     return perkColumns;
 }
 
-function getWeaponPerkRatings(itemHash: string): Map<string, WeaponPerkRating> {
-    let ratings = new Map<string, WeaponPerkRating>();
+function getWeaponPerkRatingsForItem(allRatings: WeaponPerkRatings, itemHash: string)
+    : Map<string, WeaponPerkRating> {
 
-    return ratings;
+    let output = new Map<string, WeaponPerkRating>();
+
+    let ratings = allRatings[itemHash];
+    if (ratings) {
+        ratings.forEach(rating => {
+            output.set(rating.name, rating);
+        });
+    }
+
+    return output;
 }

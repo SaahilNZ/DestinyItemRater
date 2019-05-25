@@ -16,6 +16,7 @@ import ItemDefinitionActions from '../actions/ItemDefinitionActions';
 import PerkActions from '../actions/PerkActions';
 import ItemActions_Alt from '../actions/ItemActions_Alt';
 import TaggingService, { ItemTag } from '../services/TaggingService';
+import { getWeaponPerkRatings } from '../model/WeaponPerkRating';
 
 class MainApp extends React.Component<{}, MainAppState> {
     constructor(props) {
@@ -228,12 +229,14 @@ class MainApp extends React.Component<{}, MainAppState> {
 
     exportCsv() {
         let { items, itemDefinitions, perkRatings, comparisons } = ItemStore.getState();
+        let weaponPerkRatings = getWeaponPerkRatings();
+
         let containers = items
-            .map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings, new Map()));
+            .map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings, weaponPerkRatings, new Map()));
         let itemTags = TaggingService.tagItems(containers);
         let taggedItems = items
-            .map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings, itemTags));
-        
+            .map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings, weaponPerkRatings, itemTags));
+
         let csvItems = [];
         taggedItems.forEach(taggedItem => {
             let tag = "";

@@ -4,6 +4,7 @@ import ItemStore from "../stores/ItemStore";
 import ItemComparisonResult from "../services/ItemComparisonResult";
 import ItemsTable from "./ItemsTable";
 import { buildItemContainer } from "../model/DestinyItemContainer";
+import { getWeaponPerkRatings } from "../model/WeaponPerkRating";
 
 interface FilteredItemsTableProps {
     itemFilter?: string;
@@ -47,7 +48,8 @@ export default class FilteredItemsTable extends React.Component<FilteredItemsTab
 
         let itemGroup = this.props.itemFilter === 'weapons' ? 'weapons' : 'armor';
         let containers = this.state.items
-            .map(item => buildItemContainer(item, this.state.itemDefinitions, this.state.comparisons, this.state.perkRatings, new Map()))
+            .map(item => buildItemContainer(item, this.state.itemDefinitions, this.state.comparisons, this.state.perkRatings,
+                getWeaponPerkRatings(), new Map()))
             .filter(container => container && container.group === itemGroup);
 
         if (this.props.itemFilter === "bad") {

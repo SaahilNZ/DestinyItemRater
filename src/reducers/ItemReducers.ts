@@ -9,6 +9,7 @@ import DestinyItemDefinition from "../model/DestinyItemDefinition";
 import PerkRating from "../model/PerkRating";
 import ComparisonService from "../services/ComparisonService";
 import { buildItemContainer } from "../model/DestinyItemContainer";
+import { WeaponPerkRatings, getWeaponPerkRatings } from "../model/WeaponPerkRating";
 
 const initialState: ItemsState = {
     items: [],
@@ -63,7 +64,8 @@ export function items(state = initialState, action?: Action): ItemsState {
             case ItemActionType.COMPARE_ITEMS:
                 return {
                     ...state,
-                    comparisons: compareItems(state.items, state.itemDefinitions, state.perkRatings)
+                    comparisons: compareItems(state.items, state.itemDefinitions, state.perkRatings,
+                        getWeaponPerkRatings())
                 };
 
             default:
@@ -137,12 +139,14 @@ function buildItems(profile: BungieDestinyProfile): DestinyItem[] {
 
 function compareItems(items: DestinyItem[],
     itemDefs: Map<string, DestinyItemDefinition>,
-    perkRatings: Map<string, PerkRating>): Map<string, DestinyItemComparison[]> {
+    perkRatings: Map<string, PerkRating>, weaponPerkRatings: WeaponPerkRatings)
+    : Map<string, DestinyItemComparison[]> {
 
     if (perkRatings && itemDefs) {
-        let containers = items.map(item => buildItemContainer(item, itemDefs, new Map(), perkRatings, new Map()))
+        let containers = items.map(item =>
+            buildItemContainer(item, itemDefs, new Map(), perkRatings, weaponPerkRatings, new Map()))
             .filter(container => container);
-        return ComparisonService.compareAll(containers, perkRatings);
+        return ComparisonService.compareAll(containers, perkRatings, weaponPerkRatings);
     }
     return null;
 }
