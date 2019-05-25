@@ -16,7 +16,7 @@ export default interface DestinyItemContainer {
 }
 
 export function buildItemContainer(item: DestinyItem,
-    itemDefs: Map<string, DestinyItemDefinition>,
+    itemDefs: Map<number, DestinyItemDefinition>,
     comparisons: Map<string, DestinyItemComparison[]>,
     perkRatings: Map<string, PerkRating>,
     weaponPerkRatings: WeaponPerkRatings,
@@ -62,24 +62,24 @@ function getItemGroup(itemDef: DestinyItemDefinition): string {
     return isArmor ? 'armor' : (isWeapon ? 'weapons' : null);
 }
 
-function buildArmorPerkColumns(perkColumnHashes: string[][],
-    itemDefs: Map<string, DestinyItemDefinition>, ratings: Map<string, PerkRating>)
+function buildArmorPerkColumns(perkColumnHashes: number[][],
+    itemDefs: Map<number, DestinyItemDefinition>, ratings: Map<string, PerkRating>)
     : DestinyPerkContainer[][] {
 
     return buildPerkColumns(perkColumnHashes, [0, 1, 2, 5, 6, 7], itemDefs,
         perk => buildPerkContainer(perk, ratings));
 }
 
-function buildWeaponPerkColumns(perkColumnHashes: string[][],
-    itemDefs: Map<string, DestinyItemDefinition>, ratings: Map<string, WeaponPerkRating>)
+function buildWeaponPerkColumns(perkColumnHashes: number[][],
+    itemDefs: Map<number, DestinyItemDefinition>, ratings: Map<string, WeaponPerkRating>)
     : DestinyPerkContainer[][] {
 
     return buildPerkColumns(perkColumnHashes, [0, 1, 2, 3, 4, 9], itemDefs,
         perk => buildWeaponPerkContainer(perk, ratings));
 }
 
-function buildPerkColumns(perkColumnHashes: string[][], perkColumnIndices: number[],
-    itemDefs: Map<string, DestinyItemDefinition>,
+function buildPerkColumns(perkColumnHashes: number[][], perkColumnIndices: number[],
+    itemDefs: Map<number, DestinyItemDefinition>,
     buildPerkContainer: (perk: PerkRating) => DestinyPerkContainer)
     : DestinyPerkContainer[][] {
 
@@ -104,7 +104,7 @@ function buildPerkColumns(perkColumnHashes: string[][], perkColumnIndices: numbe
     return perkColumns;
 }
 
-function getWeaponPerkRatingsForItem(allRatings: WeaponPerkRatings, itemHash: string)
+function getWeaponPerkRatingsForItem(allRatings: WeaponPerkRatings, itemHash: number)
     : Map<string, WeaponPerkRating> {
 
     let output = new Map<string, WeaponPerkRating>();

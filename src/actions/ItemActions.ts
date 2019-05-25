@@ -33,7 +33,7 @@ export interface RequestItemDefinitionsAction {
 }
 export interface RequestItemDefinitionsSuccessAction {
     type: typeof ItemActionType.REQUEST_ITEM_DEFINITIONS_SUCCESS;
-    definitions: Map<string, DestinyItemDefinition>;
+    definitions: Map<number, DestinyItemDefinition>;
 }
 
 export interface RequestPerkRatingsAction {
@@ -71,7 +71,7 @@ export function requestItemDefinitions(): RequestItemDefinitionsAction {
         type: ItemActionType.REQUEST_ITEM_DEFINITIONS
     };
 }
-export function requestItemDefinitionsSuccess(definitions: Map<string, DestinyItemDefinition>): RequestItemDefinitionsSuccessAction {
+export function requestItemDefinitionsSuccess(definitions: Map<number, DestinyItemDefinition>): RequestItemDefinitionsSuccessAction {
     return {
         type: ItemActionType.REQUEST_ITEM_DEFINITIONS_SUCCESS,
         definitions: definitions

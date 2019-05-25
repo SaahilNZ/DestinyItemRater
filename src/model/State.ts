@@ -11,7 +11,7 @@ export interface AccountState {
 
 export interface ItemsState {
     items: DestinyItem[];
-    itemDefinitions: Map<string, DestinyItemDefinition>;
+    itemDefinitions: Map<number, DestinyItemDefinition>;
     comparisons: Map<string, DestinyItemComparison[]>;
     perkRatings: Map<string, PerkRating>;
     errorMessage: string;

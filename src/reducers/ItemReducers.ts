@@ -116,7 +116,7 @@ function buildItems(profile: BungieDestinyProfile): DestinyItem[] {
             let itemInstance = profile.itemComponents.instances.data[item.itemInstanceId];
             if (!itemInstance) return null;
 
-            let perkColumnHashes: string[][] = [];
+            let perkColumnHashes: number[][] = [];
             if (profile.itemComponents.sockets) {
                 let itemSockets = profile.itemComponents.sockets.data[item.itemInstanceId];
                 if (itemSockets) {
@@ -138,7 +138,7 @@ function buildItems(profile: BungieDestinyProfile): DestinyItem[] {
 }
 
 function compareItems(items: DestinyItem[],
-    itemDefs: Map<string, DestinyItemDefinition>,
+    itemDefs: Map<number, DestinyItemDefinition>,
     perkRatings: Map<string, PerkRating>, weaponPerkRatings: WeaponPerkRatings)
     : Map<string, DestinyItemComparison[]> {
 

@@ -1,7 +1,7 @@
 import DestinyItemDefinition from "../model/DestinyItemDefinition";
 
 class ItemDefinitionSource {
-    async fetch(): Promise<Map<string, DestinyItemDefinition>> {
+    async fetch(): Promise<Map<number, DestinyItemDefinition>> {
         return await fetch("/api/itemdefinitions")
             .then(response => response.text())
             .then(json => JSON.parse(json))
@@ -12,8 +12,8 @@ class ItemDefinitionSource {
             });
     }
 
-    populateItemDefinitionMap(data): Map<string, DestinyItemDefinition> {
-        let map = new Map<string, DestinyItemDefinition>();
+    populateItemDefinitionMap(data): Map<number, DestinyItemDefinition> {
+        let map = new Map<number, DestinyItemDefinition>();
         data.itemDefinitions.forEach(itemDef => {
             map.set(itemDef.hash, {
                 hash: itemDef.hash,

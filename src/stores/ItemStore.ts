@@ -15,7 +15,7 @@ import BungieDestinyProfile from '../model/bungie/BungieDestinyProfile';
 
 class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
     items: DestinyItem[];
-    itemDefinitions: Map<string, DestinyItemDefinition>;
+    itemDefinitions: Map<number, DestinyItemDefinition>;
     perkRatings: Map<string, PerkRating>;
     comparisons: Map<string, DestinyItemComparison[]>;
     errorMessage: string;
@@ -52,7 +52,7 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
         this.compareItems();
     }
 
-    onItemDefinitionsLoaded(itemDefs: Map<string, DestinyItemDefinition>) {
+    onItemDefinitionsLoaded(itemDefs: Map<number, DestinyItemDefinition>) {
         this.dispatch(requestItemDefinitionsSuccess(itemDefs));
         this.compareItems();
     }

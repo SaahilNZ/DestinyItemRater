@@ -5,7 +5,7 @@ export interface WeaponPerkRating {
     tierByMode: { [mode: string]: PerkTier };
 }
 
-export type WeaponPerkRatings = { [itemHash: string]: WeaponPerkRating[] };
+export type WeaponPerkRatings = { [itemHash: number]: WeaponPerkRating[] };
 
 export function getWeaponPerkRatings(): WeaponPerkRatings {
     let ratings: WeaponPerkRatings = {

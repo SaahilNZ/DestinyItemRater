@@ -4,7 +4,7 @@ import PerkRating from '../src/model/PerkRating';
 import DestinyItemContainer from '../src/model/DestinyItemContainer';
 import ArmourComparer from '../src/services/ArmourComparer';
 import ItemComparisonResult from '../src/services/ItemComparisonResult';
-import { DestinyPerkContainer, PerkTier } from '../src/model/DestinyPerkContainer';
+import { PerkTier } from '../src/model/DestinyPerkContainer';
 import { ItemTag } from '../src/services/TaggingService';
 
 class PerkBuilder {
@@ -104,7 +104,7 @@ class ArmorItemBuilder {
         return this;
     }
 
-    itemHash(hash: string) {
+    itemHash(hash: number) {
         this.container.item.itemHash = hash;
         return this;
     }

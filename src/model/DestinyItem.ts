@@ -1,8 +1,8 @@
 interface DestinyItem {
     id: string;
-    itemHash: string;
+    itemHash: number;
     power: number;
-    perkColumnHashes: string[][];
+    perkColumnHashes: number[][];
 }
 
 export default DestinyItem;

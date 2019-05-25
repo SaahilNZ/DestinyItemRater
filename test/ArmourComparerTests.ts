@@ -40,8 +40,8 @@ describe("ArmourComparer", () => {
         });
 
         it("should return incomparable if item 1 is exotic, but item 2 is not the same exotic", () => {
-            let item1 = newItem().armor().warlock().helmet().exotic().itemHash('1').build();
-            let item2 = newItem().armor().warlock().helmet().exotic().itemHash('2').build();
+            let item1 = newItem().armor().warlock().helmet().exotic().itemHash(1).build();
+            let item2 = newItem().armor().warlock().helmet().exotic().itemHash(2).build();
             let perkStore = TestHelper.createPerkMap([]);
             let armourComparer = new ArmourComparer(perkStore);
             assert.strictEqual(

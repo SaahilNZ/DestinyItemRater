@@ -15,6 +15,6 @@ interface BungieDestinyItemSocketSet {
 }
 
 interface BungieDestinyItemSocket {
-    reusablePlugHashes?: string[];
-    plugHash?: string;
+    reusablePlugHashes?: number[];
+    plugHash?: number;
 }

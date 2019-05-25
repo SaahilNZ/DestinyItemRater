@@ -4,16 +4,16 @@ import AbstractActionsModel from "./AbstractActionsModel";
 import DestinyItemDefinition from "../model/DestinyItemDefinition";
 
 interface AltItemDefinitionActions {
-    updateItemDefinitions(itemDefinitions: Map<string, DestinyItemDefinition>): Map<string, DestinyItemDefinition>;
+    updateItemDefinitions(itemDefinitions: Map<number, DestinyItemDefinition>): Map<number, DestinyItemDefinition>;
     fetchItemDefinitions(): (dispatch: any) => void;
     itemDefinitionsFailed(errorMessage: string): string;
 }
 
 class ItemDefinitionActions extends AbstractActionsModel implements AltItemDefinitionActions {
-    updateItemDefinitions(itemDefinitions: Map<string, DestinyItemDefinition>): Map<string, DestinyItemDefinition> {
+    updateItemDefinitions(itemDefinitions: Map<number, DestinyItemDefinition>): Map<number, DestinyItemDefinition> {
         return itemDefinitions;
     }
-    
+
     fetchItemDefinitions() {
         return (dispatch) => {
             dispatch();
@@ -27,7 +27,7 @@ class ItemDefinitionActions extends AbstractActionsModel implements AltItemDefin
                 });
         }
     }
-    
+
     itemDefinitionsFailed(errorMessage: string): string {
         return errorMessage;
     }

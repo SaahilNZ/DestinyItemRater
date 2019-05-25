@@ -81,9 +81,9 @@ describe("Reducers.items()", () => {
                 profile: {
                     characterEquipment: {
                         data: [
-                            { items: [{ itemInstanceId: '10001', itemHash: '1' }] },
-                            { items: [{ itemInstanceId: '10002', itemHash: '1' }] },
-                            { items: [{ itemInstanceId: '10003', itemHash: '1' }] }
+                            { items: [{ itemInstanceId: '10001', itemHash: 1 }] },
+                            { items: [{ itemInstanceId: '10002', itemHash: 1 }] },
+                            { items: [{ itemInstanceId: '10003', itemHash: 1 }] }
                         ]
                     },
                     characterInventories: null,
@@ -102,9 +102,9 @@ describe("Reducers.items()", () => {
             });
 
             assert.strictEqual(newState.items.length, 3);
-            assertItem(newState.items[0], '10001', '1', 300);
-            assertItem(newState.items[1], '10002', '1', 600);
-            assertItem(newState.items[2], '10003', '1', 700);
+            assertItem(newState.items[0], '10001', 1, 300);
+            assertItem(newState.items[1], '10002', 1, 600);
+            assertItem(newState.items[2], '10003', 1, 700);
         });
 
         it("should add items that are on a character but not currently equipped", () => {
@@ -117,9 +117,9 @@ describe("Reducers.items()", () => {
                     characterEquipment: null,
                     characterInventories: {
                         data: [
-                            { items: [{ itemInstanceId: '10001', itemHash: '1' }] },
-                            { items: [{ itemInstanceId: '10002', itemHash: '1' }] },
-                            { items: [{ itemInstanceId: '10003', itemHash: '1' }] }
+                            { items: [{ itemInstanceId: '10001', itemHash: 1 }] },
+                            { items: [{ itemInstanceId: '10002', itemHash: 1 }] },
+                            { items: [{ itemInstanceId: '10003', itemHash: 1 }] }
                         ]
                     },
                     itemComponents: {
@@ -137,9 +137,9 @@ describe("Reducers.items()", () => {
             });
 
             assert.strictEqual(newState.items.length, 3);
-            assertItem(newState.items[0], '10001', '1', 300);
-            assertItem(newState.items[1], '10002', '1', 600);
-            assertItem(newState.items[2], '10003', '1', 700);
+            assertItem(newState.items[0], '10001', 1, 300);
+            assertItem(newState.items[1], '10002', 1, 600);
+            assertItem(newState.items[2], '10003', 1, 700);
         });
 
         it("should not add duplicate items for items in the vault", () => {
@@ -154,9 +154,9 @@ describe("Reducers.items()", () => {
                     // items in the vault are displayed in all character's inventories
                     characterInventories: {
                         data: [
-                            { items: [{ itemInstanceId: '20001', itemHash: '2' }] },
-                            { items: [{ itemInstanceId: '20001', itemHash: '2' }] },
-                            { items: [{ itemInstanceId: '20001', itemHash: '2' }] }
+                            { items: [{ itemInstanceId: '20001', itemHash: 2 }] },
+                            { items: [{ itemInstanceId: '20001', itemHash: 2 }] },
+                            { items: [{ itemInstanceId: '20001', itemHash: 2 }] }
                         ]
                     },
 
@@ -173,7 +173,7 @@ describe("Reducers.items()", () => {
             });
 
             assert.strictEqual(newState.items.length, 1);
-            assertItem(newState.items[0], '20001', '2', 100);
+            assertItem(newState.items[0], '20001', 2, 100);
         });
 
         it("should add items that are in the account-wide inventory", () => {
@@ -200,11 +200,11 @@ describe("Reducers.items()", () => {
                     profileInventory: {
                         data: {
                             items: [
-                                { itemInstanceId: '30001', itemHash: '3' },
-                                { itemInstanceId: '30002', itemHash: '3' },
-                                { itemInstanceId: '30003', itemHash: '3' },
-                                { itemInstanceId: '30004', itemHash: '3' },
-                                { itemInstanceId: '40001', itemHash: '4' },
+                                { itemInstanceId: '30001', itemHash: 3 },
+                                { itemInstanceId: '30002', itemHash: 3 },
+                                { itemInstanceId: '30003', itemHash: 3 },
+                                { itemInstanceId: '30004', itemHash: 3 },
+                                { itemInstanceId: '40001', itemHash: 4 },
                             ]
                         }
                     }
@@ -212,11 +212,11 @@ describe("Reducers.items()", () => {
             });
 
             assert.strictEqual(newState.items.length, 5);
-            assertItem(newState.items[0], '30001', '3', 310);
-            assertItem(newState.items[1], '30002', '3', 320);
-            assertItem(newState.items[2], '30003', '3', 330);
-            assertItem(newState.items[3], '30004', '3', 340);
-            assertItem(newState.items[4], '40001', '4', 400);
+            assertItem(newState.items[0], '30001', 3, 310);
+            assertItem(newState.items[1], '30002', 3, 320);
+            assertItem(newState.items[2], '30003', 3, 330);
+            assertItem(newState.items[3], '30004', 3, 340);
+            assertItem(newState.items[4], '40001', 4, 400);
         });
 
         it("should include non-swappable plug hashes in perk column hashes", () => {
@@ -227,7 +227,7 @@ describe("Reducers.items()", () => {
                 type: ItemActionType.REQUEST_ITEMS_SUCCESS,
                 profile: {
                     characterEquipment: {
-                        data: [{ items: [{ itemInstanceId: '10001', itemHash: '1' }] }]
+                        data: [{ items: [{ itemInstanceId: '10001', itemHash: 1 }] }]
                     },
                     characterInventories: null,
                     itemComponents: {
@@ -241,9 +241,9 @@ describe("Reducers.items()", () => {
                                 '10001': {
                                     // 3 perk columns, each with only one choice
                                     sockets: [
-                                        { plugHash: '101' },
-                                        { plugHash: '201' },
-                                        { plugHash: '301' }
+                                        { plugHash: 101 },
+                                        { plugHash: 201 },
+                                        { plugHash: 301 }
                                     ]
                                 }
                             }
@@ -254,8 +254,8 @@ describe("Reducers.items()", () => {
             });
 
             assert.strictEqual(newState.items.length, 1);
-            assertItem(newState.items[0], '10001', '1', 300, [
-                ['101'], ['201'], ['301']
+            assertItem(newState.items[0], '10001', 1, 300, [
+                [101], [201], [301]
             ]);
         });
 
@@ -267,7 +267,7 @@ describe("Reducers.items()", () => {
                 type: ItemActionType.REQUEST_ITEMS_SUCCESS,
                 profile: {
                     characterEquipment: {
-                        data: [{ items: [{ itemInstanceId: '10001', itemHash: '1' }] }]
+                        data: [{ items: [{ itemInstanceId: '10001', itemHash: 1 }] }]
                     },
                     characterInventories: null,
                     itemComponents: {
@@ -281,8 +281,8 @@ describe("Reducers.items()", () => {
                                 '10001': {
                                     // 2 perk columns, each with three choices
                                     sockets: [
-                                        { reusablePlugHashes: ['101', '102', '103'] },
-                                        { reusablePlugHashes: ['201', '202', '203'] }
+                                        { reusablePlugHashes: [101, 102, 103] },
+                                        { reusablePlugHashes: [201, 202, 203] }
                                     ]
                                 }
                             }
@@ -293,9 +293,9 @@ describe("Reducers.items()", () => {
             });
 
             assert.strictEqual(newState.items.length, 1);
-            assertItem(newState.items[0], '10001', '1', 300, [
-                ['101', '102', '103'],
-                ['201', '202', '203']
+            assertItem(newState.items[0], '10001', 1, 300, [
+                [101, 102, 103],
+                [201, 202, 203]
             ]);
         });
     });
@@ -333,15 +333,15 @@ describe("Reducers.items()", () => {
         it("should set the item definitions and retain other state", () => {
             let state = buildSampleItemsState();
 
-            let definitions = new Map<string, DestinyItemDefinition>();
-            definitions.set('1', {
+            let definitions = new Map<number, DestinyItemDefinition>();
+            definitions.set(1, {
                 hash: 1,
                 name: 'Graviton Forfeit',
                 itemType: 'Helmet',
                 class: 'Hunter',
                 tier: 'Exotic'
             });
-            definitions.set('2', {
+            definitions.set(2, {
                 hash: 2,
                 name: 'Celestial Nighthawk',
                 itemType: 'Helmet',
@@ -442,7 +442,7 @@ describe("Reducers.items()", () => {
             let state = buildSampleItemsState();
             state.items.push({
                 id: '2',
-                itemHash: '1',
+                itemHash: 1,
                 power: 600,
                 perkColumnHashes: []
             });
@@ -469,7 +469,7 @@ function buildSampleItemsState(): ItemsState {
     let state: ItemsState = {
         items: [{
             id: '1',
-            itemHash: '1',
+            itemHash: 1,
             power: 700,
             perkColumnHashes: []
         }],
@@ -478,7 +478,7 @@ function buildSampleItemsState(): ItemsState {
         comparisons: new Map(),
         errorMessage: 'error',
     };
-    state.itemDefinitions.set('1', {
+    state.itemDefinitions.set(1, {
         hash: 1,
         name: 'Graviton Forfeit',
         itemType: 'Helmet',
@@ -496,7 +496,7 @@ function buildSampleItemsState(): ItemsState {
     return state;
 }
 
-function assertItem(item: DestinyItem, id: string, hash: string, power: number, perkColumnHashes?: string[][]) {
+function assertItem(item: DestinyItem, id: string, hash: number, power: number, perkColumnHashes?: number[][]) {
     assert.strictEqual(item.id, id);
     assert.strictEqual(item.itemHash, hash);
 
