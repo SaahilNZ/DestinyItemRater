@@ -1,4 +1,5 @@
 import PerkRating from "./PerkRating";
+import WeaponPerkRating from "./WeaponPerkRating";
 
 export enum PerkTier {
     NO_TIER = 0,
@@ -35,5 +36,22 @@ export function buildPerkContainer(perk: PerkRating, ratings: Map<string, PerkRa
         isGoodByMode: isGoodByMode,
         tierByMode: tierByMode,
         upgrades: (rating && rating.upgrades) || []
+    };
+}
+
+export function buildWeaponPerkContainer(perk: PerkRating, ratings: Map<string, WeaponPerkRating>): DestinyPerkContainer {
+    let rating = ratings.get(perk.name.toLowerCase());
+    return {
+        name: perk.name,
+        isGoodByMode: {
+            'PvE': false,
+            'PvP': false
+        },
+        tierByMode: (rating && rating.tierByMode) || {
+            // all perks are S-tier by default
+            'PvE': PerkTier.S_TIER,
+            'PvP': PerkTier.S_TIER
+        },
+        upgrades: []
     };
 }

@@ -2,8 +2,9 @@ import DestinyItem from "./DestinyItem";
 import DestinyItemDefinition from "./DestinyItemDefinition";
 import DestinyItemComparison from "./DestinyItemComparison";
 import PerkRating from "./PerkRating";
-import { DestinyPerkContainer, buildPerkContainer } from "./DestinyPerkContainer";
+import { DestinyPerkContainer, buildPerkContainer, buildWeaponPerkContainer } from "./DestinyPerkContainer";
 import { ItemTag } from "../services/TaggingService";
+import WeaponPerkRating from "./WeaponPerkRating";
 
 export default interface DestinyItemContainer {
     item: DestinyItem;
@@ -22,15 +23,23 @@ export function buildItemContainer(item: DestinyItem,
 
     let itemDef = itemDefs && itemDefs.get(item.itemHash);
     if (!itemDef) return null;
-    
+
     let group = getItemGroup(itemDef);
+
+    let perkColumns: DestinyPerkContainer[][] = [];
+    if (group === 'armor') {
+        perkColumns = buildArmorPerkColumns(item.perkColumnHashes, itemDefs, perkRatings);
+    } else if (group === 'weapons') {
+        perkColumns = buildWeaponPerkColumns(item.perkColumnHashes, itemDefs, getWeaponPerkRatings(item.itemHash));
+    }
+
     return {
         item: item,
         definition: itemDef,
         comparisons: comparisons && comparisons.get(item.id),
         group: group,
         tag: (itemTags && itemTags.get(item.id)) || ItemTag.KEEP,
-        perkColumns: buildPerkColumns(item.perkColumnHashes, group, itemDefs, perkRatings)
+        perkColumns: perkColumns
     };
 }
 
@@ -51,14 +60,26 @@ function getItemGroup(itemDef: DestinyItemDefinition): string {
     return isArmor ? 'armor' : (isWeapon ? 'weapons' : null);
 }
 
-function buildPerkColumns(perkColumnHashes: string[][], group: string,
+function buildArmorPerkColumns(perkColumnHashes: string[][],
     itemDefs: Map<string, DestinyItemDefinition>, ratings: Map<string, PerkRating>)
     : DestinyPerkContainer[][] {
 
-    let perkColumnIndices =
-        group === 'armor' ? [0, 1, 2, 5, 6, 7] :
-            group === 'weapons' ? [0, 1, 2, 3, 4, 9] :
-                [];
+    return buildPerkColumns(perkColumnHashes, [0, 1, 2, 5, 6, 7], itemDefs,
+        perk => buildPerkContainer(perk, ratings));
+}
+
+function buildWeaponPerkColumns(perkColumnHashes: string[][],
+    itemDefs: Map<string, DestinyItemDefinition>, ratings: Map<string, WeaponPerkRating>)
+    : DestinyPerkContainer[][] {
+
+    return buildPerkColumns(perkColumnHashes, [0, 1, 2, 3, 4, 9], itemDefs,
+        perk => buildWeaponPerkContainer(perk, ratings));
+}
+
+function buildPerkColumns(perkColumnHashes: string[][], perkColumnIndices: number[],
+    itemDefs: Map<string, DestinyItemDefinition>,
+    buildPerkContainer: (perk: PerkRating) => DestinyPerkContainer)
+    : DestinyPerkContainer[][] {
 
     let perkColumns: DestinyPerkContainer[][] = [];
     for (let i = 0; i < perkColumnHashes.length; i++) {
@@ -74,9 +95,15 @@ function buildPerkColumns(perkColumnHashes: string[][], group: string,
                     },
                     upgrades: []
                 };
-                return buildPerkContainer(perk, ratings);
+                return buildPerkContainer(perk);
             }));
         }
     }
     return perkColumns;
+}
+
+function getWeaponPerkRatings(itemHash: string): Map<string, WeaponPerkRating> {
+    let ratings = new Map<string, WeaponPerkRating>();
+
+    return ratings;
 }
