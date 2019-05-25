@@ -109,6 +109,11 @@ class ArmorItemBuilder {
         return this;
     }
 
+    power(power: number) {
+        this.container.item.power = power;
+        return this;
+    }
+
     addIntrinsicPerk(rating: PerkRating) {
         this.container.perkColumns[0].push({
             ...rating,
@@ -138,6 +143,17 @@ class ArmorItemBuilder {
                 'PvE': PerkTier.NO_TIER,
                 'PvP': PerkTier.NO_TIER
             }
+        });
+        return this;
+    }
+
+    addComparison(itemId: string, result: ItemComparisonResult) {
+        if (!this.container.comparisons) {
+            this.container.comparisons = [];
+        }
+        this.container.comparisons.push({
+            id: itemId,
+            result: result
         });
         return this;
     }

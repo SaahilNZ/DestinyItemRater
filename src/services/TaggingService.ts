@@ -9,10 +9,13 @@ export enum ItemTag {
 
 class TaggingService {
     tagItems(items: DestinyItemContainer[]): Map<string, ItemTag> {
+        let taggedItems: Map<string, ItemTag> = new Map();
+        if (!items) {
+            return taggedItems;
+        }
         let maxInfuseCount = 4;
         let maxPowers = this.getMaxPowerByItemType(items);
 
-        let taggedItems: Map<string, ItemTag> = new Map();
         let sortedItems = this.sortItemsByPower(items);
         sortedItems.forEach((classMap, classType) => {
             classMap.forEach((slotItems, itemType) => {
@@ -22,11 +25,13 @@ class TaggingService {
                     var item = slotItems[i];
 
                     let isJunk = false;
-                    for (let i = 0; i < item.comparisons.length; i++) {
-                        const comparison = item.comparisons[i];
-                        if (comparison && comparison.result === ItemComparisonResult.ITEM_IS_BETTER) {
-                            isJunk = true;
-                            break;
+                    if (item.comparisons) {
+                        for (let i = 0; i < item.comparisons.length; i++) {
+                            const comparison = item.comparisons[i];
+                            if (comparison && comparison.result === ItemComparisonResult.ITEM_IS_BETTER) {
+                                isJunk = true;
+                                break;
+                            }
                         }
                     }
 
