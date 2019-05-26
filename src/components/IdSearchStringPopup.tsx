@@ -1,7 +1,7 @@
 import React, { createRef } from 'react';
 import DestinyItemContainer, { buildItemContainer } from '../model/DestinyItemContainer';
 import ItemStore from '../stores/ItemStore';
-import TaggingService, { ItemTag } from '../services/TaggingService';
+import { ItemTag } from '../services/TaggingService';
 import { getWeaponPerkRatings } from '../model/WeaponPerkRating';
 
 interface IdSearchStringPopupProps {
@@ -26,15 +26,12 @@ class IdSearchStringPopup extends React.Component<IdSearchStringPopupProps, IdSe
     }
 
     render() {
-        let { items, itemDefinitions, perkRatings, comparisons } = ItemStore.getState();
+        let { items, itemDefinitions, perkRatings, comparisons, itemTags } = ItemStore.getState();
         let weaponPerkRatings = getWeaponPerkRatings();
 
         let containers = items
-            .map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings, weaponPerkRatings, new Map()));
-        let itemTags = TaggingService.tagItems(containers);
-        let taggedItems = items
             .map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings, weaponPerkRatings, itemTags));
-        let { junkSearchString, infuseSearchString } = this.generateIdSearchStrings(taggedItems);
+        let { junkSearchString, infuseSearchString } = this.generateIdSearchStrings(containers);
 
         return (
             <div className="popup">

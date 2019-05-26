@@ -8,16 +8,18 @@ import PerkRating from '../model/PerkRating';
 import AbstractStoreModel from './AbstractStoreModel';
 import { ItemsState } from '../model/State';
 import AppStore from './AppStore';
-import { requestItems, requestItemDefinitions, requestItemsFailure, requestPerkRatings, requestItemsSuccess, requestItemDefinitionsSuccess, requestPerkRatingsSuccess, compareItems } from '../actions/ItemActions';
+import { requestItems, requestItemDefinitions, requestItemsFailure, requestPerkRatings, requestItemsSuccess, requestItemDefinitionsSuccess, requestPerkRatingsSuccess, compareItems, tagItems } from '../actions/ItemActions';
 import { Action } from '../actions/Actions';
 import DestinyItemComparison from '../model/DestinyItemComparison';
 import BungieDestinyProfile from '../model/bungie/BungieDestinyProfile';
+import { ItemTag } from '../services/TaggingService';
 
 class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
     items: DestinyItem[];
     itemDefinitions: Map<number, DestinyItemDefinition>;
     perkRatings: Map<string, PerkRating>;
     comparisons: Map<string, DestinyItemComparison[]>;
+    itemTags: Map<string, ItemTag>;
     errorMessage: string;
 
     constructor() {
@@ -50,20 +52,27 @@ class ItemStore extends AbstractStoreModel<ItemsState> implements ItemsState {
     onItemsLoadedForAccount(bungieResponse: BungieResponse<BungieDestinyProfile>) {
         this.dispatch(requestItemsSuccess(bungieResponse.Response));
         this.compareItems();
+        this.tagItems();
     }
 
     onItemDefinitionsLoaded(itemDefs: Map<number, DestinyItemDefinition>) {
         this.dispatch(requestItemDefinitionsSuccess(itemDefs));
         this.compareItems();
+        this.tagItems();
     }
 
     onPerkRatingsLoaded(perkRatings: Map<string, PerkRating>) {
         this.dispatch(requestPerkRatingsSuccess(perkRatings));
         this.compareItems();
+        this.tagItems();
     }
 
     compareItems() {
         this.dispatch(compareItems());
+    }
+
+    tagItems() {
+        this.dispatch(tagItems());
     }
 
     onItemsFailedToLoad(errorMessage) {

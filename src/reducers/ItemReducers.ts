@@ -10,12 +10,14 @@ import PerkRating from "../model/PerkRating";
 import ComparisonService from "../services/ComparisonService";
 import { buildItemContainer } from "../model/DestinyItemContainer";
 import { WeaponPerkRatings, getWeaponPerkRatings } from "../model/WeaponPerkRating";
+import TaggingService from "../services/TaggingService";
 
 const initialState: ItemsState = {
     items: [],
     itemDefinitions: null,
     perkRatings: null,
     comparisons: null,
+    itemTags: null,
     errorMessage: null
 }
 
@@ -66,6 +68,12 @@ export function items(state = initialState, action?: Action): ItemsState {
                     ...state,
                     comparisons: compareItems(state.items, state.itemDefinitions, state.perkRatings,
                         getWeaponPerkRatings())
+                };
+
+            case ItemActionType.TAG_ITEMS:
+                return {
+                    ...state,
+                    itemTags: tagItems(state.items, state.itemDefinitions, state.comparisons)
                 };
 
             default:
@@ -149,4 +157,15 @@ function compareItems(items: DestinyItem[],
         return ComparisonService.compareAll(containers, perkRatings, weaponPerkRatings);
     }
     return null;
+}
+
+function tagItems(items: DestinyItem[],
+    itemDefs: Map<number, DestinyItemDefinition>,
+    comparisons: Map<string, DestinyItemComparison[]>) {
+
+    if (itemDefs) {
+        let containers = items.map(item => buildItemContainer(item, itemDefs, comparisons, new Map(), {}, new Map()))
+            .filter(container => container);
+        return TaggingService.tagItems(containers);
+    }
 }

@@ -476,6 +476,7 @@ function buildSampleItemsState(): ItemsState {
         itemDefinitions: new Map(),
         perkRatings: new Map(),
         comparisons: new Map(),
+        itemTags: new Map(),
         errorMessage: 'error',
     };
     state.itemDefinitions.set(1, {
