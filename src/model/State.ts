@@ -3,6 +3,7 @@ import PerkRating from "./PerkRating";
 import DestinyItem from "./DestinyItem";
 import DestinyItemDefinition from "./DestinyItemDefinition";
 import DestinyItemComparison from "./DestinyItemComparison";
+import { ItemTag } from "../services/TaggingService";
 
 export interface AccountState {
     selectedAccount: DestinyAccount;
@@ -14,6 +15,7 @@ export interface ItemsState {
     itemDefinitions: Map<string, DestinyItemDefinition>;
     comparisons: Map<string, DestinyItemComparison[]>;
     perkRatings: Map<string, PerkRating>;
+    itemTags: Map<string, ItemTag>;
     errorMessage: string;
 }
 

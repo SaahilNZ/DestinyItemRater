@@ -25,13 +25,10 @@ class IdSearchStringPopup extends React.Component<IdSearchStringPopupProps, IdSe
     }
 
     render() {
-        let { items, itemDefinitions, perkRatings, comparisons } = ItemStore.getState();
+        let { items, itemDefinitions, perkRatings, comparisons, itemTags } = ItemStore.getState();
         let containers = items
-            .map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings, new Map()));
-        let itemTags = TaggingService.tagItems(containers);
-        let taggedItems = items
             .map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings, itemTags));
-        let { junkSearchString, infuseSearchString } = this.generateIdSearchStrings(taggedItems);
+        let { junkSearchString, infuseSearchString } = this.generateIdSearchStrings(containers);
 
         return (
             <div className="popup">

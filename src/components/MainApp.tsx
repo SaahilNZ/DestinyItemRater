@@ -227,17 +227,14 @@ class MainApp extends React.Component<{}, MainAppState> {
     }
 
     exportCsv() {
-        let { items, itemDefinitions, perkRatings, comparisons } = ItemStore.getState();
+        let { items, itemDefinitions, perkRatings, comparisons, itemTags } = ItemStore.getState();
         let containers = items
-            .map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings, new Map()));
-        let itemTags = TaggingService.tagItems(containers);
-        let taggedItems = items
             .map(item => buildItemContainer(item, itemDefinitions, comparisons, perkRatings, itemTags));
         
         let csvItems = [];
-        taggedItems.forEach(taggedItem => {
+        containers.forEach(item => {
             let tag = "";
-            switch (taggedItem.tag) {
+            switch (item.tag) {
                 case ItemTag.INFUSE:
                     tag = "infuse";
                     break;
@@ -249,10 +246,10 @@ class MainApp extends React.Component<{}, MainAppState> {
                     break;
             }
             csvItems.push({
-                "Id": `${JSON.stringify(taggedItem.item.id)}`,
+                "Id": `${JSON.stringify(item.item.id)}`,
                 "Notes": "",
                 "Tag": tag,
-                "Hash": taggedItem.item.itemHash
+                "Hash": item.item.itemHash
             });
         });
 
