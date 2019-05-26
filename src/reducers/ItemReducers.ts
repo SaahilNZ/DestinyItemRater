@@ -154,7 +154,7 @@ function compareItems(items: DestinyItem[],
         let containers = items.map(item =>
             buildItemContainer(item, itemDefs, new Map(), perkRatings, weaponPerkRatings, new Map()))
             .filter(container => container);
-        return ComparisonService.compareAll(containers, perkRatings, weaponPerkRatings);
+        return ComparisonService.compareAll(containers, perkRatings);
     }
     return null;
 }

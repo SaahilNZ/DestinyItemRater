@@ -4,9 +4,10 @@ import DestinyItemContainer from '../src/model/DestinyItemContainer';
 import ItemComparisonResult from '../src/services/ItemComparisonResult';
 import { PerkTier } from '../src/model/DestinyPerkContainer';
 import { ItemTag } from '../src/services/TaggingService';
+import { WeaponPerkRating } from '../src/model/WeaponPerkRating';
 
 class PerkBuilder {
-    perk: PerkRating;
+    private perk: PerkRating;
 
     constructor(name: string) {
         this.perk = {
@@ -47,9 +48,50 @@ class PerkBuilder {
     }
 }
 
+class WeaponPerkBuilder {
+    private perk: WeaponPerkRating;
+
+    constructor(name: string) {
+        this.perk = {
+            name: name,
+            tierByMode: {
+                'PvE': PerkTier.S_TIER,
+                'PvP': PerkTier.S_TIER
+            }
+        };
+    }
+
+    pve(tier: ('S' | 'A' | 'B' | 'C')): WeaponPerkBuilder {
+        this.perk.tierByMode['PvE'] = this.parseTier(tier);
+        return this;
+    }
+
+    pvp(tier: ('S' | 'A' | 'B' | 'C')): WeaponPerkBuilder {
+        this.perk.tierByMode['PvP'] = this.parseTier(tier);
+        return this;
+    }
+
+    private parseTier(tier: ('S' | 'A' | 'B' | 'C')): PerkTier {
+        switch (tier) {
+            case 'S':
+                return PerkTier.S_TIER;
+            case 'A':
+                return PerkTier.A_TIER;
+            case 'B':
+                return PerkTier.B_TIER;
+            case 'C':
+                return PerkTier.C_TIER;
+        }
+    }
+
+    build(): WeaponPerkRating {
+        return this.perk;
+    }
+}
+
 class ArmorItemBuilder {
-    container: DestinyItemContainer;
-    classItemType: string;
+    private container: DestinyItemContainer;
+    private classItemType: string;
 
     constructor(definition, classItemType) {
         this.container = {
@@ -162,7 +204,7 @@ class ArmorItemBuilder {
 }
 
 class WeaponItemBuilder {
-    container: DestinyItemContainer;
+    private container: DestinyItemContainer;
 
     constructor() {
         this.container = {
@@ -176,16 +218,27 @@ class WeaponItemBuilder {
             comparisons: null,
             group: null,
             tag: ItemTag.KEEP,
-            perkColumns: [
-                [],
-                [],
-                []
-            ]
+            perkColumns: []
         };
     }
 
     itemHash(hash: number) {
         this.container.item.itemHash = hash;
+        return this;
+    }
+
+    addPerkColumn(perks: WeaponPerkRating[]): WeaponItemBuilder {
+        this.container.perkColumns.push(
+            perks.map(perk => {
+                return {
+                    ...perk,
+                    isGoodByMode: {
+                        'PvE': false,
+                        'PvP': false
+                    },
+                    upgrades: []
+                }
+            }));
         return this;
     }
 
@@ -216,9 +269,13 @@ export function newItem() {
     };
 }
 
-export function newPerk() {
+export function newPerk(): PerkBuilder {
     let name = uuid.v4();
     return new PerkBuilder(name);
+}
+
+export function newWeaponPerk(name: string): WeaponPerkBuilder {
+    return new WeaponPerkBuilder(name);
 }
 
 export type ArmorItemDefiner = (builder: ArmorItemBuilder) => ArmorItemBuilder;
