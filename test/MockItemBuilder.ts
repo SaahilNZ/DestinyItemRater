@@ -1,8 +1,6 @@
-import assert from 'assert';
 import uuid from 'uuid';
 import PerkRating from '../src/model/PerkRating';
 import DestinyItemContainer from '../src/model/DestinyItemContainer';
-import ArmourComparer from '../src/services/ArmourComparer';
 import ItemComparisonResult from '../src/services/ItemComparisonResult';
 import { PerkTier } from '../src/model/DestinyPerkContainer';
 import { ItemTag } from '../src/services/TaggingService';
@@ -163,6 +161,39 @@ class ArmorItemBuilder {
     }
 }
 
+class WeaponItemBuilder {
+    container: DestinyItemContainer;
+
+    constructor() {
+        this.container = {
+            item: {
+                id: uuid.v4(),
+                itemHash: uuid.v4(),
+                power: 700,
+                perkColumnHashes: []
+            },
+            definition: null,
+            comparisons: null,
+            group: null,
+            tag: ItemTag.KEEP,
+            perkColumns: [
+                [],
+                [],
+                []
+            ]
+        };
+    }
+
+    itemHash(hash: number) {
+        this.container.item.itemHash = hash;
+        return this;
+    }
+
+    build() {
+        return this.container;
+    }
+}
+
 export function newItem() {
     return {
         armor: () => {
@@ -180,7 +211,8 @@ export function newItem() {
                     itemType: "Helmet"
                 }, "Titan Mark")
             };
-        }
+        },
+        weapon: () => new WeaponItemBuilder()
     };
 }
 
@@ -189,12 +221,5 @@ export function newPerk() {
     return new PerkBuilder(name);
 }
 
-type ItemDefiner = (builder: ArmorItemBuilder) => ArmorItemBuilder;
-export function armourComparerTest(
-    defineItem1: ItemDefiner, defineItem2: ItemDefiner,
-    expected: ItemComparisonResult, armourComparer: ArmourComparer) {
-
-    let item1 = defineItem1(newItem().armor().warlock().gauntlets()).build();
-    let item2 = defineItem2(newItem().armor().warlock().gauntlets()).build();
-    assert.strictEqual(armourComparer.compare(item1, item2), expected);
-}
+export type ArmorItemDefiner = (builder: ArmorItemBuilder) => ArmorItemBuilder;
+export type WeaponItemDefiner = (builder: WeaponItemBuilder) => WeaponItemBuilder;

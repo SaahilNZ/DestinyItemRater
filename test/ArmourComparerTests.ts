@@ -2,7 +2,7 @@ import TestHelper from "./TestHelper";
 import assert from "assert";
 import ArmourComparer from "../src/services/ArmourComparer";
 import ItemComparisonResult from "../src/services/ItemComparisonResult";
-import { armourComparerTest, newItem, newPerk } from './MockItemBuilder';
+import { newItem, newPerk, ArmorItemDefiner } from './MockItemBuilder';
 
 describe("ArmourComparer", () => {
     describe("compare()", () => {
@@ -339,3 +339,12 @@ describe("ArmourComparer", () => {
         });
     });
 });
+
+export function armourComparerTest(
+    defineItem1: ArmorItemDefiner, defineItem2: ArmorItemDefiner,
+    expected: ItemComparisonResult, armourComparer: ArmourComparer) {
+
+    let item1 = defineItem1(newItem().armor().warlock().gauntlets()).build();
+    let item2 = defineItem2(newItem().armor().warlock().gauntlets()).build();
+    assert.strictEqual(armourComparer.compare(item1, item2), expected);
+}
