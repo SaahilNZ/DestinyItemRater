@@ -129,22 +129,6 @@ describe("WeaponComparer", () => {
             );
         });
 
-        it("should return worse if both items have S-tier perks in PvE but item 1's perk is also S-tier in PvP", () => {
-            let perk_sTierPvE_sTierPvP = newWeaponPerk('kill clip').pve('S').pvp('S').build();
-            let perk_sTierPvE_aTierPvP = newWeaponPerk('rampage').pve('S').pvp('A').build();
-
-            let weaponComparer = new WeaponComparer();
-
-            weaponComparerTest(
-                item1 => item1
-                    .addPerkColumn([perk_sTierPvE_sTierPvP]),
-                item2 => item2
-                    .addPerkColumn([perk_sTierPvE_aTierPvP]),
-                ItemComparisonResult.ITEM_IS_WORSE,
-                weaponComparer
-            );
-        });
-
         it("should return equivalent if item 2 has all of item 1's S-tier perks even if it is missing some of item 1's perks that are not S-tier", () => {
             let perk_sTier = newWeaponPerk('kill clip').pve('S').pvp('S').build();
             let perk_bTier = newWeaponPerk('headseeker').pve('B').pvp('B').build();
