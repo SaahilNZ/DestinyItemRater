@@ -7,62 +7,99 @@ export interface WeaponPerkRating {
 
 export type WeaponPerkRatings = { [itemHash: number]: WeaponPerkRating[] };
 
+export type PerkRatings = {
+    [mode: string]: {
+        s_tier: string[];
+        a_tier: string[];
+        b_tier: string[];
+        c_tier: string[];
+    }[]
+};
+
 export function getWeaponPerkRatings(): WeaponPerkRatings {
-    let ratings: WeaponPerkRatings = {
-        // Go Figure
-        4138174248: [
+    let goFigurePerks: PerkRatings = {
+        'PvE': [
             // trait column 1
             {
-                name: 'outlaw',
-                tierByMode: { 'PvE': PerkTier.S_TIER, 'PvP': PerkTier.S_TIER }
+                s_tier: ['outlaw'],
+                a_tier: ['moving target', 'firmly planted'],
+                b_tier: ['zen moment'],
+                c_tier: ['under pressure', 'hip-fire grip']
             },
-            {
-                name: 'moving target',
-                tierByMode: { 'PvE': PerkTier.A_TIER, 'PvP': PerkTier.A_TIER }
-            },
-            {
-                name: 'firmly planted',
-                tierByMode: { 'PvE': PerkTier.A_TIER, 'PvP': PerkTier.A_TIER }
-            },
-            {
-                name: 'zen moment',
-                tierByMode: { 'PvE': PerkTier.B_TIER, 'PvP': PerkTier.A_TIER }
-            },
-            {
-                name: 'under pressure',
-                tierByMode: { 'PvE': PerkTier.C_TIER, 'PvP': PerkTier.C_TIER }
-            },
-            {
-                name: 'hip-fire grip',
-                tierByMode: { 'PvE': PerkTier.C_TIER, 'PvP': PerkTier.C_TIER }
-            },
-
             // trait column 2
             {
-                name: 'rampage',
-                tierByMode: { 'PvE': PerkTier.S_TIER, 'PvP': PerkTier.A_TIER }
+                s_tier: ['rampage'],
+                a_tier: ['kill clip'],
+                b_tier: ['rangefinder'],
+                c_tier: ['high-impact reserves', 'full auto trigger system', 'headseeker']
             },
+            // kill tracker
             {
-                name: 'kill clip',
-                tierByMode: { 'PvE': PerkTier.A_TIER, 'PvP': PerkTier.S_TIER }
-            },
+                s_tier: [],
+                a_tier: [],
+                b_tier: [],
+                c_tier: ['tracker disabled', 'kill tracker', 'crucible tracker']
+            }
+        ],
+        'PvP': [
+            // trait column 1
             {
-                name: 'high-impact reserves',
-                tierByMode: { 'PvE': PerkTier.C_TIER, 'PvP': PerkTier.C_TIER }
+                s_tier: ['outlaw'],
+                a_tier: ['moving target', 'firmly planted', 'zen moment'],
+                b_tier: [],
+                c_tier: ['under pressure', 'hip-fire grip']
             },
+            // trait column 2
             {
-                name: 'full auto trigger system',
-                tierByMode: { 'PvE': PerkTier.C_TIER, 'PvP': PerkTier.C_TIER }
+                s_tier: ['kill clip'],
+                a_tier: ['rampage'],
+                b_tier: ['rangefinder', 'headseeker'],
+                c_tier: ['high-impact reserves', 'full auto trigger system']
             },
+            // kill tracker
             {
-                name: 'rangefinder',
-                tierByMode: { 'PvE': PerkTier.B_TIER, 'PvP': PerkTier.B_TIER }
-            },
-            {
-                name: 'headseeker',
-                tierByMode: { 'PvE': PerkTier.C_TIER, 'PvP': PerkTier.B_TIER }
-            },
+                s_tier: [],
+                a_tier: [],
+                b_tier: [],
+                c_tier: ['tracker disabled', 'kill tracker', 'crucible tracker']
+            }
         ]
     };
+
+    return buildRatings({
+        4138174248: goFigurePerks
+    });
+}
+
+function buildRatings(perkRatingsByWeapon: { [itemHash: number]: PerkRatings }): WeaponPerkRatings {
+    let ratings: WeaponPerkRatings = {};
+    for (const itemHash in perkRatingsByWeapon) {
+        const perkRatingsByMode = perkRatingsByWeapon[itemHash];
+        const perks: { [name: string]: WeaponPerkRating } = {};
+
+        const buildTieredPerk = (perkName: string, mode: string, tier: PerkTier) => {
+            let perk: WeaponPerkRating = perks[perkName];
+            if (!perk) {
+                perk = {
+                    name: perkName,
+                    tierByMode: {}
+                };
+                perks[perkName] = perk;
+            }
+            perk.tierByMode[mode] = tier;
+        }
+
+        for (const mode in perkRatingsByMode) {
+            const perkRatings = perkRatingsByMode[mode];
+            perkRatings.forEach(column => {
+                column.s_tier.forEach(perkName => buildTieredPerk(perkName, mode, PerkTier.S_TIER));
+                column.a_tier.forEach(perkName => buildTieredPerk(perkName, mode, PerkTier.A_TIER));
+                column.b_tier.forEach(perkName => buildTieredPerk(perkName, mode, PerkTier.B_TIER));
+                column.c_tier.forEach(perkName => buildTieredPerk(perkName, mode, PerkTier.C_TIER));
+            });
+        }
+
+        ratings[itemHash] = Object.keys(perks).map(name => perks[name]);
+    }
     return ratings;
 }
