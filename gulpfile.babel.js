@@ -82,18 +82,24 @@ export function server() {
     }
   }
 
-  return nodemon({
-    script: paths.server
+  nodemon({
+    script: paths.server,
+    watch: [
+      "routes/**/*.js",
+      "app.js",
+      "bin/www"
+    ]
   }).on('restart', files => {
     if (files) {
       let changed = files.map(f => path.basename(f));
       console.log(`Detected changes in '${changed}'. Restarting...`)
     }
-  })
+  });
+  return Promise.resolve();
 }
 
 export const serve = gulp.series(build, server);
 
-gulp.watch(['src/**/*.js', 'src/**/*.jsx', 'src/**/*.ts', 'src/**/*.tsx', 'routes/**/*.js'], build);
+gulp.watch(['src/**/*.js', 'src/**/*.jsx', 'src/**/*.ts', 'src/**/*.tsx', 'routes/**/*.js'], serve);
 
 export default serve;

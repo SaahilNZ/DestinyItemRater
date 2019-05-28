@@ -12,6 +12,7 @@ coverage
 build
 bundle.js
 *.map
+ItemDefinitions.json
 
 # misc
 .DS_Store

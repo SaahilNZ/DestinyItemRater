@@ -11,6 +11,10 @@ var debug = require("debug")("destiny-item-rater:server");
 var https = require("https");
 var fs = require("fs");
 var path = require("path");
+var fetch = require('node-fetch');
+
+const manifestUrl = 'https://destiny.plumbing/';
+const itemDefinitionUrl = 'https://destiny.plumbing/en/raw/DestinyInventoryItemDefinition.json';
 
 // if we aren't running in production, load env vars from a .env file
 const isProduction = process.env.NODE_ENV === 'production';
@@ -70,13 +74,17 @@ const options = {
 var server = https.createServer(options, app);
 
 /**
+ * Update Destiny manifest
  * Listen on provided port, on all network interfaces.
  */
-
-console.log(`Listening on port ${port}...`);
-server.listen(port, hostname);
-server.on("error", onError);
-server.on("listening", onListening);
+updateItemDefinitions()
+    .then(() => {
+        console.log(`Listening on port ${port}...`);
+        server.listen(port, hostname);
+        server.on("error", onError);
+        server.on("listening", onListening);
+    })
+    .catch(error => { throw error });
 
 /**
  * Normalize a port into a number, string, or false.
@@ -96,6 +104,100 @@ function normalizePort(val) {
     }
 
     return false;
+}
+
+/**
+ * Updates the current Destiny manifest
+ */
+
+async function updateItemDefinitions() {
+    console.log('Checking Destiny manifest version...');
+    return fetch(manifestUrl)
+        .then(response => response.json())
+        .then(manifest => updateDefinitionsIfRequired(manifest.bungieManifestVersion))
+        .catch(error => { throw error });
+}
+
+/**
+ * Fetches the newest item definitions if required
+ */
+
+async function updateDefinitionsIfRequired(manifestVersion) {
+    let updateDefs = true;
+    const itemDefPath = path.join(__dirname, "../public/data/ItemDefinitions.json");
+    console.log(`Online manifest version: ${manifestVersion}`);
+    if (fs.existsSync(itemDefPath)) {
+        let itemDefs = JSON.parse(fs.readFileSync(itemDefPath).toString());
+        let localManifestVersion = itemDefs.bungieManifestVersion;
+        if (localManifestVersion) {
+            console.log(`Local manifest version: ${localManifestVersion}`);
+            if (localManifestVersion == manifestVersion) {
+                console.log('Manifest versions match.');
+                updateDefs = false;
+            } else {
+                console.log('Item definitions are out of date.');
+            }
+        } else {
+            console.log('Local item definition format is invalid.');
+        }
+    } else {
+        console.log('Item definitions not downloaded.');
+    }
+    if (updateDefs) {
+        console.log('Downloading item definitions...');
+        return fetch(itemDefinitionUrl)
+            .then(response => response.json())
+            .then(plumbingItemDefs => {
+                console.log('Item definitions downloaded.');
+                console.log('Formatting item definitions...');
+                let formattedDefs = formatItemDefinitions(plumbingItemDefs, manifestVersion);
+                fs.writeFileSync(itemDefPath, JSON.stringify(formattedDefs));
+                console.log('Item definitions updated');
+            })
+            .catch(error => { throw error });
+    }
+    return Promise.resolve();
+}
+
+/**
+ * Strips unneeded information from the item definitions
+ */
+
+function formatItemDefinitions(itemDefinitions, manifestVersion) {
+    let itemDefs = [];
+    for (var itemDefProp in itemDefinitions) {
+        if (itemDefinitions.hasOwnProperty(itemDefProp)) {
+            let itemDef = itemDefinitions[itemDefProp];
+            let itemClass = "";
+            switch (itemDef.class) {
+                case 0:
+                    itemClass = "Titan"
+                    break;
+                case 1:
+                    itemClass = "Hunter"
+                    break;
+                case 2:
+                    itemClass = "Warlock"
+                    break;
+            }
+            let tier = "";
+            if (itemDef.inventory) {
+                tier = itemDef.inventory.tierTypeName;
+            }
+            itemDefs.push({
+                hash: itemDef.hash,
+                name: itemDef.displayProperties.name,
+                itemType: itemDef.itemTypeDisplayName,
+                classType: itemClass,
+                tier: tier
+            });
+        }
+    }
+
+    return {
+        bungieManifestVersion: manifestVersion,
+        itemDefinitions: itemDefs
+    };
 }
 
 /**
