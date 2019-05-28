@@ -19,6 +19,13 @@ export type PerkRatings = {
 export function getWeaponPerkRatings(): WeaponPerkRatings {
     let goFigurePerks: PerkRatings = {
         'PvE': [
+            // magazine
+            {
+                s_tier: ['ricochet rounds', 'high-caliber rounds'],
+                a_tier: ['flared magwell'],
+                b_tier: ['armor-piercing rounds', 'light mag', 'appended mag'],
+                c_tier: ['alloy magazine', 'extended mag'],
+            },
             // trait column 1
             {
                 s_tier: ['outlaw'],
@@ -42,6 +49,13 @@ export function getWeaponPerkRatings(): WeaponPerkRatings {
             }
         ],
         'PvP': [
+            // magazine
+            {
+                s_tier: ['ricochet rounds'],
+                a_tier: ['high-caliber rounds', 'flared magwell'],
+                b_tier: ['light mag', 'alloy magazine', 'appended mag'],
+                c_tier: ['armor-piercing rounds', 'extended mag'],
+            },
             // trait column 1
             {
                 s_tier: ['outlaw'],
