@@ -169,7 +169,7 @@ function formatItemDefinitions(itemDefinitions, manifestVersion) {
         if (itemDefinitions.hasOwnProperty(itemDefProp)) {
             let itemDef = itemDefinitions[itemDefProp];
             let itemClass = "";
-            switch (itemDef.class) {
+            switch (itemDef.classType) {
                 case 0:
                     itemClass = "Titan"
                     break;
