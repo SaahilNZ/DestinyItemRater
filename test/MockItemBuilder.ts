@@ -1,10 +1,10 @@
 import uuid from 'uuid';
-import PerkRating from '../src/model/PerkRating';
-import DestinyItemContainer from '../src/model/DestinyItemContainer';
-import ItemComparisonResult from '../src/services/ItemComparisonResult';
-import { PerkTier } from '../src/model/DestinyPerkContainer';
-import { ItemTag } from '../src/services/TaggingService';
-import { WeaponPerkRating } from '../src/model/WeaponPerkRating';
+import PerkRating from '../src/app/model/PerkRating';
+import DestinyItemContainer from '../src/app/model/DestinyItemContainer';
+import ItemComparisonResult from '../src/app/services/ItemComparisonResult';
+import { PerkTier } from '../src/app/model/DestinyPerkContainer';
+import { ItemTag } from '../src/app/services/TaggingService';
+import { WeaponPerkRating } from '../src/app/model/WeaponPerkRating';
 
 class PerkBuilder {
     private perk: PerkRating;

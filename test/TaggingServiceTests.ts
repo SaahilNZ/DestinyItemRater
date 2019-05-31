@@ -1,8 +1,8 @@
 import assert from 'assert';
-import TaggingService, { ItemTag } from '../src/services/TaggingService';
-import DestinyItemContainer from '../src/model/DestinyItemContainer';
+import TaggingService, { ItemTag } from '../src/app/services/TaggingService';
+import DestinyItemContainer from '../src/app/model/DestinyItemContainer';
 import { newItem } from './MockItemBuilder';
-import ItemComparisonResult from '../src/services/ItemComparisonResult';
+import ItemComparisonResult from '../src/app/services/ItemComparisonResult';
 
 
 describe("TaggingService", () => {

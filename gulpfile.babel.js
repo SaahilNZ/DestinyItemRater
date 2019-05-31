@@ -12,7 +12,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 const paths = {
   javascript: path.resolve(__dirname, "public/js/"),
-  app: path.resolve(__dirname, "src/"),
+  app: path.resolve(__dirname, "src/app/"),
   server: path.resolve(__dirname, "bin/www")
 };
 

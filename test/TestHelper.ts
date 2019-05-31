@@ -1,4 +1,4 @@
-import PerkRating from "../src/model/PerkRating";
+import PerkRating from "../src/app/model/PerkRating";
 
 class TestHelper {
     createPerkMap(perks: PerkRating[]): Map<string, PerkRating> {

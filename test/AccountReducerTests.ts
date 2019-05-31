@@ -1,8 +1,8 @@
 import assert = require("assert");
-import { accounts } from '../src/reducers/AccountReducers';
-import { ActionType } from "../src/actions/Actions";
-import { AccountState } from "../src/model/State";
-import DestinyAccount from "../src/model/DestinyAccount";
+import { accounts } from '../src/app/reducers/AccountReducers';
+import { ActionType } from "../src/app/actions/Actions";
+import { AccountState } from "../src/app/model/State";
+import DestinyAccount from "../src/app/model/DestinyAccount";
 
 describe("Reducers.accounts()", () => {
     it("should return the initial state", () => {
