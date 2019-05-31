@@ -1,7 +1,7 @@
 import TestHelper from "./TestHelper";
 import assert from "assert";
-import ArmourComparer from "../src/services/ArmourComparer";
-import ItemComparisonResult from "../src/services/ItemComparisonResult";
+import ArmourComparer from "../src/app/services/ArmourComparer";
+import ItemComparisonResult from "../src/app/services/ItemComparisonResult";
 import { armourComparerTest, newItem, newPerk } from './MockItemBuilder';
 
 describe("ArmourComparer", () => {
