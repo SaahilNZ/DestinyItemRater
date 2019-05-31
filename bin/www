@@ -124,7 +124,7 @@ async function updateItemDefinitions() {
 
 async function updateDefinitionsIfRequired(manifestVersion) {
     let updateDefs = true;
-    const itemDefPath = path.join(__dirname, "../public/data/ItemDefinitions.json");
+    const itemDefPath = path.join(__dirname, "../build/data/ItemDefinitions.json");
     console.log(`Online manifest version: ${manifestVersion}`);
     if (fs.existsSync(itemDefPath)) {
         let itemDefs = JSON.parse(fs.readFileSync(itemDefPath).toString());
