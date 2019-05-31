@@ -19,6 +19,13 @@ export type PerkRatings = {
 export function getWeaponPerkRatings(): WeaponPerkRatings {
     let goFigurePerks: PerkRatings = {
         'PvE': [
+            // scope
+            {
+                s_tier: ['dusk scope d2', 'devil scope d2'],
+                a_tier: ['wolf dot w2', 'dusk dot d1'],
+                b_tier: ['king dot k2', 'king sight k1'],
+                c_tier: ['wolf sight w1', 'dusk sight d1']
+            },
             // magazine
             {
                 s_tier: ['ricochet rounds', 'high-caliber rounds'],
@@ -49,6 +56,13 @@ export function getWeaponPerkRatings(): WeaponPerkRatings {
             }
         ],
         'PvP': [
+            // scope
+            {
+                s_tier: ['dusk scope d2', 'devil scope d2'],
+                a_tier: ['wolf dot w2', 'dusk dot d1'],
+                b_tier: ['king dot k2', 'king sight k1'],
+                c_tier: ['wolf sight w1', 'dusk sight d1']
+            },
             // magazine
             {
                 s_tier: ['ricochet rounds'],

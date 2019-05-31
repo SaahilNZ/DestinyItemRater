@@ -13,7 +13,8 @@ interface PerkConfiguration {
 enum PerkComparisonResult {
     PERK_IS_INCOMPARABLE = 0,
     PERK_IS_EQUIVALENT = 1,
-    PERK_IS_BETTER = 2
+    PERK_IS_BETTER = 2,
+    PERK_IS_WORSE = 3
 }
 enum PerkConfigComparisonResult {
     CONFIG_IS_INCOMPARABLE = 0,
@@ -100,42 +101,38 @@ export default class WeaponComparer {
     }
 
     private comparePerkConfigs(config1: DestinyPerkContainer[], config2: DestinyPerkContainer[], mode: string): PerkConfigComparisonResult {
-        let isMissingPerk: boolean = false;
-        let hasBetterPerk: boolean = false;
-
-        // test whether config 2 is better or equal to config 1
-        config1.forEach(perkToFind => {
-            let comparisons = config2.map(perkToTest => this.comparePerk(perkToFind, perkToTest, mode));
-            if (comparisons.some(c => c === PerkComparisonResult.PERK_IS_BETTER)) {
-                // config 2 contains a better version of the perk
-                hasBetterPerk = true;
-            } else if (comparisons.some(c => c === PerkComparisonResult.PERK_IS_EQUIVALENT)) {
-                // config 2 contains the perk
-            } else {
-                // config 2 does not contain the perk
-                isMissingPerk = true;
-                return;
-            }
-        });
-
-        if (isMissingPerk) {
-            // config 2 does not contain one of the perks in config 1
+        // configs have a different number of perk columns
+        if (config1.length !== config2.length) {
             return PerkConfigComparisonResult.CONFIG_IS_INCOMPARABLE;
         }
 
-        // config 2 has all perks (or better versions of the perks) in config 1
+        // compare perks
+        let comparisons: PerkComparisonResult[] = [];
+        for (let i = 0; i < config1.length; i++) {
+            const config1Perk = config1[i];
+            const config2Perk = config2[i];
+            comparisons.push(this.comparePerk(config1Perk, config2Perk, mode));
+        }
 
-        if (hasBetterPerk) {
-            // config 2 has a better version of a perk in config 1
+        if (comparisons.some(c => c === PerkComparisonResult.PERK_IS_INCOMPARABLE)) {
+            // at least one column has a different perk in each config that is the same tier
+            return PerkConfigComparisonResult.CONFIG_IS_INCOMPARABLE;
+        }
+
+        if (comparisons.every(c => c === PerkComparisonResult.PERK_IS_EQUIVALENT)) {
+            // all perks are equivalent
+            return PerkConfigComparisonResult.CONFIG_IS_EQUIVALENT;
+        }
+
+        let hasBetterPerk = comparisons.some(c => c === PerkComparisonResult.PERK_IS_BETTER);
+        let hasWorsePerk = comparisons.some(c => c === PerkComparisonResult.PERK_IS_WORSE);
+
+        if (hasBetterPerk && !hasWorsePerk) {
+            // config 2 contains at least one better perk than config 1 and no worse perks
             return PerkConfigComparisonResult.CONFIG_IS_BETTER;
         }
 
-        if (config2.length > config1.length) {
-            // config 2 has more perks than config 1
-            return PerkConfigComparisonResult.CONFIG_IS_BETTER;
-        }
-
-        return PerkConfigComparisonResult.CONFIG_IS_EQUIVALENT;
+        return PerkConfigComparisonResult.CONFIG_IS_INCOMPARABLE;
     }
 
     private comparePerk(perk1: DestinyPerkContainer, perk2: DestinyPerkContainer, mode: string): PerkComparisonResult {
@@ -147,6 +144,11 @@ export default class WeaponComparer {
         if (perk2.tierByMode[mode] > perk1.tierByMode[mode]) {
             // perk 2 is in a better tier than perk 1
             return PerkComparisonResult.PERK_IS_BETTER;
+        }
+
+        if (perk2.tierByMode[mode] < perk1.tierByMode[mode]) {
+            // perk 2 is in a worse tier than perk 1
+            return PerkComparisonResult.PERK_IS_WORSE;
         }
 
         return PerkComparisonResult.PERK_IS_INCOMPARABLE;

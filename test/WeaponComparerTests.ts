@@ -161,6 +161,26 @@ describe("WeaponComparer", () => {
                 weaponComparer
             );
         });
+
+        it("should return incomparable if item 2 has a better perk in column 1 but item 1 has a better perk in column 2", () => {
+            let perk_trait1_cTier = newWeaponPerk('under pressure').pve('C').pvp('C').build();
+            let perk_trait1_aTier = newWeaponPerk('moving target').pve('A').pvp('A').build();
+            let perk_trait2_sTier = newWeaponPerk('kill clip').pve('S').pvp('S').build();
+            let perk_trait2_cTier = newWeaponPerk('headseeker').pve('C').pvp('C').build();
+
+            let weaponComparer = new WeaponComparer();
+
+            weaponComparerTest(
+                item1 => item1
+                    .addPerkColumn([perk_trait1_cTier])
+                    .addPerkColumn([perk_trait2_sTier]),
+                item2 => item2
+                    .addPerkColumn([perk_trait1_aTier])
+                    .addPerkColumn([perk_trait2_cTier]),
+                ItemComparisonResult.ITEM_IS_INCOMPARABLE,
+                weaponComparer
+            );
+        });
     });
 });
 
