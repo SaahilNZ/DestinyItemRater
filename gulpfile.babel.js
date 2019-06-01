@@ -28,7 +28,7 @@ const paths = {
 
 let tsProject = ts.createProject("tsconfig.json");
 
-export function bundle() {
+export function bundleApp() {
   return tsProject.src()
     .pipe(tsProject())
     .js.pipe(
@@ -105,7 +105,7 @@ export const copyPublicFiles = gulp.parallel(copyFavicon, copyManifest);
 
 export const copyStaticFiles = gulp.parallel(copyViews, copyPublicFiles, copyPerkRatings);
 
-export const build = gulp.parallel(bundle, copyStaticFiles);
+export const build = gulp.parallel(bundleApp, copyStaticFiles);
 
 export function server() {
   console.log(`Production: ${isProduction}`);

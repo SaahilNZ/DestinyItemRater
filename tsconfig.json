@@ -11,6 +11,6 @@
         "types": ["node", "mocha"]
     },
     "include": [
-        "./src/**/*"
+        "./src/app/**/*"
     ]
 }
