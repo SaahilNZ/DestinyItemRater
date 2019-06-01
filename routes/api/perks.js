@@ -8,7 +8,7 @@ var papa = require("papaparse");
 router.get("/", function (req, res, next) {
     res.header("Content-Type", "application/json");
     var file = fs.readFileSync(
-        path.join(__dirname, "../../public/data/d2-armour-perks.csv")
+        path.join(__dirname, "../../build/data/d2-armour-perks.csv")
     );
     res.send(convertToJson(papa.parse(file.toString())));
 });

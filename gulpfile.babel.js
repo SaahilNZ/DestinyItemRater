@@ -11,8 +11,18 @@ require('dotenv').config();
 const isProduction = process.env.NODE_ENV === 'production';
 
 const paths = {
-  javascript: path.resolve(__dirname, "public/js/"),
+  // Source
+  dataSrc: path.resolve(__dirname, "src/data/"),
+  viewsSrc: path.resolve(__dirname, "src/views/"),
+  publicSrc: path.resolve(__dirname, "src/public/"),
   app: path.resolve(__dirname, "src/app/"),
+  
+  // Build
+  data: path.resolve(__dirname, "build/data/"),
+  public: path.resolve(__dirname, "build/public/"),
+  views: path.resolve(__dirname, "build/views/"),
+
+  // Server
   server: path.resolve(__dirname, "bin/www")
 };
 
@@ -33,7 +43,7 @@ export function bundle() {
           main: ["babel-polyfill", paths.app + "/index.tsx"]
         },
         output: {
-          filename: "bundle.js"
+          filename: "app.bundle.js"
         },
         devtool: "source-map",
         resolve: {
@@ -68,10 +78,34 @@ export function bundle() {
           ]
         }
       })
-    ).pipe(gulp.dest(paths.javascript));
+    ).pipe(gulp.dest(paths.public));
 }
 
-export const build = gulp.series(bundle);
+export function copyViews() {
+  return gulp.src(path.resolve(paths.viewsSrc, "*.html"))
+    .pipe(gulp.dest(paths.views));
+}
+
+export function copyManifest() {
+  return gulp.src(path.resolve(paths.publicSrc, "manifest.json"))
+  .pipe(gulp.dest(paths.public));
+}
+
+export function copyFavicon() {
+  return gulp.src(path.resolve(paths.publicSrc, "favicon.ico"))
+    .pipe(gulp.dest(paths.public));
+}
+  
+export function copyPerkRatings() {
+  return gulp.src(path.resolve(paths.dataSrc, "d2-armour-perks.csv"))
+    .pipe(gulp.dest(paths.data));
+}
+
+export const copyPublicFiles = gulp.parallel(copyFavicon, copyManifest);
+
+export const copyStaticFiles = gulp.parallel(copyViews, copyPublicFiles, copyPerkRatings);
+
+export const build = gulp.parallel(bundle, copyStaticFiles);
 
 export function server() {
   console.log(`Production: ${isProduction}`);
