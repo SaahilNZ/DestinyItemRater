@@ -47,7 +47,7 @@ class ComparisonService {
             case 'armor':
                 return new ArmourComparer(perkRatings);
             case 'weapons':
-                return new WeaponComparer();
+                return new WeaponComparer(perkRatings);
         }
         return null;
     }

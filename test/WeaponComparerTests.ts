@@ -6,7 +6,7 @@ import { newItem, WeaponItemDefiner, newWeaponPerk } from './MockItemBuilder';
 describe("WeaponComparer", () => {
     describe("compare()", () => {
         it("should return incomparable if item 1 is not the same weapon as item 2", () => {
-            let weaponComparer = new WeaponComparer();
+            let weaponComparer = new WeaponComparer(new Map());
             weaponComparerTest(
                 item1 => item1.itemHash(1),
                 item2 => item2.itemHash(2),
@@ -16,7 +16,7 @@ describe("WeaponComparer", () => {
         });
 
         it("should return equivalent if item 1 is the same weapon as item 2", () => {
-            let weaponComparer = new WeaponComparer();
+            let weaponComparer = new WeaponComparer(new Map());
             weaponComparerTest(
                 item1 => item1,
                 item2 => item2,
@@ -26,7 +26,7 @@ describe("WeaponComparer", () => {
         });
 
         it("should return equivalent if item 1 has the same perks as item 2", () => {
-            let weaponComparer = new WeaponComparer();
+            let weaponComparer = new WeaponComparer(new Map());
 
             let primaryPerkSTier = newWeaponPerk('outlaw').pve('S').pvp('S').build();
             weaponComparerTest(
@@ -42,7 +42,7 @@ describe("WeaponComparer", () => {
             let primaryPerkCTier = newWeaponPerk('under pressure').pve('C').pvp('C').build();
             let secondaryPerkSTier = newWeaponPerk('kill clip').pve('S').pvp('S').build();
 
-            let weaponComparer = new WeaponComparer();
+            let weaponComparer = new WeaponComparer(new Map());
 
             weaponComparerTest(
                 item1 => item1
@@ -61,7 +61,7 @@ describe("WeaponComparer", () => {
             let primaryPerkCTier = newWeaponPerk('under pressure').pve('C').pvp('C').build();
             let secondaryPerkSTier = newWeaponPerk('kill clip').pve('S').pvp('S').build();
 
-            let weaponComparer = new WeaponComparer();
+            let weaponComparer = new WeaponComparer(new Map());
 
             weaponComparerTest(
                 item1 => item1
@@ -80,7 +80,7 @@ describe("WeaponComparer", () => {
             let secondaryPerkSTier = newWeaponPerk('kill clip').pve('S').pvp('S').build();
             let secondaryPerkCTier = newWeaponPerk('high-impact reserves').pve('C').pvp('C').build();
 
-            let weaponComparer = new WeaponComparer();
+            let weaponComparer = new WeaponComparer(new Map());
 
             weaponComparerTest(
                 item1 => item1
@@ -99,7 +99,7 @@ describe("WeaponComparer", () => {
             let secondaryPerkSTier = newWeaponPerk('kill clip').pve('S').pvp('S').build();
             let secondaryPerkCTier = newWeaponPerk('high-impact reserves').pve('C').pvp('C').build();
 
-            let weaponComparer = new WeaponComparer();
+            let weaponComparer = new WeaponComparer(new Map());
 
             weaponComparerTest(
                 item1 => item1
@@ -117,7 +117,7 @@ describe("WeaponComparer", () => {
             let primaryPerkSTier1 = newWeaponPerk('kill clip').pve('S').pvp('S').build();
             let primaryPerkSTier2 = newWeaponPerk('rampage').pve('S').pvp('S').build();
 
-            let weaponComparer = new WeaponComparer();
+            let weaponComparer = new WeaponComparer(new Map());
 
             weaponComparerTest(
                 item1 => item1
@@ -133,7 +133,7 @@ describe("WeaponComparer", () => {
             let perk_sTier = newWeaponPerk('kill clip').pve('S').pvp('S').build();
             let perk_bTier = newWeaponPerk('headseeker').pve('B').pvp('B').build();
 
-            let weaponComparer = new WeaponComparer();
+            let weaponComparer = new WeaponComparer(new Map());
 
             weaponComparerTest(
                 item1 => item1
@@ -150,7 +150,7 @@ describe("WeaponComparer", () => {
             let perk_sTier2 = newWeaponPerk('rampage').pve('S').pvp('S').build();
             let perk_bTier = newWeaponPerk('headseeker').pve('B').pvp('B').build();
 
-            let weaponComparer = new WeaponComparer();
+            let weaponComparer = new WeaponComparer(new Map());
 
             weaponComparerTest(
                 item1 => item1
@@ -168,7 +168,7 @@ describe("WeaponComparer", () => {
             let perk_trait2_sTier = newWeaponPerk('kill clip').pve('S').pvp('S').build();
             let perk_trait2_cTier = newWeaponPerk('headseeker').pve('C').pvp('C').build();
 
-            let weaponComparer = new WeaponComparer();
+            let weaponComparer = new WeaponComparer(new Map());
 
             weaponComparerTest(
                 item1 => item1
