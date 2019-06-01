@@ -1,11 +1,11 @@
 import assert from 'assert';
 import uuid from 'uuid';
-import PerkRating from '../src/app/model/PerkRating';
-import DestinyItemContainer from '../src/app/model/DestinyItemContainer';
-import ArmourComparer from '../src/app/services/ArmourComparer';
-import ItemComparisonResult from '../src/app/services/ItemComparisonResult';
-import { DestinyPerkContainer, PerkTier } from '../src/app/model/DestinyPerkContainer';
-import { ItemTag } from '../src/app/services/TaggingService';
+import PerkRating from '../app/model/PerkRating';
+import DestinyItemContainer from '../app/model/DestinyItemContainer';
+import ArmourComparer from '../app/services/ArmourComparer';
+import ItemComparisonResult from '../app/services/ItemComparisonResult';
+import { DestinyPerkContainer, PerkTier } from '../app/model/DestinyPerkContainer';
+import { ItemTag } from '../app/services/TaggingService';
 
 class PerkBuilder {
     perk: PerkRating;

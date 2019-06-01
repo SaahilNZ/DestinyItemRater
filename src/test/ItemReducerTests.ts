@@ -1,10 +1,10 @@
 import assert = require("assert");
-import { items } from '../src/app/reducers/ItemReducers';
-import { ItemsState } from "../src/app/model/State";
-import { ItemActionType } from "../src/app/actions/ItemActions";
-import DestinyItem from "../src/app/model/DestinyItem";
-import DestinyItemDefinition from "../src/app/model/DestinyItemDefinition";
-import PerkRating from "../src/app/model/PerkRating";
+import { items } from '../app/reducers/ItemReducers';
+import { ItemsState } from "../app/model/State";
+import { ItemActionType } from "../app/actions/ItemActions";
+import DestinyItem from "../app/model/DestinyItem";
+import DestinyItemDefinition from "../app/model/DestinyItemDefinition";
+import PerkRating from "../app/model/PerkRating";
 
 describe("Reducers.items()", () => {
     it("should return the initial state", () => {
