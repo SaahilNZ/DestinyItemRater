@@ -222,10 +222,13 @@ function formatItemDefinitions(itemDefinitions, manifestVersion) {
             if (itemDef.inventory) {
                 tier = itemDef.inventory.tierTypeName;
             }
+            let hasIcon: boolean = itemDef.displayProperties.hasIcon;
             itemDefs.push({
                 hash: itemDef.hash,
                 name: itemDef.displayProperties.name,
                 itemType: itemDef.itemTypeDisplayName,
+                hasIcon: hasIcon,
+                icon: hasIcon ? itemDef.displayProperties.icon : null,
                 classType: itemClass,
                 tier: tier
             });
