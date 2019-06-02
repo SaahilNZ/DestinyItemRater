@@ -1,13 +1,13 @@
-var express = require('express');
-var router = express.Router();
-var http = require('http');
-var querystring = require('querystring');
-var fetch = require('node-fetch');
+import express from "express";
+import querystring from "querystring";
+import fetch from "node-fetch";
 
 const TOKEN_URL = 'https://www.bungie.net/platform/app/oauth/token/';
 
-router.get('/', function (req, res) {
-    var code = req.headers.auth_code;
+const router = express.Router();
+
+router.get('/', (req, res) => {
+    let code = req.headers.auth_code;
     fetch(TOKEN_URL, {
         method: "POST",
         body: querystring.stringify({
@@ -26,7 +26,7 @@ router.get('/', function (req, res) {
 });
 
 router.get('/refresh', function (req, res) {
-    var refresh = JSON.parse(req.headers.refresh_token);
+    var refresh = JSON.parse(req.headers.refresh_token as string);
     fetch(TOKEN_URL, {
         method: "POST",
         body: querystring.stringify({
@@ -44,4 +44,4 @@ router.get('/refresh', function (req, res) {
         .catch(error => console.log(error));
 });
 
-module.exports = router;
+export default router;

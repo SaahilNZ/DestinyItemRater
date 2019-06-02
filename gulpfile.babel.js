@@ -6,6 +6,7 @@ import nodemon from "gulp-nodemon";
 import fs from 'fs';
 import { execSync } from "child_process";
 import ts from 'gulp-typescript';
+// import uglify from 
 require('dotenv').config();
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -16,21 +17,26 @@ const paths = {
   viewsSrc: path.resolve(__dirname, "src/views/"),
   publicSrc: path.resolve(__dirname, "src/public/"),
   app: path.resolve(__dirname, "src/app/"),
-  
+  nodeModulesSrc: path.resolve(__dirname, "node_modules/"),
+
   // Build
   data: path.resolve(__dirname, "build/data/"),
   public: path.resolve(__dirname, "build/public/"),
   views: path.resolve(__dirname, "build/views/"),
+  nodeModules: path.resolve(__dirname, "build/node_modules/"),
 
   // Server
-  server: path.resolve(__dirname, "bin/www")
+  serverSrc: path.resolve(__dirname, "src/server.ts"),
+  serverBuild: path.resolve(__dirname, "build/"),
+  server: path.resolve(__dirname, "build/server.bundle.js")
 };
 
-let tsProject = ts.createProject("tsconfig.json");
+let tsAppProject = ts.createProject("tsconfig.json");
+let tsServerProject = ts.createProject("tsconfig_server.json");
 
 export function bundleApp() {
-  return tsProject.src()
-    .pipe(tsProject())
+  return tsAppProject.src()
+    .pipe(tsAppProject())
     .js.pipe(
       webpackStream({
         plugins: [
@@ -81,6 +87,41 @@ export function bundleApp() {
     ).pipe(gulp.dest(paths.public));
 }
 
+export function bundleServer() {
+  return tsServerProject.src()
+    .pipe(tsServerProject())
+    .js.pipe(
+      webpackStream({
+        devtool: "source-map",
+        target: "node",
+        resolve: {
+          extensions: [".ts", ".js"]
+        },
+        optimization: {
+          minimize: false
+        },
+        entry: {
+          main: ["babel-polyfill", paths.serverSrc]
+        },
+        output: {
+          filename: "server.bundle.js"
+        },
+        node: {
+          __dirname: false,
+          __filename: false
+        },
+        module: {
+          rules: [
+            {
+              test: /\.ts?$/,
+              use: "awesome-typescript-loader"
+            }
+          ]
+        }
+      })
+    ).pipe(gulp.dest(paths.serverBuild));
+}
+
 export function copyViews() {
   return gulp.src(path.resolve(paths.viewsSrc, "*.html"))
     .pipe(gulp.dest(paths.views));
@@ -88,14 +129,14 @@ export function copyViews() {
 
 export function copyManifest() {
   return gulp.src(path.resolve(paths.publicSrc, "manifest.json"))
-  .pipe(gulp.dest(paths.public));
+    .pipe(gulp.dest(paths.public));
 }
 
 export function copyFavicon() {
   return gulp.src(path.resolve(paths.publicSrc, "favicon.ico"))
     .pipe(gulp.dest(paths.public));
 }
-  
+
 export function copyPerkRatings() {
   return gulp.src(path.resolve(paths.dataSrc, "d2-armour-perks.csv"))
     .pipe(gulp.dest(paths.data));
@@ -105,9 +146,10 @@ export const copyPublicFiles = gulp.parallel(copyFavicon, copyManifest);
 
 export const copyStaticFiles = gulp.parallel(copyViews, copyPublicFiles, copyPerkRatings);
 
-export const build = gulp.parallel(bundleApp, copyStaticFiles);
+export const build = gulp.parallel(bundleApp, bundleServer, copyStaticFiles);
 
 export function server() {
+  process.chdir("./build");
   console.log(`Production: ${isProduction}`);
   if (!isProduction) {
     if (!fs.existsSync("key.pem") || !fs.existsSync("cert.pem")) {
@@ -117,16 +159,14 @@ export function server() {
   }
 
   nodemon({
-    script: paths.server,
+    script: path.resolve('../', paths.server),
     watch: [
-      "routes/**/*.js",
-      "app.js",
-      "bin/www"
+      "server.bundle.js",
     ]
   }).on('restart', files => {
     if (files) {
       let changed = files.map(f => path.basename(f));
-      console.log(`Detected changes in '${changed}'. Restarting...`)
+      console.log(`Detected changes in '${changed}'. Restarting...`);
     }
   });
   return Promise.resolve();

@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "noImplicitAny": false,
+        "esModuleInterop": true,
+        "sourceMap": true,
+        "allowJs": false,
+        "module": "commonjs",
+        "target": "es5",
+        "lib": ["es2015", "dom"],
+        "types": ["node"],
+        "moduleResolution": "node"
+    },
+    "include": [
+        "./src/server.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
