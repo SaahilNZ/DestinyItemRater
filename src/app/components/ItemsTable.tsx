@@ -29,6 +29,7 @@ export default class ItemsTable extends React.Component<ItemsTableProps, {}> {
             <table className="item-table">
                 <tbody>
                     <tr>
+                        <th>Icon</th>
                         <th>ID</th>
                         <th>Name</th>
                         <th>Class</th>

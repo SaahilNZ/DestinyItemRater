@@ -339,14 +339,18 @@ describe("Reducers.items()", () => {
                 name: 'Graviton Forfeit',
                 itemType: 'Helmet',
                 class: 'Hunter',
-                tier: 'Exotic'
+                tier: 'Exotic',
+                hasIcon: false,
+                icon: null
             });
             definitions.set('2', {
                 hash: 2,
                 name: 'Celestial Nighthawk',
                 itemType: 'Helmet',
                 class: 'Hunter',
-                tier: 'Exotic'
+                tier: 'Exotic',
+                hasIcon: false,
+                icon: null
             });
             let newState = items(state, {
                 type: ItemActionType.REQUEST_ITEM_DEFINITIONS_SUCCESS,
@@ -484,7 +488,9 @@ function buildSampleItemsState(): ItemsState {
         name: 'Graviton Forfeit',
         itemType: 'Helmet',
         class: 'Hunter',
-        tier: 'Exotic'
+        tier: 'Exotic',
+        hasIcon: false,
+        icon: null
     });
     state.perkRatings.set('1', {
         name: 'Ashes to Assets',

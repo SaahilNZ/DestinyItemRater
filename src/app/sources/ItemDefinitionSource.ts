@@ -20,7 +20,9 @@ class ItemDefinitionSource {
                 name: itemDef.name,
                 itemType: itemDef.itemType,
                 tier: itemDef.tier,
-                class: itemDef.classType
+                class: itemDef.classType,
+                hasIcon: itemDef.hasIcon,
+                icon: itemDef.icon
             });
         });
         return map;
