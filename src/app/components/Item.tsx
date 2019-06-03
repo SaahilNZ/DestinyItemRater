@@ -44,6 +44,12 @@ class Item extends React.Component<ItemProps, {}> {
 
         return (
             <tr ref={this.props.itemRef}>
+                <td>
+                    {this.props.itemContainer.definition.hasIcon &&
+                    <img src={"https://www.bungie.net" + this.props.itemContainer.definition.icon}
+                        alt={this.props.itemContainer.definition.name}
+                        width="64" height="64" ></img>}
+                </td>
                 <td>{this.props.itemContainer.item.id}</td>
                 <td>{this.props.itemContainer.definition.name}</td>
                 <td>{this.props.itemContainer.definition.class}</td>

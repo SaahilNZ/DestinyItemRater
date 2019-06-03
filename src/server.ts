@@ -1,20 +1,59 @@
-#!/usr/bin/env node
-
-/**
- * Module dependencies.
- */
-
 console.log('Loading modules...');
 
-var app = require("../app");
-var debug = require("debug")("destiny-item-rater:server");
-var https = require("https");
-var fs = require("fs");
-var path = require("path");
-var fetch = require('node-fetch');
+import express from 'express';
+import path from "path";
+import logger from "morgan";
+import cookieParser from "cookie-parser";
+import createError from "http-errors";
+import debug from "debug";
+import https from "https";
+import fs from "fs";
+import fetch from "node-fetch";
+
+import indexRouter from "./routes/index";
+import itemsRouter from "./routes/api/items";
+import itemDefinitionsRouter from "./routes/api/itemdefinitions";
+import perksRouter from "./routes/api/perks";
+import membershipsRouter from "./routes/api/memberships";
+import authRouter from "./routes/auth/bungie";
+import redirectRouter from "./routes/redirect";
 
 const manifestUrl = 'https://destiny.plumbing/';
 const itemDefinitionUrl = 'https://destiny.plumbing/en/raw/DestinyInventoryItemDefinition.json';
+
+const app = express();
+const serverDebug = debug("destiny-item-rater:server");
+// @ts-ignore
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+// @ts-ignore
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/', indexRouter);
+app.use('/redirect', redirectRouter);
+app.use('/api/items', itemsRouter);
+app.use('/api/itemdefinitions', itemDefinitionsRouter);
+app.use('/api/perks', perksRouter);
+app.use('/api/memberships', membershipsRouter);
+app.use('/auth/bungie', authRouter);
+
+// catch 404 and forward to error handler
+app.use((req, res, next) => {
+    next(createError(404));
+});
+
+// error handler
+app.use((err, req, res, next) => {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
+});
 
 // if we aren't running in production, load env vars from a .env file
 const isProduction = process.env.NODE_ENV === 'production';
@@ -56,8 +95,8 @@ var hostname = process.env.HOSTNAME || "localhost";
  * Create HTTP server.
  */
 console.log('Creating HTTP server...');
-const keyPath = path.join(__dirname, "../key.pem");
-const certPath = path.join(__dirname, "../cert.pem");
+const keyPath = path.join(__dirname, "./key.pem");
+const certPath = path.join(__dirname, "./cert.pem");
 if (!fs.existsSync(keyPath)) {
     throw `SSL key not found at '${keyPath}'. Is OpenSSL configured?`
 }
@@ -80,9 +119,8 @@ var server = https.createServer(options, app);
 updateItemDefinitions()
     .then(() => {
         console.log(`Listening on port ${port}...`);
-        server.listen(port, hostname);
+        server.listen(port, hostname, onListening);
         server.on("error", onError);
-        server.on("listening", onListening);
     })
     .catch(error => { throw error });
 
@@ -90,7 +128,7 @@ updateItemDefinitions()
  * Normalize a port into a number, string, or false.
  */
 
-function normalizePort(val) {
+function normalizePort(val): number {
     var port = parseInt(val, 10);
 
     if (isNaN(port)) {
@@ -103,7 +141,7 @@ function normalizePort(val) {
         return port;
     }
 
-    return false;
+    return -1;
 }
 
 /**
@@ -112,7 +150,7 @@ function normalizePort(val) {
 
 async function updateItemDefinitions() {
     console.log('Checking Destiny manifest version...');
-    return fetch(manifestUrl)
+    return fetch(manifestUrl, {})
         .then(response => response.json())
         .then(manifest => updateDefinitionsIfRequired(manifest.bungieManifestVersion))
         .catch(error => { throw error });
@@ -124,7 +162,7 @@ async function updateItemDefinitions() {
 
 async function updateDefinitionsIfRequired(manifestVersion) {
     let updateDefs = true;
-    const itemDefPath = path.join(__dirname, "../build/data/ItemDefinitions.json");
+    const itemDefPath = path.join(__dirname, "./data/ItemDefinitions.json");
     console.log(`Online manifest version: ${manifestVersion}`);
     if (fs.existsSync(itemDefPath)) {
         let itemDefs = JSON.parse(fs.readFileSync(itemDefPath).toString());
@@ -145,7 +183,7 @@ async function updateDefinitionsIfRequired(manifestVersion) {
     }
     if (updateDefs) {
         console.log('Downloading item definitions...');
-        return fetch(itemDefinitionUrl)
+        return fetch(itemDefinitionUrl, {})
             .then(response => response.json())
             .then(plumbingItemDefs => {
                 console.log('Item definitions downloaded.');
@@ -184,10 +222,13 @@ function formatItemDefinitions(itemDefinitions, manifestVersion) {
             if (itemDef.inventory) {
                 tier = itemDef.inventory.tierTypeName;
             }
+            let hasIcon: boolean = itemDef.displayProperties.hasIcon;
             itemDefs.push({
                 hash: itemDef.hash,
                 name: itemDef.displayProperties.name,
                 itemType: itemDef.itemTypeDisplayName,
+                hasIcon: hasIcon,
+                icon: hasIcon ? itemDef.displayProperties.icon : null,
                 classType: itemClass,
                 tier: tier
             });
@@ -233,5 +274,5 @@ function onError(error) {
 function onListening() {
     var addr = server.address();
     var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
-    debug("Listening on " + bind);
+    serverDebug("Listening on " + bind);
 }

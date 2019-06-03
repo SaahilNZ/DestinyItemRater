@@ -1,16 +1,19 @@
 {
     "compilerOptions": {
-        // "noImplicitAny": true,
+        "noImplicitAny": false,
         "esModuleInterop": true,
         "sourceMap": true,
-        "allowJs": true,
+        "allowJs": false,
         "module": "commonjs",
         "target": "es5",
-        "jsx": "react",
         "lib": ["es2015", "dom"],
-        "types": ["node", "mocha"]
+        "types": ["node"],
+        "moduleResolution": "node"
     },
     "include": [
-        "./src/app/**/*"
+        "./src/server.ts"
+    ],
+    "exclude": [
+        "node_modules"
     ]
 }

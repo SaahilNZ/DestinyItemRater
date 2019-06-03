@@ -1,6 +1,6 @@
 import assert from "assert";
-import WeaponComparer from "../src/app/services/WeaponComparer";
-import ItemComparisonResult from "../src/app/services/ItemComparisonResult";
+import WeaponComparer from "../app/services/WeaponComparer";
+import ItemComparisonResult from "../app/services/ItemComparisonResult";
 import { newItem, WeaponItemDefiner, newWeaponPerk } from './MockItemBuilder';
 
 describe("WeaponComparer", () => {

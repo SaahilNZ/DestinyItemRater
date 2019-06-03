@@ -4,6 +4,8 @@ interface DestinyItemDefinition {
     itemType: string;
     class: string;
     tier: string;
+    hasIcon: boolean;
+    icon: string;
 }
 
 export default DestinyItemDefinition;
